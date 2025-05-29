@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    <h1>Quynh Anh</h1>
+    <button id="btnGoogleLogin" onclick="loginWithGoogle()">Đăng nhập với Google</button>
+
+
+    <script type="module">
+        import { loginWithGoogle } from '/js/firebase/firebase-auth.js';
+        window.loginWithGoogle = loginWithGoogle;
+    </script>
+
+
 </body>
+
 </html>

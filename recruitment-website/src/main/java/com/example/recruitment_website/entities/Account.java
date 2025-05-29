@@ -19,7 +19,7 @@ public class Account {
     @NotNull
     @Size(max = 25)
     @Column(unique = true)
-    private String userName;
+    private String email;
 
     @NotNull
     @Size(max = 25)
@@ -42,12 +42,12 @@ public class Account {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
