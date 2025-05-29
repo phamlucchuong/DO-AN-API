@@ -8,12 +8,12 @@
 </head>
 
 <body>
-    <button id="btnGoogleLogin" onclick="loginWithGoogle()">Đăng nhập với Google</button>
+    <button id="btnGoogleLogin">Đăng nhập với Google</button>
 
 
     <script type="module">
         import { loginWithGoogle } from '/js/firebase/firebase-auth.js';
-        window.loginWithGoogle = loginWithGoogle;
+        document.getElementById('btnGoogleLogin').addEventListener('click', loginWithGoogle);
     </script>
 
 
