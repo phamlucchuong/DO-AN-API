@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Thành Viên</title>
+    <link rel="stylesheet" href="css/register.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-EvV84MR4kqVGRNSg..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script href="js/accounts/register.js"></script> 
+</head>
+<body>
+    <div class="header">
+        
+    </div>
+
+    <div class="container">
+        <h2 class="form-title">Đăng Ký Thành Viên!</h2>
+        
+        <div class="social-buttons">
+            <button class="social-btn ">
+                <i class="fa-brands fa-facebook"></i>
+                với tài khoản Facebook
+            </button>
+            <button id="btnGoogleLogin" class="social-btn google-btn">
+                với tài khoản Google
+            </button>
+        </div>
+
+        <form>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">Họ Tên</label>
+                    <input type="text" id="firstName" name="firstName">
+                </div>
+               
+            </div>
+
+            <div class="form-group full-width">
+                <label for="phone">Số điện thoại</label>
+                <div class="phone-group">
+                    <div class="country-code">
+                        <div class="flag"></div>
+                        +84
+                    </div>
+                    <input type="tel" id="phone" name="phone" class="phone-input">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Sử dụng email có thật để xác thực.">
+            </div>
+
+            <div class="form-group full-width">
+                <label for="password">Mật Khẩu</label>
+                <div class="password-group">
+                    <input type="password" id="password" name="password" placeholder="Từ 6 đến 50 ký tự, 1 chữ hoa, 1 số.">
+                    <button type="button" class="password-toggle">👁</button>
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="terms" name="terms">
+                <label for="terms">
+                    Tôi đồng ý với <a href="#">Thỏa thuận sử dụng</a> và <a href="#">Quy định bảo mật</a> của VietnamWorks.
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn">Đăng Ký</button>
+
+            <div class="login-link">
+                Bạn là thành viên VietnamWorks? <a href="/login">Đăng Nhập</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="help-text">
+                Nếu bạn đang có nhu cầu tuyển dụng, vui lòng đăng ký <a href="#">tại đây</a>.
+            </div>
+
+            <div class="help-text" style="margin-top: 15px;">
+                <a href="#">Thỏa Thuận Sử Dụng</a> | <a href="#">Quy Định Bảo Mật</a>
+            </div>
+        </form>
+    </div>
+
+
+    <script type="module">
+        import { loginWithGoogle, loginWithEmailAndPwd } from '/js/firebase/firebase-auth.js';
+
+
+        document.getElementById('btnGoogleLogin').addEventListener('click', loginWithGoogle);
+
+        // document.getElementById('btnEmailLogin').addEventListener('click', () => {
+        //     const email = document.getElementById('email').value;
+        //     const password = document.getElementById('password').value;
+
+        //     if (!email || !password) {
+        //         alert('Vui lòng nhập đầy đủ email và mật khẩu.');
+        //         return;
+        //     }
+
+        //     loginWithEmailAndPwd(email, password);
+        // });
+    </script>
+</body>
+</html>
