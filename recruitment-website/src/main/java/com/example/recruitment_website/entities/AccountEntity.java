@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Account")
-public class Account {
+public class AccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,10 +20,6 @@ public class Account {
     @Size(max = 25)
     @Column(unique = true)
     private String email;
-
-    @NotNull
-    @Size(max = 25)
-    private String password;
 
     @NotNull
     @Size(max = 20)
@@ -48,14 +44,6 @@ public class Account {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getRole() {

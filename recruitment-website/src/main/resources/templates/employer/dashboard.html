@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentHub - Recruiter Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="employer/fragments/header :: header"></div>
+
+    <div th:replace="employer/fragments/nav :: nav"></div>
+
+    <!-- Dashboard Content -->
+    <div class="content">
+        <h2>Dashboard Overview</h2>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 th:text="${totalJobs}">0</h3>
+                <p>Total Jobs Posted</p>
+            </div>
+            <div class="stat-card">
+                <h3 th:text="${totalCandidates}">0</h3>
+                <p>Total Candidates</p>
+            </div>
+            <div class="stat-card">
+                <h3 th:text="${activeJobs}">0</h3>
+                <p>Active Jobs</p>
+            </div>
+            <div class="stat-card">
+                <h3 th:text="${avgCandidatesPerJob}">0</h3>
+                <p>Avg. Candidates per Job</p>
+            </div>
+        </div>
+
+        <!-- Recent Jobs Section -->
+        <h3>Recent Job Postings</h3>
+        <div id="recent-jobs">
+            <div class="job-card" th:each="job : ${recentJobs}">
+                <h3 th:text="${job.title}">Job Title</h3>
+                <div class="job-meta">
+                    <span th:text="'🏢 ' + ${job.companyName}">Company</span>
+                    <span th:text="'📍 ' + ${job.location}">Location</span>
+                    <span th:text="'💼 ' + ${job.jobType}">Type</span>
+                    <span th:text="'💰 ' + ${job.salaryRange}">Salary</span>
+                    <span th:if="${job.urgent}" style="background: #f59e0b; color: white;">⚡ Khá gấp</span>
+                </div>
+                <div class="candidate-count" th:text="${job.candidateCount} + ' candidates applied'">0 candidates applied</div>
+                <div class="job-actions">
+                    <a th:href="@{'/job-details/' + ${job.id}}" class="btn btn-secondary">👥 View Candidates</a>
+                    <a th:href="@{'/edit-job/' + ${job.id}}" class="btn">✏️ Edit</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="actions-grid">
+                <a th:href="@{/post-job}" class="action-card">
+                    <div class="action-icon">📝</div>
+                    <h4>Post New Job</h4>
+                    <p>Create a new job posting</p>
+                </a>
+                <a th:href="@{/post-job-vn}" class="action-card">
+                    <div class="action-icon">🇻🇳</div>
+                    <h4>Đăng tuyển VN</h4>
+                    <p>Tạo tin tuyển dụng tiếng Việt</p>
+                </a>
+                <a th:href="@{/candidates}" class="action-card">
+                    <div class="action-icon">👥</div>
+                    <h4>View All Candidates</h4>
+                    <p>Browse candidate profiles</p>
+                </a>
+                <a th:href="@{/statistics}" class="action-card">
+                    <div class="action-icon">📈</div>
+                    <h4>View Statistics</h4>
+                    <p>Analyze recruitment data</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/script.js}"></script>
+</body>
+</html>

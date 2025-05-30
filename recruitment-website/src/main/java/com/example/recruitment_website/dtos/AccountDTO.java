@@ -7,15 +7,20 @@ public class AccountDTO {
     private String role;
     private Boolean isDeleted;
 
-    // Constructor mặc định
-    public AccountDTO() {}
-
     // Constructor từ Entity Account (dùng khi chuyển đổi)
-    public AccountDTO(com.example.recruitment_website.entities.Account account) {
+    public AccountDTO(com.example.recruitment_website.entities.AccountEntity account) {
         // this.id = account.getId();
         this.email = account.getEmail();
         this.role = account.getRole();
         this.isDeleted = account.getIsDeleted();
+    }
+
+    public AccountDTO(Integer id2, String email2, String role2, Boolean isDeleted2) {
+        //TODO Auto-generated constructor stub
+    }
+
+    public AccountDTO() {
+        //TODO Auto-generated constructor stub
     }
 
     // Getter và Setter

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentHub - Recruiter Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/employer/candidates.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="employer/fragments/header :: header"></div>
+
+    <div th:replace="employer/fragments/nav :: nav"></div>
+    
+    <!-- Candidates Content -->
+    <section class="candidates">
+        <div class="container">
+            <div class="candidates-header">
+                <h1 class="candidates-title">Danh sách ứng viên</h1>
+                <div class="candidates-filter">
+                    <div class="filter-container">
+                        <div class="filter-icon">🔍</div>
+                        <input type="text" class="filter-input" id="candidate-filter"
+                               placeholder="Tìm kiếm theo tên, vị trí, hoặc trạng thái">
+                        <select class="filter-status" id="status-filter">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="pending">Chờ xử lý</option>
+                            <option value="interview">Phỏng vấn</option>
+                            <option value="accepted">Được nhận</option>
+                            <option value="rejected">Loại</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="candidates-list">
+                <div class="candidates-table">
+                    <div class="table-header">
+                        <div class="table-cell">Tên</div>
+                        <div class="table-cell">Email</div>
+                        <div class="table-cell">CV</div>
+                        <div class="table-cell">Vị trí ứng tuyển</div>
+                        <div class="table-cell">Trạng thái</div>
+                        <div class="table-cell">Hành động</div>
+                    </div>
+
+                    <!-- Lặp qua danh sách ứng viên -->
+                    <div th:each="candidate : ${candidates}" class="table-row"
+                         th:attr="data-candidate-id=${candidate.id}">
+                        <div class="table-cell" th:text="${candidate.name}">Tên</div>
+                        <div class="table-cell">
+                            <a th:href="'mailto:' + ${candidate.email}" th:text="${candidate.email}">email</a>
+                        </div>
+                        <div class="table-cell">
+                            <a th:href="@{${candidate.cvLink}}" class="cv-link" target="_blank">Xem CV</a>
+                        </div>
+                        <div class="table-cell" th:text="${candidate.position}">Vị trí</div>
+                        <div class="table-cell">
+                            <select class="status-select" th:attr="data-candidate-id=${candidate.id}">
+                                <option value="pending"
+                                        th:selected="${candidate.status == 'pending'}">Chờ xử lý</option>
+                                <option value="interview"
+                                        th:selected="${candidate.status == 'interview'}">Phỏng vấn</option>
+                                <option value="accepted"
+                                        th:selected="${candidate.status == 'accepted'}">Được nhận</option>
+                                <option value="rejected"
+                                        th:selected="${candidate.status == 'rejected'}">Loại</option>
+                            </select>
+                        </div>
+                        <div class="table-cell">
+                            <a th:href="'mailto:' + ${candidate.email}" class="action-button contact-button">Liên hệ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="actions-grid">
+            <a th:href="@{/post-job}" class="action-card">
+                <div class="action-icon">📝</div>
+                <h4>Post New Job</h4>
+                <p>Create a new job posting</p>
+            </a>
+            <a th:href="@{/post-job-vn}" class="action-card">
+                <div class="action-icon">🇻🇳</div>
+                <h4>Đăng tuyển VN</h4>
+                <p>Tạo tin tuyển dụng tiếng Việt</p>
+            </a>
+            <a th:href="@{/candidates}" class="action-card">
+                <div class="action-icon">👥</div>
+                <h4>View All Candidates</h4>
+                <p>Browse candidate profiles</p>
+            </a>
+            <a th:href="@{/statistics}" class="action-card">
+                <div class="action-icon">📈</div>
+                <h4>View Statistics</h4>
+                <p>Analyze recruitment data</p>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
