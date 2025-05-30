@@ -13,15 +13,15 @@ import java.util.Map;
 public class AuthController {
 
     @PostMapping("/verify-token")
-public ResponseEntity<?> verifyToken(@RequestBody Map<String, String> body) {
-    try {
-        String token = body.get("token");
-        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-        String uid = decodedToken.getUid();
-        return ResponseEntity.ok(Map.of("uid", uid));
-    } catch (FirebaseAuthException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+    public ResponseEntity<?> verifyToken(@RequestBody Map<String, String> body) {
+        try {
+            String token = body.get("token");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            String uid = decodedToken.getUid();
+            return ResponseEntity.ok(Map.of("uid", uid));
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
     }
-}
 }
