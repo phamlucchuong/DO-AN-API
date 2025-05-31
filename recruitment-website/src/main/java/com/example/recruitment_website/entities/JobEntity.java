@@ -8,8 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -22,9 +20,7 @@ public class JobEntity {
     private Integer id;
 
     @NotNull
-    @OneToOne
-    @JoinColumn(name = "employer_id", unique = true)
-    private EmployerEntity employer;
+    private Integer employerId;
 
     @Column(nullable = false, name= "title")
     private String title;
@@ -82,12 +78,12 @@ public class JobEntity {
         this.id = id;
     }
 
-    public EmployerEntity getEmployer() {
-        return employer;
+    public Integer getEmployerId() {
+        return employerId;
     }
 
-    public void setEmployer(EmployerEntity employer) {
-        this.employer = employer;
+    public void setEmployerId(Integer employerId) {
+        this.employerId = employerId;
     }
 
     public String getTitle() {

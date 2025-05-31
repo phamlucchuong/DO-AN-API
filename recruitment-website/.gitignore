@@ -34,5 +34,3 @@ build/
 # Ignore Firebase service account key file
 src/main/resources/firebase/serviceAccountKey.json
 
-
-

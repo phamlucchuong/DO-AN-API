@@ -1,51 +1,46 @@
 package com.example.recruitment_website.restControllers;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.recruitment_website.dtos.JobDTO;
-import com.example.recruitment_website.entities.JobEntity;
-import com.example.recruitment_website.mappers.JobMapper;
-import com.example.recruitment_website.repositories.JobRepository;
+import com.example.recruitment_website.payloads.EmployerLoginResponse;
+import com.example.recruitment_website.payloads.JobResponse;
+import com.example.recruitment_website.services.JobService;
 
 @RestController
 @RequestMapping("/employer/job")
 public class JobRestController {
 
     @Autowired
-    private JobRepository jobRepository;
-
-    @Autowired
-    private JobMapper jobMapper;
+    private JobService jobService;
 
     @PostMapping("/add")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> postNewJob(@RequestBody JobDTO jobDTO) {
-        Map<String, Object> response = new HashMap<>();
-
+    public ResponseEntity<?> addJob(@RequestBody JobDTO jobDTO) {
         try {
-            JobEntity jobEntity = jobMapper.toEntity(jobDTO);
-            jobEntity.setCreatedAt(LocalDateTime.now());
-            jobEntity.setUpdatedAt(LocalDateTime.now());
-            jobRepository.save(jobEntity);
-
-            response.put("success", true);
-
-            return ResponseEntity.ok(response);
+            JobDTO savedJob = jobService.addJob(jobDTO);
+            return ResponseEntity.ok(new EmployerLoginResponse("true", "Job added successfully", savedJob));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.badRequest().body(new EmployerLoginResponse("false", e.getMessage(), null));
         }
     }
+
+    @GetMapping("/get")
+    @ResponseBody
+    public List<JobResponse> getJobsByEmployerId(@RequestParam Integer employerId) {
+        if (employerId == null) {
+            throw new IllegalArgumentException("Employer ID must not be null");
+        }
+        return jobService.getJobResponsesByEmployerId(employerId);
+    }
+
 }

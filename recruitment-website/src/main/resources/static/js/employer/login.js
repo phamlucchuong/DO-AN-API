@@ -1,37 +1,8 @@
-document.getElementById('login-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const rememberMe = document.getElementById('remember-me').checked;
-      console.log('Login attempt:', { email, password, rememberMe });
-      // Handle login logic here
-    });
-
-    document.getElementById('toggle-password').addEventListener('click', function() {
-      const passwordInput = document.getElementById('password');
-      const eye = this.querySelector('.eye');
-      const eyeOff = this.querySelector('.eye-off');
-      
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        eye.classList.add('hidden');
-        eyeOff.classList.remove('hidden');
-      } else {
-        passwordInput.type = 'password';
-        eye.classList.remove('hidden');
-        eyeOff.classList.add('hidden');
-      }
-    });
-
-    document.getElementById('google-login').addEventListener('click', function() {
-      console.log('Google login initiated');
-      // Implement Google login logic here (e.g., redirect to Google OAuth)
-    });
-
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
+  const rememberMe = document.getElementById('remember-me');
   
   // Tạo phần hiển thị lỗi nếu chưa có
   let errorMessage = document.getElementById('error-message');
@@ -49,9 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const email = emailInput.value.trim();
     const password = passwordInput.value;
+    const isRememberMe = rememberMe.checked;
 
     if (!email || !password) {
-      errorMessage.textContent = 'Please enter email and password.';
+      errorMessage.textContent = 'Vui lòng nhập email và mật khẩu.';
       return;
     }
 
@@ -66,16 +38,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        errorMessage.textContent = errorData.message || 'Login failed';
+        errorMessage.textContent = errorData.message || 'Đăng nhập thất bại';
         return;
       }
 
       const data = await response.json();
-        window.location.href = '/employer/dashboard';
+      // Lưu ID vào localStorage hoặc sessionStorage dựa trên rememberMe
+      if (isRememberMe) {
+        localStorage.setItem('employerId', data.id);
+      } else {
+        sessionStorage.setItem('employerId', data.id);
+      }
+      
+      console.log('Đăng nhập thành công:', { email, password, isRememberMe, userId: data.id });
+      window.location.href = '/employer/dashboard';
 
     } catch (error) {
-      errorMessage.textContent = 'Error occurred. Please try again.';
-      console.error('Login error:', error);
+      errorMessage.textContent = 'Đã xảy ra lỗi. Vui lòng thử lại.';
+      console.error('Lỗi đăng nhập:', error);
     }
   });
 
@@ -91,5 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
       togglePasswordBtn.querySelector('.eye').classList.remove('hidden');
       togglePasswordBtn.querySelector('.eye-off').classList.add('hidden');
     }
+  });
+
+  // Xử lý đăng nhập bằng Google
+  document.getElementById('google-login').addEventListener('click', () => {
+    console.log('Đăng nhập bằng Google được khởi tạo');
+    // Thêm logic đăng nhập Google (ví dụ: chuyển hướng đến Google OAuth)
   });
 });

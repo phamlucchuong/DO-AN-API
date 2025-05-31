@@ -10,7 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
     "com.example.recruitment_website.restcontrollers",
     "com.example.recruitment_website.services",
     "com.example.recruitment_website.repositories",
-    "com.example.recruitment_website.configs"
+    "com.example.recruitment_website.configs",
+    "com.example.recruitment_website.mappers",
 })
 public class RecruitmentWebsiteApplication {
 
