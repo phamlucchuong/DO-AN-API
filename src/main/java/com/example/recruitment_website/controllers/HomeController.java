@@ -1,0 +1,34 @@
+package com.example.recruitment_website.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class HomeController {
+    @GetMapping("/index")
+    public String index() {
+        return "index";
+    }
+    
+    @GetMapping("/login")
+    public String login() {
+        return "account/login";
+    }
+    
+    @GetMapping("/employer")
+    public String employerPage() {
+        return "employer/employer";
+    }
+
+    @GetMapping("/company-detail")
+    public String companyDetail(@RequestParam(value = "id", required = false) Integer companyId) {
+        return "company-detail";
+    }
+
+    @GetMapping("/job-detail")
+    public String jobDetail(@RequestParam(value = "id", required = false) Integer jobId) {
+        return "job-detail";
+    }
+}
