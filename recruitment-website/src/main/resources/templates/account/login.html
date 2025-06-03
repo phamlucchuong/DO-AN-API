@@ -86,12 +86,12 @@
     </script>
 
     <script type="module">
-        import { loginWithGoogle, loginWithFacebook, loginWithEmailAndPwd } from '/js/firebase/firebase-auth.js';
+        import { loginWithGoogle, loginWithEmailAndPwd } from '/js/firebase/firebase-auth.js';
 
 
-        document.getElementById('btnGoogleLogin').addEventListener('click', loginWithGoogle);
+        document.getElementById('btnGoogleLogin').addEventListener('click', () => loginWithGoogle('Employee'));
 
-        document.getElementById('btnFacebookLogin').addEventListener('click', loginWithFacebook);
+        // document.getElementById('btnFacebookLogin').addEventListener('click', loginWithFacebook());
 
         document.getElementById('btnEmailLogin').addEventListener('click', () => {
             const email = document.getElementById('email').value;
@@ -102,7 +102,7 @@
                 return;
             }
 
-            loginWithEmailAndPwd(email, password);
+            loginWithEmailAndPwd(email, password, 'Employee');
         });
     </script>
 </body>

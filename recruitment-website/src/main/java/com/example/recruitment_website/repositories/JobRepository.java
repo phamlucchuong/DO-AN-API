@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.recruitment_website.entities.JobEntity;
 
 @Repository
-public interface JobRepository extends JpaRepository<JobEntity, Integer> {
+public interface JobRepository extends JpaRepository<JobEntity, String> {
     // Define custom query methods if needed
-    List<JobEntity> findByEmployerId(Integer employerId);
+    List<JobEntity> findByEmployerId(String employerId);
 }

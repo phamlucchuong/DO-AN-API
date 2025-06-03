@@ -66,7 +66,7 @@ public class JobService {
     }
 
     @Transactional
-    public List<JobResponse> getJobResponsesByEmployerId(Integer employerId) {
+    public List<JobResponse> getJobResponsesByEmployerId(String employerId) {
         List<JobEntity> jobEntities = jobRepository.findByEmployerId(employerId);
 
         List<JobResponse> jobResponses = new ArrayList<>();

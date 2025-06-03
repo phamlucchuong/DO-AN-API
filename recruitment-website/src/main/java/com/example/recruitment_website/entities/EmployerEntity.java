@@ -2,9 +2,10 @@ package com.example.recruitment_website.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,11 +15,12 @@ import jakarta.validation.constraints.Size;
 public class EmployerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String uid;
 
-    @NotNull
-    private Integer accountId;
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "uid")
+    private AccountEntity account;
 
     @NotNull
     @Size(max = 100)
@@ -47,28 +49,28 @@ public class EmployerEntity {
     public EmployerEntity() {
     }
 
-    public EmployerEntity(Integer accountId, String companyName, String companyAddress, String phoneNumber, Boolean isApproved) {
-        this.accountId = accountId;
+    public EmployerEntity(String uid, String companyName, String companyAddress, String phoneNumber, Boolean isApproved) {
+        this.uid = uid;
         this.companyName = companyName;
         this.companyAddress = companyAddress;
         this.phoneNumber = phoneNumber;
         this.isApproved = isApproved;
     }
 
-    public Integer getId() {
-        return id;
+    public String getId() {
+        return uid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.uid = id;
     }
 
-    public Integer getAccountId() {
-        return accountId;
+    public AccountEntity getAccount() {
+        return account;
     }
 
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
+    public void setAccount(AccountEntity account) {
+        this.account = account;
     }
 
     public String getCompanyName() {

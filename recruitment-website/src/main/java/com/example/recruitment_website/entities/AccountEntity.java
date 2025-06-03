@@ -2,8 +2,6 @@ package com.example.recruitment_website.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +10,10 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "Account")
 public class AccountEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id")
+    private String id;
 
     @NotNull
     @Size(max = 25)
@@ -30,11 +29,11 @@ public class AccountEntity {
     @Column(nullable = false)
     private Boolean isDeleted;
 
-    public Integer getId() {
+    public String getUid() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setUid(String id) {
         this.id = id;
     }
 

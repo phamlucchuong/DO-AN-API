@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class JobDTO {
-    private Integer id;
-    private Integer employerId;
+    private String id;
+    private String employerId;
     private String title;
     private String salary;
     private String experience;
@@ -25,19 +25,19 @@ public class JobDTO {
     public JobDTO() {}
 
     // getter và setter
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getEmployerId() {
+    public String getEmployerId() {
         return employerId;
     }
 
-    public void setEmployerId(Integer employerId) {
+    public void setEmployerId(String employerId) {
         this.employerId = employerId;
     }
 

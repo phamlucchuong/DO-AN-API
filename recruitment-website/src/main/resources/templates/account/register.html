@@ -89,19 +89,19 @@
         import { loginWithGoogle, loginWithEmailAndPwd } from '/js/firebase/firebase-auth.js';
 
 
-        document.getElementById('btnGoogleLogin').addEventListener('click', loginWithGoogle);
+        document.getElementById('btnGoogleLogin').addEventListener('click', () => loginWithGoogle('Employee'));
 
-        // document.getElementById('btnEmailLogin').addEventListener('click', () => {
-        //     const email = document.getElementById('email').value;
-        //     const password = document.getElementById('password').value;
+        document.getElementById('btnEmailLogin').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        //     if (!email || !password) {
-        //         alert('Vui lòng nhập đầy đủ email và mật khẩu.');
-        //         return;
-        //     }
+            if (!email || !password) {
+                alert('Vui lòng nhập đầy đủ email và mật khẩu.');
+                return;
+            }
 
-        //     loginWithEmailAndPwd(email, password);
-        // });
+            loginWithEmailAndPwd(email, password, 'Employee');
+        });
     </script>
 </body>
 </html>

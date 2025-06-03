@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -16,11 +14,10 @@ import jakarta.validation.constraints.NotNull;
 public class JobEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     @NotNull
-    private Integer employerId;
+    private String employerId;
 
     @Column(nullable = false, name= "title")
     private String title;
@@ -70,19 +67,19 @@ public class JobEntity {
     public JobEntity() {
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getEmployerId() {
+    public String getEmployerId() {
         return employerId;
     }
 
-    public void setEmployerId(Integer employerId) {
+    public void setEmployerId(String employerId) {
         this.employerId = employerId;
     }
 

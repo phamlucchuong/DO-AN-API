@@ -68,8 +68,8 @@ public class EmployerService {
 
         // Ánh xạ sang EmployerEntity
         EmployerEntity employerEntity = employerMapper.toEntity(employerDTO);
-        if (employerEntity.getAccountId() == null || employerEntity.getPassword() == null) {
-            throw new RuntimeException("Lỗi ánh xạ: accountId=" + employerEntity.getAccountId() + ", password=" + employerEntity.getPassword());
+        if (employerEntity.getAccount() == null || employerEntity.getPassword() == null) {
+            throw new RuntimeException("Lỗi ánh xạ: accountId=" + employerEntity.getAccount() + ", password=" + employerEntity.getPassword());
         }
 
         // Lưu vào cơ sở dữ liệu
@@ -87,7 +87,7 @@ public class EmployerService {
             throw new RuntimeException("Tài khoản đã bị khóa");
         }
 
-        EmployerEntity employer = employerRepository.findByAccountId(account.getId())
+        EmployerEntity employer = employerRepository.findByAccountId(account.getUid())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà tuyển dụng cho tài khoản này"));
 
         boolean matches = passwordEncoder.matches(rawPassword, employer.getPassword());

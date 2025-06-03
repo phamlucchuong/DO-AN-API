@@ -36,7 +36,7 @@ public class JobRestController {
 
     @GetMapping("/get")
     @ResponseBody
-    public List<JobResponse> getJobsByEmployerId(@RequestParam Integer employerId) {
+    public List<JobResponse> getJobsByEmployerId(@RequestParam String employerId) {
         if (employerId == null) {
             throw new IllegalArgumentException("Employer ID must not be null");
         }

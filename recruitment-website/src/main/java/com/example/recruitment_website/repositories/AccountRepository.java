@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.example.recruitment_website.entities.AccountEntity;
 
 @Repository
-public interface AccountRepository extends JpaRepository<AccountEntity, Integer> {
+public interface AccountRepository extends JpaRepository<AccountEntity, String> {
     // Define custom query methods if needed
+    boolean existsById(String id);
     boolean existsByEmail(String email);
     Optional<AccountEntity> findByEmail(String email);
-    boolean existsByIdAndIsDeletedFalse(Integer id);
-    Optional<AccountEntity> findByIdAndIsDeletedFalse(Integer id);
+    boolean existsByIdAndIsDeletedFalse(String id);
+    Optional<AccountEntity> findByIdAndIsDeletedFalse(String id);
 }

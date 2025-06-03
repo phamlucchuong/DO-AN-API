@@ -10,14 +10,12 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "Employee")
 public class EmployeeEntity {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String uid;
 
-    @NotNull
     @OneToOne
-    @JoinColumn(name = "accountId", unique = true)
+    @MapsId
+    @JoinColumn(name = "uid")
     private AccountEntity account;
 
     @NotNull
@@ -65,12 +63,12 @@ public class EmployeeEntity {
 
     // getter & setter...
 
-    public Integer getId() {
-        return id;
+    public String getId() {
+        return uid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String uid) {
+        this.uid = uid;
     }
 
     public AccountEntity getAccount() {

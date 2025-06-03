@@ -41,7 +41,7 @@ public class AccountService {
         return accountMapper.toDTO(account);
     }
 
-    public String getEmailById(Integer accountId) {
+    public String getEmailById(String accountId) {
         AccountEntity account = accountRepository.findById(accountId)
             .orElseThrow(() -> new RuntimeException("Account not found with id: " + accountId));
         return account.getEmail();

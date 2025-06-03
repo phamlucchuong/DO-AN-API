@@ -1,7 +1,7 @@
 package com.example.recruitment_website.payloads;
 
 public class JobResponse {
-    private Integer id;
+    private String id;
     private String title;
     private String companyName;
     private String companyAddress;
@@ -12,11 +12,11 @@ public class JobResponse {
 
     public JobResponse() {}
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
