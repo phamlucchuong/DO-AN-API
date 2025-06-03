@@ -40,13 +40,18 @@
             </div>
 
             <nav class="nav-menu">
-              <a href="#" class="nav-item active">
-                <i class="fas fa-list"></i>
-                Tất cả danh mục
-              </a>
-              <a href="/employer" class="nav-item"
-                >Nhà tuyển dụng</a
-              >
+              <div class="dropdown">
+                <a href="#" class="nav-item active dropdown-toggle">
+                  <i class="fas fa-list"></i>
+                  Tất cả danh mục
+                </a>
+                <div class="dropdown-content">
+                  <a href="#top-companies">Các Công Ty Hàng Đầu</a>
+                  <a href="#hot-jobs">Việc Làm Tốt Nhất</a>
+                  <a href="#suggested-jobs">Việc Làm Gợi Ý</a>
+                </div>
+              </div>
+              <a href="/employer" class="nav-item">Nhà tuyển dụng</a>
               <a href="#" class="nav-item">Ví</a>
               <a href="#" class="nav-item">
                 <i class="fas fa-bell"></i>
@@ -136,64 +141,17 @@
     </section>
 
     <!-- Top Companies -->
-    <section class="top-companies">
+    <section class="top-companies" id="top-companies">
       <div class="container">
         <h2 class="section-title">Các Công Ty Hàng Đầu</h2>
-        <div class="companies-grid">
-          <div class="company-item" onclick="viewCompany('Techcombank')">
-            <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23E31E24'/%3E%3Ctext x='5' y='35' font-family='Arial' font-size='10' fill='white'%3ETECHCOMBANK%3C/text%3E%3C/svg%3E"
-              alt="Techcombank"
-            />
-            <h4>TECHCOMBANK</h4>
-            <span class="job-tag">VIỆC MỚI</span>
-          </div>
-          <div class="company-item" onclick="viewCompany('VPBank')">
-            <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23009639'/%3E%3Ctext x='20' y='35' font-family='Arial' font-size='10' fill='white'%3EVPBank%3C/text%3E%3C/svg%3E"
-              alt="VPBank"
-            />
-            <h4>VP BANK</h4>
-            <span class="job-tag">VIỆC MỚI</span>
-          </div>
-          <div class="company-item" onclick="viewCompany('VinFast')">
-            <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23000'/%3E%3Ctext x='25' y='35' font-family='Arial' font-size='12' fill='white'%3EV%3C/text%3E%3C/svg%3E"
-              alt="Vinfast"
-            />
-            <h4>VINFAST</h4>
-            <span class="job-tag">VIỆC MỚI</span>
-          </div>
-          <div class="company-item" onclick="viewCompany('Sumitomo')">
-            <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23003DA5'/%3E%3Ctext x='10' y='35' font-family='Arial' font-size='8' fill='white'%3ESUMITOMO%3C/text%3E%3C/svg%3E"
-              alt="Sumitomo"
-            />
-            <h4>SEI (VIỆT NAM)</h4>
-            <span class="job-tag">VIỆC MỚI</span>
-          </div>
-          <div class="company-item" onclick="viewCompany('Chailease')">
-            <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23FFD700'/%3E%3Ctext x='15' y='35' font-family='Arial' font-size='10' fill='black'%3ECHAILEASE%3C/text%3E%3C/svg%3E"
-              alt="Chailease"
-            />
-            <h4>CHAILEASE</h4>
-            <span class="job-tag">VIỆC MỚI</span>
-          </div>
-          <div class="company-item" onclick="viewCompany('ACB')">
-            <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Crect width='100' height='60' fill='%23005AA0'/%3E%3Ctext x='30' y='35' font-family='Arial' font-size='12' fill='white'%3EACB%3C/text%3E%3C/svg%3E"
-              alt="ACB"
-            />
-            <h4>NGÂN HÀNG Á CHÂU (ACB)</h4>
-            <span class="job-tag">VIỆC MỚI</span>
-          </div>
+        <div class="companies-grid" id="companiesGrid">
+          <!-- Dữ liệu sẽ được tải bằng JavaScript -->
         </div>
       </div>
     </section>
 
     <!-- Hot Jobs -->
-    <section class="hot-jobs">
+    <section class="hot-jobs" id="hot-jobs">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">Việc Làm Tốt Nhất</h2>
@@ -296,7 +254,7 @@
     </section>
 
     <!-- Suggested Jobs -->
-    <section class="suggested-jobs">
+    <section class="suggested-jobs" id="suggested-jobs">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">Việc Làm Gợi Ý</h2>
