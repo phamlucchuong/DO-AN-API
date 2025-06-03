@@ -15,11 +15,15 @@ public class AccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    
     @NotNull
     @Size(max = 25)
     @Column(unique = true)
     private String email;
+    
+    @NotNull
+    @Size(max =  255)
+    private String password;
 
     @NotNull
     @Size(max = 20)
@@ -36,6 +40,14 @@ public class AccountEntity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {

@@ -3,9 +3,10 @@ package com.example.recruitment_website.dtos;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
 public class JobDTO {
     private Integer id;
-    private Integer employerId;
+    private EmployerDTO employerDTO;
     private String title;
     private String salary;
     private String experience;
@@ -33,12 +34,12 @@ public class JobDTO {
         this.id = id;
     }
 
-    public Integer getEmployerId() {
-        return employerId;
+    public EmployerDTO getEmployerDTO() {
+        return employerDTO;
     }
 
-    public void setEmployerId(Integer employerId) {
-        this.employerId = employerId;
+    public void setEmployerDTO(EmployerDTO employerDTO) {
+        this.employerDTO = employerDTO;
     }
 
     public String getTitle() {

@@ -25,7 +25,7 @@ public class AccountService {
     private static final List<String> VALID_ROLES = Arrays.asList("Admin", "Employer", "Employee");
 
     @Transactional
-    public AccountDTO createAccount(String email, String role, boolean isDeleted) {
+    public AccountDTO createAccount(String email, String password, String role, boolean isDeleted) {
 
         if (!VALID_ROLES.contains(role)) {
             throw new IllegalArgumentException("Invalid role: " + role);
@@ -33,6 +33,7 @@ public class AccountService {
 
         AccountEntity account = new AccountEntity();
         account.setEmail(email);
+        account.setPassword(password);
         account.setRole(role);
         account.setIsDeleted(isDeleted);
 
@@ -45,6 +46,11 @@ public class AccountService {
         AccountEntity account = accountRepository.findById(accountId)
             .orElseThrow(() -> new RuntimeException("Account not found with id: " + accountId));
         return account.getEmail();
+    }
+
+    public AccountEntity getAccountById(Integer id) {
+        return accountRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Account not found "));
     }
 
 }

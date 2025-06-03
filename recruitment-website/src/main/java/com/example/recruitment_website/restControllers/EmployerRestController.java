@@ -1,5 +1,7 @@
 package com.example.recruitment_website.restcontrollers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +13,9 @@ import com.example.recruitment_website.dtos.EmployerDTO;
 import com.example.recruitment_website.payloads.EmployerLoginRequest;
 import com.example.recruitment_website.payloads.EmployerRegisterRequest;
 import com.example.recruitment_website.services.EmployerService;
+import org.springframework.web.bind.annotation.GetMapping;
+
+
 
 @RestController
 @RequestMapping("/employer")
@@ -27,8 +32,7 @@ public class EmployerRestController {
                     request.getPassword(),
                     request.getCompanyName(),
                     request.getCompanyAddress(),
-                    request.getPhoneNumber()
-            );
+                    request.getPhoneNumber());
             return ResponseEntity.ok(registeredEmployer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,4 +45,11 @@ public class EmployerRestController {
         EmployerDTO accountDTO = employerService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return ResponseEntity.ok(accountDTO);
     }
+
+    @GetMapping("/get-list")
+    public ResponseEntity<List<EmployerDTO>> getCompanyList() {
+        List<EmployerDTO> employerList = employerService.getListEmployer();
+        return ResponseEntity.ok(employerList);
+    }
+
 }

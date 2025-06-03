@@ -2,18 +2,19 @@ package com.example.recruitment_website.dtos;
 
 public class EmployerDTO {
     private Integer id;
-    private Integer accountId; 
-    private String password;
+    private AccountDTO accountDTO;
     private String companyName;
     private String companyAddress;
     private String phoneNumber;
     private boolean isApproved;
 
-    public EmployerDTO() {}
+    public EmployerDTO() {
+    }
 
-    public EmployerDTO(Integer id, Integer accountId, String companyName, String companyAddress, String phoneNumber) {
+    public EmployerDTO(Integer id, AccountDTO accountDTO, String companyName, String companyAddress,
+            String phoneNumber) {
         this.id = id;
-        this.accountId = accountId;
+        this.accountDTO = accountDTO;
         this.companyName = companyName;
         this.companyAddress = companyAddress;
         this.phoneNumber = phoneNumber;
@@ -27,12 +28,12 @@ public class EmployerDTO {
         this.id = id;
     }
 
-    public Integer getAccountId() {
-        return accountId;
+    public AccountDTO getAccountDTO() {
+        return accountDTO;
     }
 
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
+    public void setAccountDTO(AccountDTO accountDTO) {
+        this.accountDTO = accountDTO;
     }
 
     public String getCompanyName() {
@@ -57,14 +58,6 @@ public class EmployerDTO {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public boolean isApproved() {

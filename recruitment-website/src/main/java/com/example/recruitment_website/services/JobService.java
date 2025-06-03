@@ -31,7 +31,7 @@ public class JobService {
     @Transactional
     public JobDTO addJob(JobDTO jobDTO) {
         // Kiểm tra dữ liệu đầu vào
-        if (jobDTO.getEmployerId() == null) {
+        if (jobDTO.getEmployerDTO() == null) {
             throw new IllegalArgumentException("ID nhà tuyển dụng là bắt buộc");
         }
         if (jobDTO.getTitle() == null || jobDTO.getTitle().trim().isEmpty()) {
@@ -54,7 +54,7 @@ public class JobService {
         if (jobEntity.getStatus() == null || jobEntity.getStatus().trim().isEmpty()) {
             jobEntity.setStatus("Open");
         }
-        jobEntity.setEmployerId(jobDTO.getEmployerId());
+        jobEntity.setEmployer(jobEntity.getEmployer());
         jobEntity.setCreatedAt(LocalDateTime.now());
         jobEntity.setUpdatedAt(LocalDateTime.now());
 
@@ -76,7 +76,7 @@ public class JobService {
 
         for (JobEntity jobEntity : jobEntities) {
             JobResponse response = new JobResponse();
-            response.setId(jobEntity.getId());
+            response.setId(jobEntity.getId());  
             response.setTitle(jobEntity.getTitle());
             response.setCompanyName(employerEntity.getCompanyName());
             response.setCompanyAddress(employerEntity.getCompanyAddress());

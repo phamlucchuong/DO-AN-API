@@ -1,34 +1,37 @@
 package com.example.recruitment_website.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import com.google.firebase.database.annotations.NotNull;
+
+import java.util.List;
 
 @Entity
-@Table(name = "Employer")
+@Table(name = "employer")
 public class EmployerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotNull
-    private Integer accountId;
+    @OneToOne
+    @JoinColumn(name = "accountId", unique = true)
+    private AccountEntity accountEntity;
 
     @NotNull
     @Size(max = 100)
     @Column(length = 100)
     private String companyName;
 
-    @NotNull
-    @Size(max = 200)
-    @Column(length = 200)
-    private String password;
+    @Lob
+    private String logo;
+
+    private int jobCount;
+
+    private String industry;
+
+    private double rating;
 
     @NotNull
     @Size(max = 200)
@@ -40,74 +43,65 @@ public class EmployerEntity {
     @Column(length = 15)
     private String phoneNumber;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobEntity> jobs;
+
     @NotNull
     @Column(nullable = false)
     private Boolean isApproved = false;
 
-    public EmployerEntity() {
-    }
+    public EmployerEntity() {}
 
-    public EmployerEntity(Integer accountId, String companyName, String companyAddress, String phoneNumber, Boolean isApproved) {
-        this.accountId = accountId;
-        this.companyName = companyName;
-        this.companyAddress = companyAddress;
-        this.phoneNumber = phoneNumber;
-        this.isApproved = isApproved;
-    }
+    // Getters and Setters
 
-    public Integer getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public void setId(Long id) { this.id = id; }
 
-    public Integer getAccountId() {
-        return accountId;
-    }
+    public AccountEntity getAccountEntity() { return accountEntity; }
 
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
-    }
+    public void setAccountEntity(AccountEntity accountEntity) { this.accountEntity = accountEntity; }
 
-    public String getCompanyName() {
-        return companyName;
-    }
+    public String getCompanyName() { return companyName; }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
+    public void setCompanyName(String companyName) { this.companyName = companyName; }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getLogo() { return logo; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setLogo(String logo) { this.logo = logo; }
 
-    public String getCompanyAddress() {
-        return companyAddress;
-    }
+    public int getJobCount() { return jobCount; }
 
-    public void setCompanyAddress(String companyAddress) {
-        this.companyAddress = companyAddress;
-    }
+    public void setJobCount(int jobCount) { this.jobCount = jobCount; }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+    public String getIndustry() { return industry; }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+    public void setIndustry(String industry) { this.industry = industry; }
 
-    public Boolean getIsApproved() {
-        return isApproved;
-    }
+    public double getRating() { return rating; }
 
-    public void setIsApproved(Boolean isApproved) {
-        this.isApproved = isApproved;
-    }
+    public void setRating(double rating) { this.rating = rating; }
+
+    public String getCompanyAddress() { return companyAddress; }
+
+    public void setCompanyAddress(String companyAddress) { this.companyAddress = companyAddress; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public List<JobEntity> getJobs() { return jobs; }
+
+    public void setJobs(List<JobEntity> jobs) { this.jobs = jobs; }
+
+    public Boolean getIsApproved() { return isApproved; }
+
+    public void setIsApproved(Boolean isApproved) { this.isApproved = isApproved; }
 }

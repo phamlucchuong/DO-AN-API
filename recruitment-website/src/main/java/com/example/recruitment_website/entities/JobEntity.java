@@ -1,15 +1,10 @@
 package com.example.recruitment_website.entities;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Job")
@@ -20,9 +15,11 @@ public class JobEntity {
     private Integer id;
 
     @NotNull
-    private Integer employerId;
+    @ManyToOne
+    @JoinColumn(name = "employer_id", nullable = false)
+    private EmployerEntity employer;
 
-    @Column(nullable = false, name= "title")
+    @Column(nullable = false, name = "title")
     private String title;
 
     @Column(name = "salary")
@@ -67,142 +64,75 @@ public class JobEntity {
     @Column(name = "employment_type")
     private String employmentType;
 
-    public JobEntity() {
-    }
+    public JobEntity() {}
 
-    public Integer getId() {
-        return id;
-    }
+    // Getters and Setters
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public Integer getId() { return id; }
 
-    public Integer getEmployerId() {
-        return employerId;
-    }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setEmployerId(Integer employerId) {
-        this.employerId = employerId;
-    }
+    public EmployerEntity getEmployer() { return employer; }
 
-    public String getTitle() {
-        return title;
-    }
+    public void setEmployer(EmployerEntity employer) { this.employer = employer; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public String getTitle() { return title; }
 
-    public String getSalary() {
-        return salary;
-    }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setSalary(String salary) {
-        this.salary = salary;
-    }
+    public String getSalary() { return salary; }
 
-    public String getExperience() {
-        return experience;
-    }
+    public void setSalary(String salary) { this.salary = salary; }
 
-    public void setExperience(String experience) {
-        this.experience = experience;
-    }
+    public String getExperience() { return experience; }
 
-    public String getDepartment() {
-        return department;
-    }
+    public void setExperience(String experience) { this.experience = experience; }
 
-    public void setDepartment(String department) {
-        this.department = department;
-    }
+    public String getDepartment() { return department; }
 
-    public String getDescription() {
-        return description;
-    }
+    public void setDepartment(String department) { this.department = department; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public String getDescription() { return description; }
 
-    public String getRequirements() {
-        return requirements;
-    }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setRequirements(String requirements) {
-        this.requirements = requirements;
-    }
+    public String getRequirements() { return requirements; }
 
-    public String getBenefits() {
-        return benefits;
-    }
+    public void setRequirements(String requirements) { this.requirements = requirements; }
 
-    public void setBenefits(String benefits) {
-        this.benefits = benefits;
-    }
+    public String getBenefits() { return benefits; }
 
-    public LocalDate getDeadline() {
-        return deadline;
-    }
+    public void setBenefits(String benefits) { this.benefits = benefits; }
 
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
+    public LocalDate getDeadline() { return deadline; }
 
-    public Boolean getRemoteOk() {
-        return remoteOk;
-    }
+    public void setDeadline(LocalDate deadline) { this.deadline = deadline; }
 
-    public void setRemoteOk(Boolean remoteOk) {
-        this.remoteOk = remoteOk;
-    }
+    public Boolean getRemoteOk() { return remoteOk; }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    public void setRemoteOk(Boolean remoteOk) { this.remoteOk = remoteOk; }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public String getStatus() {
-        return status;
-    }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public String getStatus() { return status; }
 
-    public Integer getNumberOfVacancies() {
-        return numberOfVacancies;
-    }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setNumberOfVacancies(Integer numberOfVacancies) {
-        this.numberOfVacancies = numberOfVacancies;
-    }
+    public Integer getNumberOfVacancies() { return numberOfVacancies; }
 
-    public String getJobLevel() {
-        return jobLevel;
-    }
+    public void setNumberOfVacancies(Integer numberOfVacancies) { this.numberOfVacancies = numberOfVacancies; }
 
-    public void setJobLevel(String jobLevel) {
-        this.jobLevel = jobLevel;
-    }
+    public String getJobLevel() { return jobLevel; }
 
-    public String getEmploymentType() {
-        return employmentType;
-    }
+    public void setJobLevel(String jobLevel) { this.jobLevel = jobLevel; }
 
-    public void setEmploymentType(String employmentType) {
-        this.employmentType = employmentType;
-    }
+    public String getEmploymentType() { return employmentType; }
+
+    public void setEmploymentType(String employmentType) { this.employmentType = employmentType; }
 }
