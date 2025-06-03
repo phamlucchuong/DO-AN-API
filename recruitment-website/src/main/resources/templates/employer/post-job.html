@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post New Job - TalentHub</title>
+    <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
+</head>
+
+<body>
+    <div class="container">
+        <div th:replace="employer/fragments/header :: header"></div>
+        <div th:replace="employer/fragments/nav :: nav"></div>
+
+        <div class="content">
+            <h2>Post New Job</h2>
+
+            <div id="alert-container" th:if="${message != null}" th:text="${message}"></div>
+
+            <form th:object="${job}" id="job-form" onsubmit="return false;">
+
+                <div class="form-group">
+                    <label for="job-title">Job Title *</label>
+                    <input type="text" id="job-title" th:field="*{title}" required
+                        placeholder="e.g. Senior Software Engineer" />
+                </div>
+
+                <div class="form-group">
+                    <label for="employmentType">Employment Type *</label>
+                    <select id="employmentType" th:field="*{employmentType}" required>
+                        <option value="" disabled th:selected="*{employmentType} == null">Select employment type
+                        </option>
+                        <option value="Full-time" th:selected="*{employmentType} == 'Full-time'">Full-time</option>
+                        <option value="Part-time" th:selected="*{employmentType} == 'Part-time'">Part-time</option>
+                        <option value="Contract" th:selected="*{employmentType} == 'Contract'">Contract</option>
+                        <option value="Internship" th:selected="*{employmentType} == 'Internship'">Internship</option>
+                        <option value="Remote" th:selected="*{employmentType} == 'Remote'">Remote</option>
+                        <option value="Freelance" th:selected="*{employmentType} == 'Freelance'">Freelance</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="salary-range">Salary Range</label>
+                    <input type="text" id="salary-range" th:field="*{salary}" placeholder="e.g. $80,000 - $120,000" />
+                </div>
+
+                <div class="form-group">
+                    <label for="experience-level">Experience Level</label>
+                    <select id="experience-level" th:field="*{experience}">
+                        <option value="" disabled th:selected="*{experience} == null">Select experience level</option>
+                        <option value="Entry level" th:selected="*{experience} == 'Entry level'">Entry level</option>
+                        <option value="Mid level" th:selected="*{experience} == 'Mid level'">Mid level (2-5 years)
+                        </option>
+                        <option value="Senior level" th:selected="*{experience} == 'Senior level'">Senior level (5+
+                            years)</option>
+                        <option value="Lead level" th:selected="*{experience} == 'Lead level'">Lead level (7+ years)
+                        </option>
+                        <option value="Executive" th:selected="*{experience} == 'Executive'">Executive</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <select id="department" th:field="*{department}">
+                        <option value="" disabled th:selected="*{department} == null">Select department</option>
+                        <option value="Engineering" th:selected="*{department} == 'Engineering'">Engineering</option>
+                        <option value="Product" th:selected="*{department} == 'Product'">Product</option>
+                        <option value="Design" th:selected="*{department} == 'Design'">Design</option>
+                        <option value="Marketing" th:selected="*{department} == 'Marketing'">Marketing</option>
+                        <option value="Sales" th:selected="*{department} == 'Sales'">Sales</option>
+                        <option value="HR" th:selected="*{department} == 'HR'">Human Resources</option>
+                        <option value="Finance" th:selected="*{department} == 'Finance'">Finance</option>
+                        <option value="Operations" th:selected="*{department} == 'Operations'">Operations</option>
+                        <option value="Customer Success" th:selected="*{department} == 'Customer Success'">Customer
+                            Success</option>
+                        <option value="Other" th:selected="*{department} == 'Other'">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobLevel">Job Level</label>
+                    <select id="jobLevel" th:field="*{jobLevel}">
+                        <option value="" disabled th:selected="*{jobLevel} == null">Select job level</option>
+                        <option value="Junior" th:selected="*{jobLevel} == 'Junior'">Junior</option>
+                        <option value="Mid" th:selected="*{jobLevel} == 'Mid'">Mid</option>
+                        <option value="Senior" th:selected="*{jobLevel} == 'Senior'">Senior</option>
+                        <option value="Lead" th:selected="*{jobLevel} == 'Lead'">Lead</option>
+                        <option value="Manager" th:selected="*{jobLevel} == 'Manager'">Manager</option>
+                        <option value="Executive" th:selected="*{jobLevel} == 'Executive'">Executive</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="numberOfVacancies">Number of Vacancies</label>
+                    <input type="number" id="numberOfVacancies" th:field="*{numberOfVacancies}" min="1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Job Description *</label>
+                    <textarea id="description" th:field="*{description}" rows="8" required
+                        placeholder="Describe the role, responsibilities, and what the candidate will be doing day-to-day..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="requirements">Requirements *</label>
+                    <textarea id="requirements" th:field="*{requirements}" rows="6" required
+                        placeholder="List the key requirements, qualifications, and skills needed for this role..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="benefits">Benefits & Perks</label>
+                    <textarea id="benefits" th:field="*{benefits}" rows="4"
+                        placeholder="Health insurance, flexible hours, remote work options, professional development..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="application-deadline">Application Deadline</label>
+                    <input type="date" id="application-deadline" th:field="*{deadline}" />
+                </div>
+
+                <input type="hidden" id="status" th:field="*{status}" value="Open" />
+
+
+                <div class="form-group">
+                    <label for="remoteOk">Remote OK</label>
+                    <input type="checkbox" id="remoteOk" th:field="*{remoteOk}" />
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="submit-btn" id="submit-job-btn">Post Job</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script th:src="@{/js/employer/post-job.js}"></script>
+</body>
+
+</html>

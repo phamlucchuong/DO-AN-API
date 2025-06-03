@@ -1,139 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TalentHub - Recruiter Dashboard</title>
-    <link rel="stylesheet" href="css/employer.css" />
-  </head>
-  <body>
-    <div class="container">
-      <!-- Header -->
-      <div class="header">
-        <h1>🎯 TalentHub</h1>
-        <p>Your comprehensive recruiter management platform</p>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TalentHub - Recruiter Dashboard</title>
+  <link rel="stylesheet" th:href="@{/css/employer.css}" />
+</head>
+
+<body>
+  <div class="container">
+    <div th:replace="employer/fragments/header :: header"></div>
+
+    <div th:replace="employer/fragments/nav :: nav"></div>
+    <!-- Dashboard Content -->
+    <div class="content">
+      <h2>Dashboard Overview</h2>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3 th:text="${totalJobs}">12</h3>
+          <p>Total Jobs Posted</p>
+        </div>
+        <div class="stat-card">
+          <h3 th:text="${totalCandidates}">247</h3>
+          <p>Total Candidates</p>
+        </div>
+        <div class="stat-card">
+          <h3 th:text="${activeJobs}">8</h3>
+          <p>Active Jobs</p>
+        </div>
+        <div class="stat-card">
+          <h3 th:text="${avgCandidates}">21</h3>
+          <p>Avg. Candidates per Job</p>
+        </div>
       </div>
 
-      <!-- Navigation -->
-      <nav class="nav-tabs">
-        <a href="indext.html" class="nav-tab active">📊 Dashboard</a>
-        <a href="post-job.html" class="nav-tab">📝 Post Job</a>
-
-        <a href="manage-jobs.html" class="nav-tab">💼 Manage Jobs</a>
-        <a href="candidates.html" class="nav-tab">👥 Candidates</a>
-        <a href="statistics.html" class="nav-tab">📈 Statistics</a>
-      </nav>
-
-      <!-- Dashboard Content -->
-      <div class="content">
-        <h2>Dashboard Overview</h2>
-
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-          <div class="stat-card">
-            <h3 id="total-jobs">12</h3>
-            <p>Total Jobs Posted</p>
+      <!-- Recent Jobs Section -->
+      <h3>Recent Job Postings</h3>
+      <div id="recent-jobs">
+        <div th:each="job : ${recentJobs}" class="job-card">
+          <h3 th:text="${job.title}">Job Title</h3>
+          <div class="job-meta">
+            <span>🏢 <span th:text="${job.company}">Company Name</span></span>
+            <span>📍 <span th:text="${job.location}">Location</span></span>
+            <span>💼 <span th:text="${job.type}">Full-time</span></span>
+            <span>💰 <span th:text="${job.salary}">$100,000 - $140,000</span></span>
+            <span th:if="${job.urgent}" style="background:#f59e0b; color:white">⚡ Khá gấp</span>
           </div>
-          <div class="stat-card">
-            <h3 id="total-candidates">247</h3>
-            <p>Total Candidates</p>
+          <div class="candidate-count" th:text="${job.candidateCount + ' candidates applied'}">X candidates applied
           </div>
-          <div class="stat-card">
-            <h3 id="active-jobs">8</h3>
-            <p>Active Jobs</p>
-          </div>
-          <div class="stat-card">
-            <h3 id="avg-candidates">21</h3>
-            <p>Avg. Candidates per Job</p>
+          <div class="job-actions">
+            <a th:href="@{'/employer/job-details?id=' + ${job.id}}" class="btn btn-secondary">👥 View Candidates</a>
+            <a th:href="@{'/employer/edit-job?id=' + ${job.id}}" class="btn">✏️ Edit</a>
           </div>
         </div>
+      </div>
 
-        <!-- Recent Jobs Section -->
-        <h3>Recent Job Postings</h3>
-        <div id="recent-jobs">
-          <div class="job-card">
-            <h3>Senior React Developer</h3>
-            <div class="job-meta">
-              <span>🏢 TechFlow Inc.</span>
-              <span>📍 San Francisco, CA</span>
-              <span>💼 Full-time</span>
-              <span>💰 $100,000 - $140,000</span>
-            </div>
-            <div class="candidate-count">12 candidates applied</div>
-            <div class="job-actions">
-              <a href="job-details.html?id=1" class="btn btn-secondary"
-                >👥 View Candidates</a
-              >
-              <a href="edit-job.html?id=1" class="btn">✏️ Edit</a>
-            </div>
-          </div>
-
-          <div class="job-card">
-            <h3>UX/UI Designer</h3>
-            <div class="job-meta">
-              <span>🏢 DesignHub</span>
-              <span>📍 New York, NY</span>
-              <span>💼 Full-time</span>
-              <span>💰 $80,000 - $110,000</span>
-            </div>
-            <div class="candidate-count">8 candidates applied</div>
-            <div class="job-actions">
-              <a href="job-details.html?id=2" class="btn btn-secondary"
-                >👥 View Candidates</a
-              >
-              <a href="edit-job.html?id=2" class="btn">✏️ Edit</a>
-            </div>
-          </div>
-
-          <div class="job-card">
-            <h3>Lập trình viên Frontend</h3>
-            <div class="job-meta">
-              <span>🏢 Công ty ABC</span>
-              <span>🏭 Công nghệ thông tin</span>
-              <span>📍 Quận 1, TP.HCM</span>
-              <span>💼 Toàn thời gian</span>
-              <span>💰 15-25 triệu VNĐ</span>
-              <span style="background: #f59e0b; color: white">⚡ Khá gấp</span>
-            </div>
-            <div class="candidate-count">15 ứng viên đã ứng tuyển</div>
-            <div class="job-actions">
-              <a href="job-details.html?id=3" class="btn btn-secondary"
-                >👥 Xem ứng viên</a
-              >
-              <a href="edit-job.html?id=3" class="btn">✏️ Chỉnh sửa</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-          <h3>Quick Actions</h3>
-          <div class="actions-grid">
-            <a href="post-job.html" class="action-card">
-              <div class="action-icon">📝</div>
-              <h4>Post New Job</h4>
-              <p>Create a new job posting</p>
-            </a>
-            <a href="post-job-vn.html" class="action-card">
-              <div class="action-icon">🇻🇳</div>
-              <h4>Đăng tuyển VN</h4>
-              <p>Tạo tin tuyển dụng tiếng Việt</p>
-            </a>
-            <a href="candidates.html" class="action-card">
-              <div class="action-icon">👥</div>
-              <h4>View All Candidates</h4>
-              <p>Browse candidate profiles</p>
-            </a>
-            <a href="statistics.html" class="action-card">
-              <div class="action-icon">📈</div>
-              <h4>View Statistics</h4>
-              <p>Analyze recruitment data</p>
-            </a>
-          </div>
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="actions-grid">
+          <a th:href="@{/employer/post-job}" class="action-card">
+            <div class="action-icon">📝</div>
+            <h4>Post New Job</h4>
+            <p>Create a new job posting</p>
+          </a>
+          <a th:href="@{/employer/post-job-vn}" class="action-card">
+            <div class="action-icon">🇻🇳</div>
+            <h4>Đăng tuyển VN</h4>
+            <p>Tạo tin tuyển dụng tiếng Việt</p>
+          </a>
+          <a th:href="@{/employer/candidates}" class="action-card">
+            <div class="action-icon">👥</div>
+            <h4>View All Candidates</h4>
+            <p>Browse candidate profiles</p>
+          </a>
+          <a th:href="@{/employer/statistics}" class="action-card">
+            <div class="action-icon">📈</div>
+            <h4>View Statistics</h4>
+            <p>Analyze recruitment data</p>
+          </a>
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="js/employer/employer.js"></script>
-  </body>
+  <script th:src="@{/js/employer/employer.js}"></script>
+</body>
+
 </html>

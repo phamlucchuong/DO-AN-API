@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = {
     "com.example.recruitment_website.controllers",
-    "com.example.recruitment_website.restcontrollers",
+    "com.example.recruitment_website.restControllers",
     "com.example.recruitment_website.services",
     "com.example.recruitment_website.repositories",
     "com.example.recruitment_website.configs",

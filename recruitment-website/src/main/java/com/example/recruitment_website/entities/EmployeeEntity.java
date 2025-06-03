@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "Employee")
-public class Employee {
+public class EmployeeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ public class Employee {
     @NotNull
     @OneToOne
     @JoinColumn(name = "accountId", unique = true)
-    private Account account;
+    private AccountEntity account;
 
     @NotNull
     @Size(max = 100)
@@ -73,11 +73,11 @@ public class Employee {
         this.id = id;
     }
 
-    public Account getAccount() {
+    public AccountEntity getAccount() {
         return account;
     }
 
-    public void setAccount(Account account) {
+    public void setAccount(AccountEntity account) {
         this.account = account;
     }
 
