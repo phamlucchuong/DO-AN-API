@@ -32,6 +32,7 @@ public class AuthController {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
             String uid = decodedToken.getUid();
             String email = decodedToken.getEmail();
+            String img = decodedToken.getPicture();
 
             // Nếu account chưa tồn tại thì tạo
             if (!accountRepository.existsById(uid)) {
@@ -44,7 +45,7 @@ public class AuthController {
                 accountRepository.save(account);
             }
 
-            return ResponseEntity.ok(Map.of("uid", uid, "email", email, "role", role));
+            return ResponseEntity.ok(Map.of("uid", uid, "email", email, "avatarURL", img, "role", role));
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");

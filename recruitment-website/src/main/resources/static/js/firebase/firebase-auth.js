@@ -12,6 +12,7 @@ export async function loginWithGoogle(role) {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
     const token = await user.getIdToken();
+    localStorage.setItem('idToken', token);
 
     console.log('Google ID Token:', token);
 
@@ -39,6 +40,7 @@ export async function loginWithEmailAndPwd(email, password, role) {
     const result = await signInWithEmailAndPassword(auth, email, password);
     const user = result.user;
     const token = await user.getIdToken();
+    localStorage.setItem('idToken', token);
 
     console.log('Email/Password ID Token:', token);
 
