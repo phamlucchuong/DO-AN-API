@@ -1,34 +1,36 @@
 package com.example.recruitment_website.dtos;
 
+import com.example.recruitment_website.entities.AccountEntity;
+
 public class AccountDTO {
 
-    private Integer id;
+    private String id;
     private String email;
     private String role;
     private Boolean isDeleted;
 
-    // Constructor từ Entity Account (dùng khi chuyển đổi)
-    public AccountDTO(com.example.recruitment_website.entities.AccountEntity account) {
-        // this.id = account.getId();
-        this.email = account.getEmail();
-        this.role = account.getRole();
-        this.isDeleted = account.getIsDeleted();
-    }
-
-    public AccountDTO(Integer id2, String email2, String role2, Boolean isDeleted2) {
-        //TODO Auto-generated constructor stub
-    }
-
     public AccountDTO() {
-        //TODO Auto-generated constructor stub
     }
 
-    // Getter và Setter
-    public Integer getId() {
+    public AccountDTO(String id, String email, String role, Boolean isDeleted) {
+        this.id = id;
+        this.email = email;
+        this.role = role;
+        this.isDeleted = isDeleted;
+    }
+
+    public AccountDTO(AccountEntity entity) {
+        this.id = entity.getUid();
+        this.email = entity.getEmail();
+        this.role = entity.getRole();
+        this.isDeleted = entity.getIsDeleted();
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

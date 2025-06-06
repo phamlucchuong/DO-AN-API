@@ -3,6 +3,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+  signOut
   // FacebookAuthProvider
 } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js';
 
@@ -62,9 +63,6 @@ export async function loginWithEmailAndPwd(email, password, role) {
   }
 }
 
-// function loginWithFacebook() {
-
-// }
 
 
 // export async function loginWithFacebook(role) {
@@ -93,3 +91,16 @@ export async function loginWithEmailAndPwd(email, password, role) {
 //     console.error('Lỗi đăng nhập Facebook:', error.message);
 //   }
 // }
+
+
+
+export async function logout() {
+  try {
+    await signOut(auth);
+    console.log('Đăng xuất thành công!');
+    localStorage.removeItem('idToken'); // Xoá token nếu cần
+    window.location.href = '/index'; // Redirect sau khi logout
+  } catch (error) {
+    console.error('firebase-auth.js-logout: Lỗi khi đăng xuất:', error.message);
+  }
+}
