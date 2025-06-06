@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hồ sơ của bạn - VietnamWorks</title>
+    <link rel="stylesheet" href="/css/employee/profile-detail.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-main">
+        <div class="container">
+          <div class="header-content">
+            <div class="logo">
+              <img
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Ctext x='10' y='35' font-family='Arial' font-size='20' fill='white'%3EVietnamWorks%3C/text%3E%3C/svg%3E"
+                alt="VietnamWorks"
+              />
+            </div>
+            <nav class="nav-menu">
+              <a href="/" class="nav-item">Trang chủ</a>
+              <a href="/employer" class="nav-item">Nhà tuyển dụng</a>
+              <a href="#" class="nav-item">Ví</a>
+              <a href="#" class="nav-item"><i class="fas fa-bell"></i></a>
+              <a href="/login" class="nav-item login"
+                ><i class="fas fa-user"></i> Đăng xuất</a
+              >
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Profile Detail Section -->
+    <section class="profile-detail" id="profileDetail">
+      <div class="container">
+        <div class="profile-header">
+          <img
+            id="profileImage"
+            class="profile-img"
+            alt="Profile Image"
+            src="https://via.placeholder.com/150"
+          />
+          <div class="profile-info">
+            <h1 id="fullName"></h1>
+            <p id="jobTitle"></p>
+            <div class="contact-info">
+              <span id="location"><i class="fas fa-map-marker-alt"></i></span>
+              <span id="email"><i class="fas fa-envelope"></i></span>
+              <span id="phone"><i class="fas fa-phone"></i></span>
+            </div>
+            <div class="profile-actions">
+              <button id="editButton" class="edit-btn">Chỉnh sửa hồ sơ</button>
+              <button id="downloadButton" class="download-btn">
+                Tải xuống PDF
+              </button>
+              <label>
+                <input type="checkbox" id="publicStatus" /> Công khai hồ sơ
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-content">
+          <div class="profile-section">
+            <h2>Thông tin cá nhân</h2>
+            <p><strong>Ngày sinh:</strong> <span id="dob"></span></p>
+            <p>
+              <strong>Trình độ học vấn:</strong>
+              <span id="educationLevel"></span>
+            </p>
+            <p><strong>Ngôn ngữ:</strong> <span id="languages"></span></p>
+            <p>
+              <strong>Kinh nghiệm:</strong>
+              <span id="experienceYears"></span> năm
+            </p>
+          </div>
+
+          <div class="profile-section">
+            <h2>Kinh nghiệm làm việc</h2>
+            <div id="workExperience"></div>
+          </div>
+
+          <div class="profile-section">
+            <h2>Học vấn</h2>
+            <div id="education"></div>
+          </div>
+
+          <div class="profile-section">
+            <h2>Kỹ năng</h2>
+            <div id="skills"></div>
+            <div id="certifications"></div>
+          </div>
+
+          <div class="profile-section">
+            <h2>Tóm tắt bản thân</h2>
+            <p id="summary"></p>
+          </div>
+
+          <div class="profile-section">
+            <h2>Tài liệu đính kèm</h2>
+            <a id="cvLink" href="#" target="_blank">Xem CV</a>
+          </div>
+
+          <div class="profile-section">
+            <h2>Thông tin bổ sung</h2>
+            <p>
+              <strong>Mức lương mong muốn:</strong>
+              <span id="desiredSalary"></span>
+            </p>
+            <p>
+              <strong>Ngày có thể bắt đầu:</strong> <span id="startDate"></span>
+            </p>
+            <p>
+              <strong>Lượt xem hồ sơ:</strong> <span id="viewsCount">0</span>
+            </p>
+            <p>
+              <strong>Lượt liên hệ:</strong> <span id="contactCount">0</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>VietnamWorks</h4>
+            <ul>
+              <li><a href="#">Về chúng tôi</a></li>
+              <li><a href="#">Liên hệ</a></li>
+              <li><a href="#">Điều khoản sử dụng</a></li>
+              <li><a href="#">Chính sách bảo mật</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Ứng viên</h4>
+            <ul>
+              <li><a href="#">Tìm việc làm</a></li>
+              <li><a href="#">Công ty</a></li>
+              <li><a href="#">Tạo CV</a></li>
+              <li><a href="#">Tư vấn nghề nghiệp</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Nhà tuyển dụng</h4>
+            <ul>
+              <li><a href="#">Đăng tuyển</a></li>
+              <li><a href="#">Tìm hồ sơ</a></li>
+              <li><a href="#">Giải pháp HR</a></li>
+              <li><a href="#">Báo cáo thị trường</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Kết nối với chúng tôi</h4>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 VietnamWorks. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/js/employee/profile-detail.js"></script>
+  </body>
+</html>

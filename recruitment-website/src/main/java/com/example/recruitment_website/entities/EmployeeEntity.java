@@ -5,11 +5,14 @@ import com.example.recruitment_website.enums.Gender;
 import com.example.recruitment_website.enums.JobLevel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "Employee")
 public class EmployeeEntity {
+
     @Id
     private String uid;
 
@@ -38,9 +41,7 @@ public class EmployeeEntity {
     private Degree degree;
 
     @NotNull
-    private Boolean country; // false = Vietnam, true = Foreign
-
-    // ➕ Các trường bổ sung dựa theo form UI:
+    private Boolean country;
 
     @NotNull
     @Size(max = 20)
@@ -55,19 +56,46 @@ public class EmployeeEntity {
 
     @NotNull
     @Size(max = 100)
-    private String location; // Quốc gia/ Tỉnh thành/ Quận huyện
+    private String location;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    // getter & setter...
+    private String languages;
 
-    public String getId() {
+    @Column(columnDefinition = "TEXT")
+    private String summary;
+
+    private String cvLink;
+
+    private String desiredSalary;
+
+    private String startDate;
+
+    private Integer viewsCount;
+
+    private Integer contactCount;
+
+    @ElementCollection
+    private List<String> skills;
+
+    @ElementCollection
+    private List<String> certifications;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WorkExperienceEntity> workExperience;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EducationEntity> education;
+
+    // Getters and Setters
+
+    public String getUid() {
         return uid;
     }
 
-    public void setId(String uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
@@ -167,4 +195,91 @@ public class EmployeeEntity {
         this.gender = gender;
     }
 
+    public String getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String languages) {
+        this.languages = languages;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getCvLink() {
+        return cvLink;
+    }
+
+    public void setCvLink(String cvLink) {
+        this.cvLink = cvLink;
+    }
+
+    public String getDesiredSalary() {
+        return desiredSalary;
+    }
+
+    public void setDesiredSalary(String desiredSalary) {
+        this.desiredSalary = desiredSalary;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public Integer getViewsCount() {
+        return viewsCount;
+    }
+
+    public void setViewsCount(Integer viewsCount) {
+        this.viewsCount = viewsCount;
+    }
+
+    public Integer getContactCount() {
+        return contactCount;
+    }
+
+    public void setContactCount(Integer contactCount) {
+        this.contactCount = contactCount;
+    }
+
+    public List<String> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<String> skills) {
+        this.skills = skills;
+    }
+
+    public List<String> getCertifications() {
+        return certifications;
+    }
+
+    public void setCertifications(List<String> certifications) {
+        this.certifications = certifications;
+    }
+
+    public List<WorkExperienceEntity> getWorkExperience() {
+        return workExperience;
+    }
+
+    public void setWorkExperience(List<WorkExperienceEntity> workExperience) {
+        this.workExperience = workExperience;
+    }
+
+    public List<EducationEntity> getEducation() {
+        return education;
+    }
+
+    public void setEducation(List<EducationEntity> education) {
+        this.education = education;
+    }
 }

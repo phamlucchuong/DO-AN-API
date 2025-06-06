@@ -38,4 +38,9 @@ public class HomeController {
         return "details/job-detail";
     }
 
+    @GetMapping("/employee-profile")
+    public String profileDetail() {
+        return "employee/profile-detail"; 
+    }
+
 }

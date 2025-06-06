@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
     "com.example.recruitment_website.configs",
     "com.example.recruitment_website.mappers",
 })
-public class RecruitmentWebsiteApplication {
+public class RecruitmentWebsiteApplicationTest {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RecruitmentWebsiteApplication.class, args);
