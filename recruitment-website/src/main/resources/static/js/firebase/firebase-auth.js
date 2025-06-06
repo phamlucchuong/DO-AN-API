@@ -3,7 +3,8 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  sendPasswordResetEmail,
   // FacebookAuthProvider
 } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js';
 
@@ -102,5 +103,24 @@ export async function logout() {
     window.location.href = '/index'; // Redirect sau khi logout
   } catch (error) {
     console.error('firebase-auth.js-logout: Lỗi khi đăng xuất:', error.message);
+  }
+}
+
+
+
+// Hàm quên mật khẩu
+export async function forgotPassword(email) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert('Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư đến.');
+  } catch (error) {
+    console.error('Lỗi khi gửi email đặt lại mật khẩu:', error.message);
+    if (error.code === 'auth/user-not-found') {
+      alert('Không tìm thấy người dùng với email này.');
+    } else if (error.code === 'auth/invalid-email') {
+      alert('Email không hợp lệ.');
+    } else {
+      alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+    }
   }
 }

@@ -16,16 +16,29 @@
 
         <h2 class="modal-title">Đăng nhập để tiếp tục</h2>
 
-        <div class="social-buttons">
-            <button id="btnGoogleLogin" class="social-btn google-btn">với tài khoản Google</button>
-            <button id="btnFacebookLogin" class="social-btn facebook-btn">với tài khoản Facebook</button>
-        </div>
+        <!-- Form Quên Mật Khẩu -->
+        <form id="forgotPasswordForm" style="display: none;">
+            <div class="form-group">
+                <label class="form-label">Nhập email để đặt lại mật khẩu</label>
+                <input id="resetEmail" type="email" class="form-input" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="backToLogin()">Quay lại</button>
+                <button type="button" class="btn btn-primary" id="reset-pwd">Gửi yêu cầu</button>
+            </div>
+        </form>
 
-        <div class="divider">
-            <span>hoặc đăng nhập bằng email</span>
-        </div>
+        <!-- Form Đăng Nhập -->
+        <form id="loginForm">
+            <div class="social-buttons">
+                <button id="btnGoogleLogin" class="social-btn google-btn">với tài khoản Google</button>
+                <button id="btnFacebookLogin" class="social-btn facebook-btn">với tài khoản Facebook</button>
+            </div>
 
-        <form>
+            <div class="divider">
+                <span>hoặc đăng nhập bằng email</span>
+            </div>
+
             <div class="form-group">
                 <label class="form-label">Email <span class="required">*</span></label>
                 <input id="email" type="email" class="form-input" required>
@@ -38,73 +51,26 @@
                     <button type="button" class="password-toggle" onclick="togglePassword()">👁</button>
                 </div>
                 <div class="forgot-password">
-                    <a href="#">Quên mật khẩu?</a>
+                    <a id="forget-pwd-btn" href="#">Quên mật khẩu?</a>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <div>
+                    <span style="color: #666; font-size: 14px;">Chưa có tài khoản? </span>
+                    <a href="/register" class="signup-link">Đăng Ký</a>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary">Hủy</button>
+                    <button id="btnEmailLogin" type="button" class="btn btn-primary">Đăng nhập</button>
                 </div>
             </div>
         </form>
-
-        <div class="form-footer">
-            <div>
-                <span style="color: #666; font-size: 14px;">Chưa có tài khoản? </span>
-                <a href="/register" class="signup-link">Đăng Ký</a>
-            </div>
-
-            <div class="form-actions">
-                <button class="btn btn-secondary">Hủy</button>
-                <button id="btnEmailLogin" class="btn btn-primary">Đăng nhập</button>
-            </div>
-        </div>
     </div>
 
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleBtn = document.querySelector('.password-toggle');
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleBtn.textContent = '🙈';
-            } else {
-                passwordInput.type = 'password';
-                toggleBtn.textContent = '👁';
-            }
-        }
-
-        function closeModal() {
-            document.querySelector('.login-modal').style.transform = 'scale(0.95)';
-            document.querySelector('.login-modal').style.opacity = '0';
-            setTimeout(() => {
-                alert('Modal would close in a real application');
-            }, 200);
-        }
-
-        // Form submission
-        document.querySelector('form').addEventListener('submit', function (e) {
-            e.preventDefault();
-            alert('Form submitted! In a real app, this would process the login.');
-        });
-    </script>
-
-    <script type="module">
-        import { loginWithGoogle, loginWithEmailAndPwd } from '/js/firebase/firebase-auth.js';
-
-
-        document.getElementById('btnGoogleLogin').addEventListener('click', () => loginWithGoogle('Employee'));
-
-        // document.getElementById('btnFacebookLogin').addEventListener('click', loginWithFacebook());
-
-        document.getElementById('btnEmailLogin').addEventListener('click', () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            if (!email || !password) {
-                alert('Vui lòng nhập đầy đủ email và mật khẩu.');
-                return;
-            }
-
-            loginWithEmailAndPwd(email, password, 'Employee');
-        });
-    </script>
+    <script type="module" src="/js/accounts/login.js"></script>
 </body>
 
 </html>
