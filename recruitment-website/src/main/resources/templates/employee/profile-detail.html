@@ -27,8 +27,8 @@
               <a href="/employer" class="nav-item">Nhà tuyển dụng</a>
               <a href="#" class="nav-item">Ví</a>
               <a href="#" class="nav-item"><i class="fas fa-bell"></i></a>
-              <a href="/login" class="nav-item login"
-                ><i class="fas fa-user"></i> Đăng xuất</a
+              <button id="btnLogout" class="nav-item login"
+                ><i class="fas fa-user"></i> Đăng xuất</
               >
             </nav>
           </div>
@@ -175,5 +175,15 @@
     </footer>
 
     <script src="/js/employee/profile-detail.js"></script>
+
+    <script type="module">
+      import { logout } from '/js/firebase/firebase-auth.js';
+
+      document.getElementById('btnLogout').addEventListener('click', () => {
+        alert('btnLogout click');
+        logout();
+      } 
+    );
+    </script>
   </body>
 </html>

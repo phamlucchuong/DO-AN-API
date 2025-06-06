@@ -1,38 +1,55 @@
 package com.example.recruitment_website.dtos;
 
+import com.example.recruitment_website.entities.EmployerEntity;
+
 public class EmployerDTO {
-    private Integer id;
-    private Integer accountId; 
-    private String password;
+
+    private String uid;
+    private String email; // từ AccountEntity
     private String companyName;
     private String companyAddress;
     private String phoneNumber;
-    private boolean isApproved;
+    private Boolean isApproved;
 
-    public EmployerDTO() {}
+    public EmployerDTO() {
+    }
 
-    public EmployerDTO(Integer id, Integer accountId, String companyName, String companyAddress, String phoneNumber) {
-        this.id = id;
-        this.accountId = accountId;
+    public EmployerDTO(String uid, String email, String companyName, String companyAddress, String phoneNumber,
+            Boolean isApproved) {
+        this.uid = uid;
+        this.email = email;
         this.companyName = companyName;
         this.companyAddress = companyAddress;
         this.phoneNumber = phoneNumber;
+        this.isApproved = isApproved;
     }
 
-    public Integer getId() {
-        return id;
+    public EmployerDTO toDTO(EmployerEntity entity) {
+        return new EmployerDTO(
+                entity.getId(),
+                entity.getAccount() != null ? entity.getAccount().getEmail() : null,
+                entity.getCompanyName(),
+                entity.getCompanyAddress(),
+                entity.getPhoneNumber(),
+                entity.getIsApproved());
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    // Getters and setters
+
+    public String getUid() {
+        return uid;
     }
 
-    public Integer getAccountId() {
-        return accountId;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCompanyName() {
@@ -59,19 +76,11 @@ public class EmployerDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isApproved() {
+    public Boolean getIsApproved() {
         return isApproved;
     }
 
-    public void setIsApproved(boolean isApproved) {
+    public void setIsApproved(Boolean isApproved) {
         this.isApproved = isApproved;
     }
 }

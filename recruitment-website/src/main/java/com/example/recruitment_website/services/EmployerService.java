@@ -49,22 +49,21 @@ public class EmployerService {
 
         // Tạo tài khoản
         AccountDTO newAccountDTO = accountService.createAccount(email, "Employer", false);
-        Integer accountId = newAccountDTO.getId();
+        String accountId = newAccountDTO.getId();
         if (accountId == null) {
             throw new RuntimeException("Không thể tạo tài khoản: accountId là null");
         }
 
         // Tạo EmployerDTO
         EmployerDTO employerDTO = new EmployerDTO();
-        employerDTO.setAccountId(accountId);
+        employerDTO.setUid(accountId);
         employerDTO.setCompanyName(companyName);
         employerDTO.setCompanyAddress(address);
         employerDTO.setPhoneNumber(phoneNumber);
-        employerDTO.setPassword(hashedPassword);
         employerDTO.setIsApproved(false);
 
         // Log để debug
-        System.out.println("EmployerDTO: accountId=" + employerDTO.getAccountId() + ", password=" + employerDTO.getPassword());
+        System.out.println("EmployerDTO: accountId=" + employerDTO.getUid());
 
         // Ánh xạ sang EmployerEntity
         EmployerEntity employerEntity = employerMapper.toEntity(employerDTO);
