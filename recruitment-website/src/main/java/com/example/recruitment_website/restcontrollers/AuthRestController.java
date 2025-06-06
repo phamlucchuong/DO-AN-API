@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseToken;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthRestController {
 
     @Autowired
     private AccountRepository accountRepository;
