@@ -1,3 +1,5 @@
+import {loginWithEmailAndPwd} from '../firebase/firebase-auth.js'
+
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
@@ -27,30 +29,25 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+
     try {
-      const response = await fetch('/employer/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        errorMessage.textContent = errorData.message || 'Đăng nhập thất bại';
-        return;
+      const userCredential = await loginWithEmailAndPwd(email, password, "Employer");
+      console.log('User Credential:', userCredential);
+      const user = userCredential.user;
+      if (!user) {
+        throw new Error('Không tìm thấy user trong userCredential');
       }
+    
+      const token = await user.getIdToken();
 
-      const data = await response.json();
-      // Lưu ID vào localStorage hoặc sessionStorage dựa trên rememberMe
       if (isRememberMe) {
-        localStorage.setItem('employerId', data.id);
+        localStorage.setItem('token', token);
       } else {
-        sessionStorage.setItem('employerId', data.id);
+        sessionStorage.setItem('token', token);
       }
       
-      console.log('Đăng nhập thành công:', { email, password, isRememberMe, userId: data.id });
+      console.log('Đăng nhập thành công:');
       window.location.href = '/employer/dashboard';
 
     } catch (error) {

@@ -23,32 +23,70 @@ public class AuthRestController {
     @Autowired
     private AccountRepository accountRepository;
 
+    // @PostMapping("/verify-token")
+    // public ResponseEntity<?> verifyToken(@RequestBody Map<String, String> body) {
+    //     try {
+    //         String token = body.get("token");
+    //         String role = body.get("role"); // mặc định USER nếu không có
+    //         FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+    //         String uid = decodedToken.getUid();
+    //         String email = decodedToken.getEmail();
+    //         String img = decodedToken.getPicture();
+    //         // Nếu account chưa tồn tại thì tạo
+    //         if (!accountRepository.existsById(uid)) {
+    //             AccountEntity account = new AccountEntity();
+    //             account.setUid(uid);
+    //             account.setEmail(email);
+    //             account.setRole(role);
+    //             account.setIsDeleted(false);
+    //             accountRepository.save(account);
+    //         }
+    //         return ResponseEntity.ok(Map.of("uid", uid, "email", email, "avatarURL", img, "role", role));
+    //     } catch (FirebaseAuthException e) {
+    //         e.printStackTrace();
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+    //     }
+    // }
     @PostMapping("/verify-token")
     public ResponseEntity<?> verifyToken(@RequestBody Map<String, String> body) {
         try {
             String token = body.get("token");
-            String role = body.get("role"); // mặc định USER nếu không có
+            String role = body.get("role");
+            if (token == null || token.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Thiếu token");
+            }
+            if (role == null || role.isEmpty()) {
+                role = "Employee";
+            }
 
+            System.out.println("Verify token: " + token);
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+
             String uid = decodedToken.getUid();
             String email = decodedToken.getEmail();
-            String img = decodedToken.getPicture();
+            String img = decodedToken.getPicture() != null ? decodedToken.getPicture() : "";
 
-            // Nếu account chưa tồn tại thì tạo
+            System.out.println("Decoded uid: " + uid);
+
             if (!accountRepository.existsById(uid)) {
                 AccountEntity account = new AccountEntity();
                 account.setUid(uid);
                 account.setEmail(email);
                 account.setRole(role);
                 account.setIsDeleted(false);
-
                 accountRepository.save(account);
+                System.out.println("Lưu tài khoản thành công: " + uid);
+            } else {
+                System.out.println("Tài khoản đã tồn tại: " + uid);
             }
 
             return ResponseEntity.ok(Map.of("uid", uid, "email", email, "avatarURL", img, "role", role));
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error: " + e.getMessage());
         }
     }
 
