@@ -42,4 +42,21 @@ public class HomeController {
     public String profileDetail() {
         return "employee/profile-detail"; 
     }
+
+    @GetMapping("/profile")
+    public String profile() {
+        return "employee/profile"; 
+    }
+
+    @GetMapping("/company-profile")
+    public String company() {
+        return "employee/company"; 
+    }
+
+    @GetMapping("/jobs-profile")
+    public String jobs() {
+        return "employee/jobs"; 
+    }
+
+    
 }
