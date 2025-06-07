@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/employer")
 public class EmployerController {
 
-    @GetMapping("/home")
+    @GetMapping("/")
     public String employerHomePage() {
         return "employer/home";
     }

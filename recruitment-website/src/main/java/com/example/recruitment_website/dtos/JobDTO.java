@@ -3,28 +3,58 @@ package com.example.recruitment_website.dtos;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.recruitment_website.enums.EmploymentType;
+import com.example.recruitment_website.enums.JobLevel;
+
+import jakarta.validation.constraints.PositiveOrZero;
+
 public class JobDTO {
     private String id;
     private String employerId;
     private String title;
-    private String salary;
-    private String experience;
-    private String department;
-    private String description;
-    private String requirements;
-    private String benefits;
-    private LocalDate deadline;
-    private Boolean remoteOk;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String status; 
-    private Integer numberOfVacancies;
-    private String jobLevel;
-    private String employmentType; 
+    private String salary; // Mức lương (có thể là khoảng lương hoặc mức lương cụ thể)
+    private String experience; // Kinh nghiệm làm việc
+    private String description;     // Mô tả công việc
+    private String requirements; // Yêu cầu công việc
+    private String benefits; // Phúc lợi
+    private LocalDate deadline; // Ngày hết hạn ứng tuyển
+    private LocalDateTime createdAt; // Thêm trường createdAt để lưu thời gian tạo
+    private LocalDateTime updatedAt; // Thêm trường updatedAt để lưu thời gian cập nhật
+    private String status; // Mặc định trạng thái là "Open"
+    @PositiveOrZero(message = "Number of vacancies must be non-negative")
+    private Integer numberOfVacancies; // Mặc định là 1 vị trí
+    private JobLevel jobLevel; // Cấp độ công việc (Entry, Mid, Senior, v.v.)
+    private EmploymentType  employmentType; // Loại hình công việc (toàn thời gian, bán thời gian, thực tập, v.v.)
+    private String city; // Thành phố làm việc 
+    private String country; // Quốc gia làm việc (thêm mới)
+    private String address; // Địa chỉ chi tiết
+    private String workingHours; // Thời gian làm việc
+    private Boolean isApproved; // Trạng thái phê duyệt (thêm mới)
+    private Integer applicationCount; // Số lượt ứng tuyển (thêm mới)
 
     public JobDTO() {}
 
-    // getter và setter
+    public JobDTO(String id, String employerId, String title, String salary, String experience,
+                  String description, String requirements, String benefits, LocalDate deadline,
+                  JobLevel jobLevel, EmploymentType employmentType, String city, String country,
+                  String address, String workingHours) {
+        this.id = id;
+        this.employerId = employerId;
+        this.title = title;
+        this.salary = salary;
+        this.experience = experience;
+        this.description = description;
+        this.requirements = requirements;
+        this.benefits = benefits;
+        this.deadline = deadline;
+        this.jobLevel = jobLevel;
+        this.employmentType = employmentType;
+        this.city = city;
+        this.country = country;
+        this.address = address;
+        this.workingHours = workingHours;
+    }
+
     public String getId() {
         return id;
     }
@@ -48,14 +78,6 @@ public class JobDTO {
     public void setTitle(String title) {
         this.title = title;
     }
-    
-    public String getEmploymentType() {
-        return employmentType;
-    }
-
-    public void setEmploymentType(String employmentType) {
-        this.employmentType = employmentType;
-    }
 
     public String getSalary() {
         return salary;
@@ -71,14 +93,6 @@ public class JobDTO {
 
     public void setExperience(String experience) {
         this.experience = experience;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
     public String getDescription() {
@@ -113,14 +127,6 @@ public class JobDTO {
         this.deadline = deadline;
     }
 
-    public Boolean getRemoteOk() {
-        return remoteOk;
-    }
-
-    public void setRemoteOk(Boolean remoteOk) {
-        this.remoteOk = remoteOk;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -153,12 +159,68 @@ public class JobDTO {
         this.numberOfVacancies = numberOfVacancies;
     }
 
-    public String getJobLevel() {
+    public JobLevel getJobLevel() {
         return jobLevel;
     }
 
-    public void setJobLevel(String jobLevel) {
+    public void setJobLevel(JobLevel jobLevel) {
         this.jobLevel = jobLevel;
     }
-    
+
+    public EmploymentType getEmploymentType() {
+        return employmentType;
+    }
+
+    public void setEmploymentType(EmploymentType employmentType) {
+        this.employmentType = employmentType;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(String workingHours) {
+        this.workingHours = workingHours;
+    }
+
+    public Boolean getIsApproved() {
+        return isApproved;
+    }
+
+    public void setIsApproved(Boolean isApproved) {
+        this.isApproved = isApproved;
+    }
+
+    public Integer getApplicationCount() {
+        return applicationCount;
+    }
+
+    public void setApplicationCount(Integer applicationCount) {
+        this.applicationCount = applicationCount;
+    }
+
 }
