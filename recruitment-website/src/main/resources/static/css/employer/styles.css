@@ -670,3 +670,226 @@ body {
         padding: 20px;
     }
 }
+
+.job-detail {
+    animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Container chính */
+#recent-jobs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Job card */
+.job-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: all 0.3s ease;
+}
+
+.job-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.job-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+/* Metadata */
+.job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.job-meta span {
+  background: #f3f4f6;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Candidate count */
+.candidate-count {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 10px;
+}
+
+/* Action buttons */
+.job-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.job-actions .btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.job-actions .btn:hover {
+  opacity: 0.9;
+}
+
+.job-actions .btn-secondary {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.job-actions .btn-secondary:hover {
+  background: #d1d5db;
+}
+
+.job-actions a.btn {
+  background: #3b82f6;
+  color: white;
+  text-decoration: none;
+}
+
+.job-actions a.btn:hover {
+  background: #2563eb;
+}
+
+/* JOB CARD LIST */
+.job-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.job-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+
+.job-meta span {
+  background: #f3f4f6;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Urgent tag */
+.job-meta .urgent-tag {
+  background: #f59e0b;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Candidate count */
+.candidate-count {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+/* Job actions */
+.job-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.job-actions .btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.job-actions .btn-secondary {
+  background: #6b7280;
+}
+
+.job-actions .btn:hover {
+  background: #2563eb;
+}
+
+.job-actions .btn-secondary:hover {
+  background: #4b5563;
+}
+
+/* JOB DETAIL SECTION */
+.job-detail {
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.job-detail p {
+  margin: 6px 0;
+}
+
+.job-detail h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #111827;
+}
+
+/* Close button in detail */
+.job-detail button {
+  background: #ef4444;
+  color: #ffffff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 14px;
+  transition: background 0.3s ease;
+}
+
+.job-detail button:hover {
+  background: #dc2626;
+}
+
+/* UL List inside job detail */
+.job-detail ul {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.job-detail ul li {
+  margin: 4px 0;
+}
+

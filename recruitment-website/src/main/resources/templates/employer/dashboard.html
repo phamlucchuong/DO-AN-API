@@ -45,11 +45,14 @@
                     </div>
                     <div class="candidate-count" th:text="${job.applicationCount} + ' candidates applied'">0 candidates applied</div>
                     <div class="job-actions">
-                        <a th:href="@{'/job-details/' + ${job.id}}" class="btn btn-secondary">👥 View Candidates</a>
+                        <a th:href="@{'/job-details/' + ${job.id}}" class="btn btn-secondary">👥 View Details</a>
                         <a th:href="@{'/edit-job/' + ${job.id}}" class="btn">✏️ Edit</a>
                     </div>
                 </div>
             </div>
+
+            <!-- Pagination Controls -->
+            <div id="pagination"></div>
 
             <!-- Quick Actions -->
             <div class="quick-actions">

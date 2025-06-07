@@ -1,6 +1,7 @@
 package com.example.recruitment_website.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,13 @@ public class JobService {
     public List<JobDTO> getJobsByEmployerId(String employerId) {
         List<JobEntity> jobs = jobRepository.findByEmployerUid(employerId);
         return jobs.stream().map(jobMapper::toDTO).collect(Collectors.toList());
+    }
+
+    public JobDTO getJobById(Integer jobId) {
+        Optional<JobEntity> optionalJob = jobRepository.findById(jobId);
+        JobEntity jobEntity = optionalJob.orElseThrow(() -> new RuntimeException("Không tìm thấy công việc với id: " + jobId));
+
+        return jobMapper.toDTO(jobEntity);
     }
 
 }
