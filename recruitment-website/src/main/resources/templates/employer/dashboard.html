@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TalentHub - Recruiter Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
 </head>
-
 <body>
     <div class="container">
-        <div th:replace="employer/fragments/header :: header"></div>
-
-        <div th:replace="employer/fragments/nav :: nav"></div>
+        <div th:replace="~{employer/fragments/header :: header}"></div>
+        <div th:replace="~{employer/fragments/nav :: nav}"></div>
 
         <!-- Dashboard Content -->
         <div class="content">
@@ -41,17 +38,19 @@
             <!-- Recent Jobs Section -->
             <h3>Recent Job Postings</h3>
             <div id="recent-jobs">
+                <div th:if="${recentJobs == null or recentJobs.isEmpty()}">
+                    <p>Chưa có tin tuyển dụng nào.</p>
+                </div>
                 <div class="job-card" th:each="job : ${recentJobs}">
                     <h3 th:text="${job.title}">Job Title</h3>
                     <div class="job-meta">
-                        <span th:text="'🏢 ' + ${job.companyName}">Company</span>
-                        <span th:text="'📍 ' + ${job.location}">Location</span>
-                        <span th:text="'💼 ' + ${job.jobType}">Type</span>
-                        <span th:text="'💰 ' + ${job.salaryRange}">Salary</span>
-                        <span th:if="${job.urgent}" style="background: #f59e0b; color: white;">⚡ Khá gấp</span>
+                        <span th:text="'🏢 ' + ${job.employer.companyName}">Company</span>
+                        <span th:text="'📍 ' + ${job.address}">Location</span>
+                        <span th:text="'💼 ' + ${job.employmentType}">Type</span>
+                        <span th:text="'💰 ' + ${job.salary}">Salary</span>
+                        <span th:if="${job.status == 'URGENT'}" style="background: #f59e0b; color: white;">⚡ Khá gấp</span>
                     </div>
-                    <div class="candidate-count" th:text="${job.candidateCount} + ' candidates applied'">0 candidates
-                        applied</div>
+                    <div class="candidate-count" th:text="${job.applicationCount} + ' candidates applied'">0 candidates applied</div>
                     <div class="job-actions">
                         <a th:href="@{'/job-details/' + ${job.id}}" class="btn btn-secondary">👥 View Candidates</a>
                         <a th:href="@{'/edit-job/' + ${job.id}}" class="btn">✏️ Edit</a>
@@ -88,7 +87,5 @@
         </div>
     </div>
     <script th:src="@{/js/employer/dashboard.js}"></script>
-
 </body>
-
 </html>

@@ -1,49 +1,86 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const employerId = localStorage.getItem("employerId") || sessionStorage.getItem("employerId");
-    if (employerId) {
-        fetch(`/employer/job/get?employerId=${employerId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Lỗi khi load job data");
-                }
-                return response.json();
-            })
-            .then(data => {
-                const jobsContainer = document.getElementById("recent-jobs");
-                jobsContainer.innerHTML = ""; // clear cũ
+function parseJwt(token) {
+  if (!token) return null;
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error("Lỗi parse JWT:", error);
+    return null;
+  }
+}
 
-                if (data.length === 0) {
-                    jobsContainer.innerHTML = "<p>Chưa có tin tuyển dụng nào.</p>";
-                } else {
-                    data.forEach(job => {
-                        const urgentTag = job.urgent ? '<span style="background: #f59e0b; color: white;">⚡ Khá gấp</span>' : '';
-                        const jobCard = `
-                            <div class="job-card">
-                                <h3>${job.title}</h3>
-                                <div class="job-meta">
-                                    <span>🏢 ${job.companyName}</span>
-                                    <span>📍 ${job.companyAddress}</span>
-                                    <span>💼 ${job.jobType}</span>
-                                    <span>💰 ${job.salaryRange}</span>
-                                    ${urgentTag}
-                                </div>
-                                <div class="candidate-count">${job.candidateCount} candidates applied</div>
-                                <div class="job-actions">
-                                    <a href="/job-details/${job.id}" class="btn btn-secondary">👥 View Candidates</a>
-                                    <a href="/edit-job/${job.id}" class="btn">✏️ Edit</a>
-                                </div>
-                            </div>
-                        `;
-                        jobsContainer.innerHTML += jobCard;
-                    });
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                document.getElementById("recent-jobs").innerHTML = "<p>Lỗi khi tải dữ liệu job.</p>";
-            });
-    } else {
-        console.warn("Chưa đăng nhập hoặc thiếu employerId trong localStorage");
-        document.getElementById("recent-jobs").innerHTML = "<p>Vui lòng đăng nhập để xem job.</p>";
+document.addEventListener("DOMContentLoaded", function() {
+    const token = localStorage.getItem("idToken");
+    console.log("Token lấy từ localStorage:", token);
+
+    if (!token) {
+        alert("Vui lòng đăng nhập.");
+        window.location.href = "/employer/login";
+        return;
     }
+
+    const payload = parseJwt(token);
+    if (!payload || !payload.user_id) {
+        alert("Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.");
+        return;
+    }
+
+
+    const jobsContainer = document.getElementById("recent-jobs");
+
+    fetch(`/api/employer/job/get?employerId=${payload.user_id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || "Lỗi khi tải dữ liệu tin tuyển dụng");
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            jobsContainer.innerHTML = ""; // Xóa nội dung cũ
+
+            if (!data || data.length === 0) {
+                jobsContainer.innerHTML = "<p>Chưa có tin tuyển dụng nào.</p>";
+                return;
+            }
+
+            data.forEach(job => {
+                const urgentTag = job.status === "URGENT" ? '<span style="background: #f59e0b; color: white;">⚡ Khá gấp</span>' : '';
+                const jobCard = `
+                    <div class="job-card">
+                        <h3>${job.title || "Không có tiêu đề"}</h3>
+                        <div class="job-meta">
+                            <span>🏢 ${job.employer?.companyName || "Không xác định"}</span>
+                            <span>📍 ${job.address || "Không xác định"}</span>
+                            <span>💼 ${job.employmentType || "Không xác định"}</span>
+                            <span>💰 ${job.salary || "Thỏa thuận"}</span>
+                            ${urgentTag}
+                        </div>
+                        <div class="candidate-count">${job.applicationCount || 0} candidates applied</div>
+                        <div class="job-actions">
+                            <a href="/job-details/${job.id}" class="btn btn-secondary">👥 View Candidates</a>
+                            <a href="/edit-job/${job.id}" class="btn">✏️ Edit</a>
+                        </div>
+                    </div>
+                `;
+                jobsContainer.innerHTML += jobCard;
+            });
+        })
+        .catch(error => {
+            console.error("Lỗi khi tải dữ liệu:", error);
+            jobsContainer.innerHTML = `<p>Lỗi khi tải dữ liệu: ${error.message}</p>`;
+        });
 });

@@ -1,100 +1,82 @@
-// package com.example.recruitment_website.services;
+package com.example.recruitment_website.services;
 
-// import java.time.LocalDateTime;
-// import java.util.ArrayList;
-// import java.util.List;
+import java.util.List;
+import java.util.stream.Collectors;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
-// import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-// import com.example.recruitment_website.dtos.JobDTO;
-// import com.example.recruitment_website.entities.EmployerEntity;
-// import com.example.recruitment_website.entities.JobEntity;
-// import com.example.recruitment_website.mappers.JobMapper;
-// import com.example.recruitment_website.payloads.JobResponse;
-// import com.example.recruitment_website.repositories.EmployerRepository;
-// import com.example.recruitment_website.repositories.JobRepository;
+import com.example.recruitment_website.dtos.EmployerDTO;
+import com.example.recruitment_website.dtos.JobDTO;
+import com.example.recruitment_website.entities.EmployerEntity;
+import com.example.recruitment_website.entities.JobEntity;
+import com.example.recruitment_website.mappers.EmployerMapper;
+import com.example.recruitment_website.mappers.JobMapper;
+import com.example.recruitment_website.payloads.JobRequest;
+import com.example.recruitment_website.repositories.EmployerRepository;
+import com.example.recruitment_website.repositories.JobRepository;
 
-// @Service
-// public class JobService {
+@Service
+public class JobService {
 
-//     @Autowired
-//     private JobRepository jobRepository;
+    @Autowired
+    private JobRepository jobRepository;
 
-//     @Autowired
-//     private JobMapper jobMapper;
+    @Autowired
+    private JobMapper jobMapper;
 
-//     @Autowired
-//     private EmployerRepository employerRepository;
+    @Autowired
+    private EmployerRepository employerRepository;
 
-//     @Transactional
-//     public JobDTO addJob(JobDTO jobDTO) {
-//         // Kiểm tra dữ liệu đầu vào
-//         if (jobDTO.getEmployerId() == null) {
-//             throw new IllegalArgumentException("ID nhà tuyển dụng là bắt buộc");
-//         }
-//         if (jobDTO.getTitle() == null || jobDTO.getTitle().trim().isEmpty()) {
-//             throw new IllegalArgumentException("Tiêu đề công việc là bắt buộc");
-//         }
-//         // if (jobDTO.getEmploymentType() == null || jobDTO.getEmploymentType().trim().isEmpty()) {
-//         //     throw new IllegalArgumentException("Loại hình công việc là bắt buộc");
-//         // }
-//         if (jobDTO.getDescription() == null || jobDTO.getDescription().trim().isEmpty()) {
-//             throw new IllegalArgumentException("Mô tả công việc là bắt buộc");
-//         }
-//         if (jobDTO.getRequirements() == null || jobDTO.getRequirements().trim().isEmpty()) {
-//             throw new IllegalArgumentException("Yêu cầu công việc là bắt buộc");
-//         }
+    @Autowired
+    private EmployerMapper employerMapper;
 
-//         // Ánh xạ JobDTO sang JobEntity
-//         JobEntity jobEntity = jobMapper.toEntity(jobDTO);
+    @Transactional
+    public JobDTO addJob(JobRequest jobRequest) {
+        // 1. Lấy EmployerEntity từ employerId trong JobRequest
+        EmployerEntity employer = employerRepository.findById(jobRequest.getEmployerId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà tuyển dụng với ID: " + jobRequest.getEmployerId()));
 
-//         // Đặt giá trị mặc định
-//         if (jobEntity.getStatus() == null || jobEntity.getStatus().trim().isEmpty()) {
-//             jobEntity.setStatus("Open");
-//         }
-//         // jobEntity.setEmployerId(jobDTO.getEmployerId());
-//         jobEntity.setCreatedAt(LocalDateTime.now());
-//         jobEntity.setUpdatedAt(LocalDateTime.now());
+        EmployerDTO employerDTO = employerMapper.toDTO(employer);
 
-//         // Lưu vào cơ sở dữ liệu
-//         JobEntity savedJob = jobRepository.save(jobEntity);
+        // 2. Map từ JobRequest sang JobDTO
+        JobDTO jobDTO = new JobDTO();
+        jobDTO.setId(jobRequest.getId());
+        jobDTO.setTitle(jobRequest.getTitle());
+        jobDTO.setEmployer(employerDTO);
+        jobDTO.setAddress(jobRequest.getAddress());
+        jobDTO.setApplicationCount(jobRequest.getApplicationCount());
+        jobDTO.setBenefits(jobRequest.getBenefits());
+        jobDTO.setCity(jobRequest.getCity());
+        jobDTO.setDeadline(jobRequest.getDeadline());
+        jobDTO.setDescription(jobRequest.getDescription());
+        jobDTO.setEmploymentType(jobRequest.getEmploymentType());
+        jobDTO.setExperience(jobRequest.getExperience());
+        jobDTO.setJobLevel(jobRequest.getJobLevel());
+        jobDTO.setIsApproved(false);
+        jobDTO.setRequirements(jobRequest.getRequirements());
+        jobDTO.setNumberOfVacancies(0);
+        jobDTO.setSalary(jobRequest.getSalary());
+        jobDTO.setStatus(jobRequest.getStatus());
+        jobDTO.setWorkingHours(jobRequest.getWorkingHours());
 
-//         // Ánh xạ JobEntity trở lại JobDTO để trả về
-//         return jobMapper.toDTO(savedJob);
-//     }
+        // 3. Map JobDTO sang JobEntity
+        JobEntity jobEntity = jobMapper.toEntity(jobDTO);
 
-//     @Transactional
-//     public List<JobResponse> getJobResponsesByEmployerId(String employerId) {
-//         // List<JobEntity> jobEntities = jobRepository.findByEmployerId(employerId);
+        // 4. Gán employer cho jobEntity
+        jobEntity.setEmployer(employer);
 
-//         // List<JobResponse> jobResponses = new ArrayList<>();
+        // 5. Lưu entity vào database
+        jobEntity = jobRepository.save(jobEntity);
 
-//         // EmployerEntity employerEntity = employerRepository.findById(employerId)
-//         //         .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà tuyển dụng"));
+        // 6. Map entity ngược lại DTO để trả về
+        return jobMapper.toDTO(jobEntity);
+    }
 
-//         // for (JobEntity jobEntity : jobEntities) {
-//         //     JobResponse response = new JobResponse();
-//         //     response.setId(jobEntity.getId());
-//         //     response.setTitle(jobEntity.getTitle());
-//         //     // response.setCompanyName(employerEntity.getCompanyName());
-//         //     // response.setCompanyAddress(employerEntity.getCompanyAddress());
-//         //     // response.setJobType(jobEntity.getEmploymentType());
-//         //     response.setSalaryRange(jobEntity.getSalary());
-//         //     response.setUrgent(jobEntity.getStatus().equalsIgnoreCase("Urgent"));
-//         //     // response.setCandidateCount(candidateRepository.countByJobId(job.getId()));
-//         //     response.setCandidateCount(0);
-//         //     jobResponses.add(response);
-//         // }
+    public List<JobDTO> getJobsByEmployerId(String employerId) {
+        List<JobEntity> jobs = jobRepository.findByEmployerUid(employerId);
+        return jobs.stream().map(jobMapper::toDTO).collect(Collectors.toList());
+    }
 
-//         // return jobResponses;
-//     }
-
-//     public Integer getCandidateCountByJobId(Integer jobId) {
-//         // Giả sử bạn có một repository để đếm số lượng ứng viên theo jobId
-//         // return candidateRepository.countByJobId(jobId);
-//         return 0; // Chưa triển khai logic đếm ứng viên
-//     }
-
-// }
+}
