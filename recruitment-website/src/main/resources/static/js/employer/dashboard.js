@@ -52,6 +52,15 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             jobsContainer.innerHTML = ""; // Xóa nội dung cũ
 
+            const totalJobElement = document.getElementById("totalJobs");
+            totalJobElement.textContent = `${data.length}`;
+
+            const totalActiveJobs = data.filter(job => job.status === "OPEN").length;
+            document.getElementById("activeJobs").textContent = totalActiveJobs;
+
+            const totalCandidates = data.reduce((sum, job) => sum + (job.applicationCount || 0), 0);
+            document.getElementById("totalCandidates").textContent = totalCandidates;
+
             if (!data || data.length === 0) {
                 jobsContainer.innerHTML = "<p>Chưa có tin tuyển dụng nào.</p>";
                 return;

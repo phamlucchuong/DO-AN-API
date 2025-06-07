@@ -14,27 +14,20 @@
         <!-- Dashboard Content -->
         <div class="content">
             <h2>Dashboard Overview</h2>
-
             <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 th:text="${totalJobs}">0</h3>
-                    <p>Total Jobs Posted</p>
-                </div>
-                <div class="stat-card">
-                    <h3 th:text="${totalCandidates}">0</h3>
-                    <p>Total Candidates</p>
-                </div>
-                <div class="stat-card">
-                    <h3 th:text="${activeJobs}">0</h3>
-                    <p>Active Jobs</p>
-                </div>
-                <div class="stat-card">
-                    <h3 th:text="${avgCandidatesPerJob}">0</h3>
-                    <p>Avg. Candidates per Job</p>
-                </div>
+            <div class="stat-card">
+                <h3 id="totalJobs" th:text="${totalJobs}">0</h3>
+                <p>Total Jobs Posted</p>
             </div>
-
+            <div class="stat-card">
+                <h3 id="totalCandidates" th:text="${totalCandidates}">0</h3>
+                <p>Total Candidates</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="activeJobs" th:text="${activeJobs}">0</h3>
+                <p>Active Jobs</p>
+            </div>
+            
             <!-- Recent Jobs Section -->
             <h3>Recent Job Postings</h3>
             <div id="recent-jobs">
@@ -87,5 +80,6 @@
         </div>
     </div>
     <script th:src="@{/js/employer/dashboard.js}"></script>
+    <script th:src="@{/js/employer/header.js}"></script>
 </body>
 </html>

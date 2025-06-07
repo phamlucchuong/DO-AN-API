@@ -5,10 +5,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.recruitment_website.dtos.EmployerDTO;
@@ -48,4 +51,21 @@ public class EmployerRestController {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(EmployerRestController.class);
+
+    @GetMapping("/profile")
+    public ResponseEntity<EmployerDTO> getEmployerProfile(@RequestParam("uid") String uid) {
+        try {
+            logger.info("Lấy hồ sơ nhà tuyển dụng với uid: {}", uid);
+            EmployerDTO employer = employerService.getEmployerByUid(uid);
+            if (employer == null) {
+                logger.warn("Không tìm thấy nhà tuyển dụng với uid: {}", uid);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.ok(employer);
+        } catch (Exception e) {
+            logger.error("Lỗi khi lấy hồ sơ nhà tuyển dụng với uid: {}", uid, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.recruitment_website.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/employer")
 public class EmployerController {
+    private static final Logger logger = LoggerFactory.getLogger(EmployerController.class);
 
     @GetMapping("/")
     public String employerHomePage() {
@@ -26,6 +29,12 @@ public class EmployerController {
     @GetMapping("/register")
     public String employerRegisterPage() {
         return "employer/register";
+    }
+
+    @GetMapping("/profile")
+    public String employerProfilePage() {
+        logger.debug("Truy cập trang profile");
+        return "employer/profile";
     }
 
     @GetMapping("/dashboard")
@@ -46,11 +55,10 @@ public class EmployerController {
         model.addAttribute("requestURI", request.getRequestURI());
         return "employer/candidates";
     }
-    
+
     @GetMapping("/statistics")
     public String statisticsPage(Model model, HttpServletRequest request) {
         model.addAttribute("requestURI", request.getRequestURI());
         return "employer/statistics";
     }
-
 }

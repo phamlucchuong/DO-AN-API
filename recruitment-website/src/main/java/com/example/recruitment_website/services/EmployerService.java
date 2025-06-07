@@ -97,5 +97,10 @@ public class EmployerService {
         }
     }
 
+    public EmployerDTO getEmployerByUid(String uid) {
+        EmployerEntity employer = employerRepository.findById(uid)
+                .orElse(null);
+        return employer != null ? employerMapper.toDTO(employer) : null;
+    }
     
 }

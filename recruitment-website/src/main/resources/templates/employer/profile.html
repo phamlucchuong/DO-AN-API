@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentHub - Employer Profile</title>
+    <link rel="stylesheet" href="/css/employer/styles.css">
+    <link rel="stylesheet" th:href="@{/css/employer/header.css}">
+    <link rel="stylesheet" th:href="@{/css/employer/profile.css}">
+</head>
+<body>
+    <div class="container">
+        <div th:replace="~{employer/fragments/header :: header}"></div>
+        <div th:replace="~{employer/fragments/nav :: nav}"></div>
+
+        <!-- Profile Content -->
+        <div class="content">
+            <h2>Employer Profile</h2>
+            <div class="profile-container">
+                <div id="error-message" class="error-message" style="display: none;"></div>
+                <div class="profile-details-container">
+                    <div class="profile-header">
+                        <img src="https://png.pngtree.com/png-vector/20210129/ourmid/pngtree-upload-avatar-by-default-png-image_2854358.jpg"
+                             alt="Company Logo"
+                             class="profile-logo"
+                             id="companyLogo"/>
+                        <div class="profile-title">
+                            <h3 id="companyName">Company Name</h3>
+                            <p id="industry">Industry</p>
+                        </div>
+                        <a href="/employer/edit-profile" class="btn btn-primary">✏️ Edit Profile</a>
+                    </div>
+
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <label>Address:</label>
+                            <span id="companyAddress">Address</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>City:</label>
+                            <span id="city">City</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Description:</label>
+                            <span id="companyDescription">Description</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Website:</label>
+                            <a href="#" id="companyWebsite" target="_blank">Website</a>
+                        </div>
+                        <div class="detail-item">
+                            <label>Phone Number:</label>
+                            <span id="phoneNumber">Phone Number</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Company Size:</label>
+                            <span id="companySize">0 employees</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Founded Date:</label>
+                            <span id="foundedDate">Date</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Tax Code:</label>
+                            <span id="taxCode">Tax Code</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Approval Status:</label>
+                            <span id="isApproved">Status</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Created At:</label>
+                            <span id="createdAt">Date</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Updated At:</label>
+                            <span id="updatedAt">Date</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/employer/header.js"></script>
+    <script src="/js/employer/profile.js"></script>
+</body>
+</html>
