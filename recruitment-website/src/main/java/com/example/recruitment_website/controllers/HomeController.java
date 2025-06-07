@@ -42,8 +42,4 @@ public class HomeController {
     public String profileDetail() {
         return "employee/profile-detail"; 
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 }

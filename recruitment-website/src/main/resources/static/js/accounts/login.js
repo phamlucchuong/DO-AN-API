@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-async function loginByUsernameAndPassword() {
-    
-}
-=======
 import { loginWithGoogle, loginWithEmailAndPwd, forgotPassword } from '../firebase/firebase-auth.js';
-// import { loginWithGoogle, loginWithEmailAndPwd, forgotPassword } from '/js/firebase/firebase-auth.js';
-
-
 
 function togglePassword() {
     const passwordInput = document.getElementById('password');
@@ -84,4 +76,3 @@ document.getElementById('reset-pwd').addEventListener('click', () => {
         alert('Lỗi gửi yêu cầu: ' + error.message);
     }
 });
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86

@@ -1,27 +1,19 @@
 package com.example.recruitment_website.entities;
 
-<<<<<<< HEAD
-=======
+
 import java.time.LocalDate;
 import java.util.Date;
 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-<<<<<<< HEAD
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-=======
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -33,12 +25,7 @@ public class EmployerEntity {
     private String uid;
 
     @OneToOne
-<<<<<<< HEAD
-    @MapsId
-    @JoinColumn(name = "uid")
-=======
     @JoinColumn(name = "account_id", nullable = false)
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     private AccountEntity account;
 
     @NotNull
@@ -49,14 +36,6 @@ public class EmployerEntity {
     @NotNull
     @Size(max = 200)
     @Column(length = 200)
-<<<<<<< HEAD
-    private String password;
-
-    @NotNull
-    @Size(max = 200)
-    @Column(length = 200)
-=======
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     private String companyAddress;
 
     @NotNull
@@ -65,16 +44,6 @@ public class EmployerEntity {
     private String phoneNumber;
 
     @NotNull
-<<<<<<< HEAD
-    @Column(nullable = false)
-    private Boolean isApproved = false;
-
-    public EmployerEntity() {
-    }
-
-    public EmployerEntity(String uid, String companyName, String companyAddress, String phoneNumber, Boolean isApproved) {
-        this.uid = uid;
-=======
     @Column(columnDefinition = "BIT DEFAULT 0")
     private Boolean isApproved = false;
 
@@ -123,28 +92,10 @@ public class EmployerEntity {
                          LocalDate foundedDate, String status, Date createdAt, Date updatedAt, String city) {
         this.uid = uid;
         this.account = account;
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
         this.companyName = companyName;
         this.companyAddress = companyAddress;
         this.phoneNumber = phoneNumber;
         this.isApproved = isApproved;
-<<<<<<< HEAD
-    }
-
-    public String getId() {
-        return uid;
-    }
-
-    public void setId(String id) {
-        this.uid = id;
-    }
-
-    public AccountEntity getAccount() {
-        return account;
-    }
-
-    public void setAccount(AccountEntity account) {
-=======
         this.companyDescription = companyDescription;
         this.companyWebsite = companyWebsite;
         this.companyLogo = companyLogo;
@@ -171,7 +122,6 @@ public class EmployerEntity {
     }
 
     public void setAccount(AccountEntity account){
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
         this.account = account;
     }
 
@@ -183,17 +133,6 @@ public class EmployerEntity {
         this.companyName = companyName;
     }
 
-<<<<<<< HEAD
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-=======
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public String getCompanyAddress() {
         return companyAddress;
     }
@@ -217,9 +156,6 @@ public class EmployerEntity {
     public void setIsApproved(Boolean isApproved) {
         this.isApproved = isApproved;
     }
-<<<<<<< HEAD
-}
-=======
 
     public String getCompanyDescription() {
         return companyDescription;
@@ -309,4 +245,3 @@ public class EmployerEntity {
         this.city = city;
     }
 }
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86

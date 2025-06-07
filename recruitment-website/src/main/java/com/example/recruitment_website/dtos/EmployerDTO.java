@@ -1,22 +1,11 @@
 package com.example.recruitment_website.dtos;
 
-<<<<<<< HEAD
-import com.example.recruitment_website.entities.EmployerEntity;
-=======
 import java.time.LocalDate;
 import java.util.Date;
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 
 public class EmployerDTO {
 
     private String uid;
-<<<<<<< HEAD
-    private String email; // từ AccountEntity
-    private String companyName;
-    private String companyAddress;
-    private String phoneNumber;
-    private Boolean isApproved;
-=======
     private AccountDTO account;
     // private String password;
     private String companyName; // Tên công ty
@@ -34,17 +23,10 @@ public class EmployerDTO {
     private Date createdAt; // Ngày tạo
     private Date updatedAt; // Ngày cập nhật
     private String city; // Thành phố
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 
     public EmployerDTO() {
     }
 
-<<<<<<< HEAD
-    public EmployerDTO(String uid, String email, String companyName, String companyAddress, String phoneNumber,
-            Boolean isApproved) {
-        this.uid = uid;
-        this.email = email;
-=======
     // public EmployerDTO(String uid, AccountDTO account, String companyName, String companyAddress, String phoneNumber,
     //                    Boolean isApproved, String companyDescription, String companyWebsite, String companyLogo,
     //                    String industry, String companySize, String taxCode, LocalDate foundedDate, String status,
@@ -74,27 +56,10 @@ public class EmployerDTO {
                        Date createdAt, Date updatedAt, String city) {
         this.uid = uid;
         this.account = account;
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
         this.companyName = companyName;
         this.companyAddress = companyAddress;
         this.phoneNumber = phoneNumber;
         this.isApproved = isApproved;
-<<<<<<< HEAD
-    }
-
-    public EmployerDTO toDTO(EmployerEntity entity) {
-        return new EmployerDTO(
-                entity.getId(),
-                entity.getAccount() != null ? entity.getAccount().getEmail() : null,
-                entity.getCompanyName(),
-                entity.getCompanyAddress(),
-                entity.getPhoneNumber(),
-                entity.getIsApproved());
-    }
-
-    // Getters and setters
-
-=======
         this.companyDescription = companyDescription;
         this.companyWebsite = companyWebsite;
         this.companyLogo = companyLogo;
@@ -108,7 +73,6 @@ public class EmployerDTO {
         this.city = city;
     }
 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public String getUid() {
         return uid;
     }
@@ -117,16 +81,6 @@ public class EmployerDTO {
         this.uid = uid;
     }
 
-<<<<<<< HEAD
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-=======
     public AccountDTO getAccount() {
         return account;
     }
@@ -135,15 +89,6 @@ public class EmployerDTO {
         this.account = account;
     }
 
-    // public String getPassword() {
-    //     return password;
-    // }
-
-    // public void setPassword(String password) {
-    //     this.password = password;
-    // }
-
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public String getCompanyName() {
         return companyName;
     }
@@ -175,9 +120,6 @@ public class EmployerDTO {
     public void setIsApproved(Boolean isApproved) {
         this.isApproved = isApproved;
     }
-<<<<<<< HEAD
-}
-=======
 
     public String getCompanyDescription() {
         return companyDescription;
@@ -268,4 +210,3 @@ public class EmployerDTO {
     }
 
 }
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86

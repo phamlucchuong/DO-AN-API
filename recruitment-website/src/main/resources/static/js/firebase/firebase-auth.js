@@ -3,12 +3,6 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
-<<<<<<< HEAD
-  signOut
-  // FacebookAuthProvider
-} from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js';
-
-=======
   signOut,
   sendPasswordResetEmail,
   createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword
@@ -16,7 +10,6 @@ import {
 
 
 // hàm đăng nhập bằng tài khoản gg
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 export async function loginWithGoogle(role) {
   const provider = new GoogleAuthProvider();
   try {
@@ -46,11 +39,8 @@ export async function loginWithGoogle(role) {
 }
 
 
-<<<<<<< HEAD
-=======
 
 // hàm đăng nhập email pwd 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 export async function loginWithEmailAndPwd(email, password, role) {
   try {
     const result = await signInWithEmailAndPassword(auth, email, password);
@@ -67,11 +57,7 @@ export async function loginWithEmailAndPwd(email, password, role) {
     }).then(res => {
       if (res.ok) {
         alert('Đăng nhập thành công!');
-<<<<<<< HEAD
-        window.location.href = '/index'; // hoặc bất kỳ trang nào bạn muốn chuyển đến
-=======
         window.location.href = role === 'Employee' ? '/index' : '/employer/dashboard';
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
       } else {
         alert('Xác thực thất bại!');
       }
@@ -83,38 +69,6 @@ export async function loginWithEmailAndPwd(email, password, role) {
 }
 
 
-<<<<<<< HEAD
-
-// export async function loginWithFacebook(role) {
-//   const provider = new FacebookAuthProvider();
-//   try {
-//     const result = await signInWithPopup(auth, provider);
-//     const user = result.user;
-//     const token = await user.getIdToken();
-
-//     console.log('Facebook ID Token:', token);
-
-//     await fetch('/api/auth/verify-token', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ token }),
-//     }).then(res => {
-//       if (res.ok) {
-//         alert('Đăng nhập Facebook thành công!');
-//         window.location.href = '/index';
-//       } else {
-//         alert('Xác thực token thất bại!');
-//       }
-//     });
-
-//   } catch (error) {
-//     console.error('Lỗi đăng nhập Facebook:', error.message);
-//   }
-// }
-
-
-
-=======
 // hàm đăng ký email password
 export async function registerWithEmailAndPassword(email, password, role) {
   try {
@@ -152,7 +106,6 @@ export async function registerWithEmailAndPassword(email, password, role) {
 
 
 // hàm đăng xuất
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 export async function logout() {
   try {
     await signOut(auth);
@@ -162,8 +115,6 @@ export async function logout() {
   } catch (error) {
     console.error('firebase-auth.js-logout: Lỗi khi đăng xuất:', error.message);
   }
-<<<<<<< HEAD
-=======
 }
 
 
@@ -182,5 +133,4 @@ export async function forgotPassword(email) {
       alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
     }
   }
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 }

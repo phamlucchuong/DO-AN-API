@@ -3,38 +3,15 @@ package com.example.recruitment_website.dtos;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-<<<<<<< HEAD
-=======
 import com.example.recruitment_website.enums.EmploymentType;
 import com.example.recruitment_website.enums.JobLevel;
 
 import jakarta.validation.constraints.PositiveOrZero;
 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 public class JobDTO {
     private String id;
     private String employerId;
     private String title;
-<<<<<<< HEAD
-    private String salary;
-    private String experience;
-    private String department;
-    private String description;
-    private String requirements;
-    private String benefits;
-    private LocalDate deadline;
-    private Boolean remoteOk;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String status; 
-    private Integer numberOfVacancies;
-    private String jobLevel;
-    private String employmentType; 
-
-    public JobDTO() {}
-
-    // getter và setter
-=======
     private String salary; // Mức lương (có thể là khoảng lương hoặc mức lương cụ thể)
     private String experience; // Kinh nghiệm làm việc
     private String description;     // Mô tả công việc
@@ -78,7 +55,6 @@ public class JobDTO {
         this.workingHours = workingHours;
     }
 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public String getId() {
         return id;
     }
@@ -102,17 +78,6 @@ public class JobDTO {
     public void setTitle(String title) {
         this.title = title;
     }
-<<<<<<< HEAD
-    
-    public String getEmploymentType() {
-        return employmentType;
-    }
-
-    public void setEmploymentType(String employmentType) {
-        this.employmentType = employmentType;
-    }
-=======
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 
     public String getSalary() {
         return salary;
@@ -130,17 +95,6 @@ public class JobDTO {
         this.experience = experience;
     }
 
-<<<<<<< HEAD
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-=======
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public String getDescription() {
         return description;
     }
@@ -173,17 +127,6 @@ public class JobDTO {
         this.deadline = deadline;
     }
 
-<<<<<<< HEAD
-    public Boolean getRemoteOk() {
-        return remoteOk;
-    }
-
-    public void setRemoteOk(Boolean remoteOk) {
-        this.remoteOk = remoteOk;
-    }
-
-=======
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -216,16 +159,6 @@ public class JobDTO {
         this.numberOfVacancies = numberOfVacancies;
     }
 
-<<<<<<< HEAD
-    public String getJobLevel() {
-        return jobLevel;
-    }
-
-    public void setJobLevel(String jobLevel) {
-        this.jobLevel = jobLevel;
-    }
-    
-=======
     public JobLevel getJobLevel() {
         return jobLevel;
     }
@@ -290,5 +223,4 @@ public class JobDTO {
         this.applicationCount = applicationCount;
     }
 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 }

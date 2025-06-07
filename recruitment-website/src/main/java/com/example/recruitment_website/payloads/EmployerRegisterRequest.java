@@ -1,27 +1,5 @@
 package com.example.recruitment_website.payloads;
 
-<<<<<<< HEAD
-public class EmployerRegisterRequest {
-
-    private String email;
-    private String password;
-    private String companyName;
-    private String companyAddress;
-    private String phoneNumber;
-
-    // Constructors
-    public EmployerRegisterRequest() {}
-
-    public EmployerRegisterRequest(String email, String password, String companyName, String companyAddress, String phoneNumber) {
-        this.email = email;
-        this.password = password;
-        this.companyName = companyName;
-        this.companyAddress = companyAddress;
-        this.phoneNumber = phoneNumber;
-    }
-
-    // Getters và Setters
-=======
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,7 +45,6 @@ public class EmployerRegisterRequest {
 
     // Getters và Setters
 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public String getEmail() {
         return email;
     }
@@ -76,17 +53,6 @@ public class EmployerRegisterRequest {
         this.email = email;
     }
 
-<<<<<<< HEAD
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-=======
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public String getCompanyName() {
         return companyName;
     }
@@ -95,8 +61,6 @@ public class EmployerRegisterRequest {
         this.companyName = companyName;
     }
 
-<<<<<<< HEAD
-=======
     public MultipartFile getCompanyLogo() {
         return companyLogo;
     }
@@ -113,7 +77,6 @@ public class EmployerRegisterRequest {
         this.firebaseUid = firebaseUid;
     }
 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     public String getCompanyAddress() {
         return companyAddress;
     }
@@ -129,8 +92,6 @@ public class EmployerRegisterRequest {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-<<<<<<< HEAD
-=======
 
     public String getTaxCode() {
         return taxCode;
@@ -187,5 +148,4 @@ public class EmployerRegisterRequest {
     public void setCompanyDescription(String companyDescription) {
         this.companyDescription = companyDescription;
     }
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 }
