@@ -16,7 +16,12 @@ public class AccountEntity {
     private String id;
 
     @NotNull
+<<<<<<< HEAD
     @Size(max = 25)
+=======
+    // @Size(max = 25)
+    @Size(max = 100)
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
     @Column(unique = true)
     private String email;
 

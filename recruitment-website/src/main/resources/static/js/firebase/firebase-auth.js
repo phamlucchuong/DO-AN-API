@@ -3,10 +3,20 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+<<<<<<< HEAD
   signOut
   // FacebookAuthProvider
 } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js';
 
+=======
+  signOut,
+  sendPasswordResetEmail,
+  createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword
+} from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js';
+
+
+// hàm đăng nhập bằng tài khoản gg
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 export async function loginWithGoogle(role) {
   const provider = new GoogleAuthProvider();
   try {
@@ -36,6 +46,11 @@ export async function loginWithGoogle(role) {
 }
 
 
+<<<<<<< HEAD
+=======
+
+// hàm đăng nhập email pwd 
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 export async function loginWithEmailAndPwd(email, password, role) {
   try {
     const result = await signInWithEmailAndPassword(auth, email, password);
@@ -52,7 +67,11 @@ export async function loginWithEmailAndPwd(email, password, role) {
     }).then(res => {
       if (res.ok) {
         alert('Đăng nhập thành công!');
+<<<<<<< HEAD
         window.location.href = '/index'; // hoặc bất kỳ trang nào bạn muốn chuyển đến
+=======
+        window.location.href = role === 'Employee' ? '/index' : '/employer/dashboard';
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
       } else {
         alert('Xác thực thất bại!');
       }
@@ -64,6 +83,7 @@ export async function loginWithEmailAndPwd(email, password, role) {
 }
 
 
+<<<<<<< HEAD
 
 // export async function loginWithFacebook(role) {
 //   const provider = new FacebookAuthProvider();
@@ -94,6 +114,45 @@ export async function loginWithEmailAndPwd(email, password, role) {
 
 
 
+=======
+// hàm đăng ký email password
+export async function registerWithEmailAndPassword(email, password, role) {
+  try {
+    const userCredential = await firebaseCreateUserWithEmailAndPassword(auth, email, password);
+    if (!userCredential) {
+      throw new Error('Không nhận được userCredential từ Firebase');
+    }
+    const user = userCredential.user;
+    if (!user) {
+      throw new Error('Không tìm thấy user trong userCredential');
+    }
+
+    const token = await user.getIdToken();
+    localStorage.setItem('idToken', token);
+
+    console.log('Register ID Token:', token);
+
+    const res = await fetch('/api/auth/verify-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, role }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error('Xác thực thất bại: ' + errorText);
+    }
+    return userCredential;
+  } catch (error) {
+    console.error('Lỗi đăng ký:', error.message);
+    alert('Đăng ký thất bại (registerWithEmailAndPassword/firebase-auth.js): ' + error.message);
+    throw error; // Ném lỗi để register.js xử lý
+  }
+}
+
+
+// hàm đăng xuất
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 export async function logout() {
   try {
     await signOut(auth);
@@ -103,4 +162,25 @@ export async function logout() {
   } catch (error) {
     console.error('firebase-auth.js-logout: Lỗi khi đăng xuất:', error.message);
   }
+<<<<<<< HEAD
+=======
+}
+
+
+// Hàm quên mật khẩu
+export async function forgotPassword(email) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert('Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư đến.');
+  } catch (error) {
+    console.error('Lỗi khi gửi email đặt lại mật khẩu:', error.message);
+    if (error.code === 'auth/user-not-found') {
+      alert('Không tìm thấy người dùng với email này.');
+    } else if (error.code === 'auth/invalid-email') {
+      alert('Email không hợp lệ.');
+    } else {
+      alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+    }
+  }
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 }

@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+import {loginWithEmailAndPwd} from '../firebase/firebase-auth.js'
+
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
@@ -27,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+<<<<<<< HEAD
     try {
       const response = await fetch('/employer/login', {
         method: 'POST',
@@ -51,6 +57,27 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       console.log('Đăng nhập thành công:', { email, password, isRememberMe, userId: data.id });
+=======
+
+    try {
+
+      const userCredential = await loginWithEmailAndPwd(email, password, "Employer");
+      console.log('User Credential:', userCredential);
+      const user = userCredential.user;
+      if (!user) {
+        throw new Error('Không tìm thấy user trong userCredential');
+      }
+    
+      const token = await user.getIdToken();
+
+      if (isRememberMe) {
+        localStorage.setItem('token', token);
+      } else {
+        sessionStorage.setItem('token', token);
+      }
+      
+      console.log('Đăng nhập thành công:');
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
       window.location.href = '/employer/dashboard';
 
     } catch (error) {
