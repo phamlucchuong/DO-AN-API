@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký tài khoản công ty</title>
+  <link rel="stylesheet" th:href="@{/css/employer/register.css}">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Đăng ký tài khoản công ty</h1>
+    </div>
+
+    <form id="registration-form">
+      <div class="form-group">
+        <label for="email">Địa chỉ email <span>*</span></label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mật khẩu <span>*</span></label>
+        <input type="password" id="password" name="password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="companyName">Tên công ty <span>*</span></label>
+        <input type="text" id="companyName" name="companyName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="companyAddress">Địa chỉ công ty <span>*</span></label>
+        <input type="text" id="companyAddress" name="companyAddress" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Số điện thoại <span>*</span></label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" required>
+      </div>
+
+      <div class="buttons">
+        <button type="submit" class="btn btn-primary">Đăng ký</button>
+      </div>
+    </form>
+
+    <div class="help-text">
+      <span>Đã có tài khoản? <a href="/employer/login">Đăng nhập</a></span>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 Employer Portal. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script th:src="@{/js/employer/register.js}"></script>
+</body>
+</html>

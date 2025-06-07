@@ -1,0 +1,309 @@
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+    }
+
+    .background-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.1;
+      background: linear-gradient(to bottom right, transparent, rgba(255, 255, 255, 0.05), transparent);
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 28rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .logo {
+      background: #2563eb;
+      padding: 0.75rem;
+      border-radius: 9999px;
+      display: inline-flex;
+    }
+
+    .logo svg {
+      width: 2rem;
+      height: 2rem;
+      color: white;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #6b7280;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-container {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      padding-left: 2.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    input[type="password"] {
+      padding-right: 3rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+    }
+
+    .password-toggle:hover {
+      color: #4b5563;
+    }
+
+    .password-toggle svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+    }
+
+    input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+      accent-color: #2563eb;
+    }
+
+    .checkbox-container label {
+      margin-left: 0.5rem;
+      font-size: 0.875rem;
+      color: #374151;
+    }
+
+    .forgot-password {
+      font-size: 0.875rem;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot-password:hover {
+      color: #1d4ed8;
+    }
+
+    .submit-button {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .submit-button:hover {
+      background: #1d4ed8;
+      transform: scale(1.02);
+    }
+
+    .submit-button:active {
+      transform: scale(0.98);
+    }
+
+    .submit-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(59, 130, 246, 0.5);
+    }
+
+    .google-button {
+      width: 100%;
+      background: white;
+      color: #374151;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .google-button:hover {
+      background: #f9fafb;
+      transform: scale(1.02);
+    }
+
+    .google-button:active {
+      transform: scale(0.98);
+    }
+
+    .google-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(59, 130, 246, 0.5);
+    }
+
+    .google-button svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .divider {
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .divider-line {
+      border-top: 1px solid #d1d5db;
+      width: 100%;
+    }
+
+    .divider-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 0 0.5rem;
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+
+    .signup-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #2563eb;
+      font-weight: 500;
+      text-decoration: none;
+      margin: 1.5rem auto;
+      text-align: center;
+      display: block;
+    }
+
+    .signup-link:hover {
+      color: #1d4ed8;
+    }
+
+    .signup-link svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.875rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .hidden {
+      display: none;
+    }

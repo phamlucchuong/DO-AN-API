@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thống kê - VietnamWorks</title>
+
+    <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/employer/statistics.css}">
+
+</head>
+
+<body>
+    <div class="container">
+    <div th:replace="employer/fragments/header :: header"></div>
+
+    <div th:replace="employer/fragments/nav :: nav"></div>
+
+        <!-- Statistics Content -->
+        <div class="content">
+            <h2>📈 Thống kê tổng quan</h2>
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">Ứng viên theo thời gian</h3>
+                    <canvas id="candidates-over-time"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Tỉ lệ trạng thái ứng viên</h3>
+                    <canvas id="candidate-status"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Hiệu quả chiến dịch tuyển dụng</h3>
+                    <canvas id="campaign-effectiveness"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script th:src="@{/statistics.js}"></script>
+</body>
+
+</html>
