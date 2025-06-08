@@ -2,7 +2,7 @@ package com.example.recruitment_website.enums;
 
 public enum StatusJob {
     OPEN("Đang tuyển dụng"),
-    CLOSE("Hết tuyển dụng");
+    CLOSED("Hết tuyển dụng");
 
     private final String displayName;
 

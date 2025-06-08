@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (total <= 1) {
-      paginationContainer.innerHTML = ""; // không cần phân trang nếu chỉ 1 trang
+      paginationContainer.innerHTML = "";
       return;
     }
 
