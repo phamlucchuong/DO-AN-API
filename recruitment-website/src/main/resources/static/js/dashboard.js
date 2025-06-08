@@ -1,4 +1,4 @@
-// Dashboard JavaScript for VietnamWorks
+m; // Dashboard JavaScript for VietnamWorks
 // Data structures for companies and jobs
 
 // Mock data for Top Companies
@@ -522,53 +522,51 @@ async function fetchSuggestedJobs() {
   });
 }
 
-
 async function loadLoginButton() {
-  const loginButton = document.querySelector('.nav-item.login');
-  
+  const loginButton = document.querySelector(".nav-item.login");
+
   // Kiểm tra xem user đã đăng nhập chưa bằng cách xem có token trong localStorage không
-  const idToken = localStorage.getItem('idToken');
+  const idToken = localStorage.getItem("idToken");
 
   if (!idToken) {
     // Nếu chưa đăng nhập, giữ nguyên nút "Đăng nhập"
     loginButton.innerHTML = `<i class="fas fa-user"></i> Đăng nhập`;
-    loginButton.setAttribute('href', '/login');
+    loginButton.setAttribute("href", "/login");
     loginButton.onclick = null;
   } else {
     try {
       // Gửi token tới backend để lấy thông tin người dùng (giả định backend có endpoint này)
-      const response = await fetch('/api/auth/verify-token', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({ token: idToken, role: 'Employee' })  // hoặc không truyền role nếu backend mặc định USER
-});
-
+      const response = await fetch("/api/auth/verify-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: idToken, role: "Employee" }), // hoặc không truyền role nếu backend mặc định USER
+      });
 
       if (!response.ok) {
-        throw new Error('Token không hợp lệ hoặc hết hạn');
+        throw new Error("Token không hợp lệ hoặc hết hạn");
       }
 
       const userData = await response.json(); // Giả sử có avatarURL trong response
 
       // Hiển thị ảnh đại diện và xử lý chuyển trang
-      loginButton.classList.remove('nav-item');
+      loginButton.classList.remove("nav-item");
       loginButton.innerHTML = `
-        <img src="${userData.avatarURL || 'https://via.placeholder.com/30'}" 
+        <img src="${userData.avatarURL || "https://via.placeholder.com/30"}" 
              alt="avatar" 
              style="width: 40px; height: 40px; box-fit: contains; border-radius: 50%; border: 2px solid rgb(97, 221, 255)" />
       `;
-      loginButton.setAttribute('href', '#');
+      loginButton.setAttribute("href", "#");
       loginButton.onclick = function () {
-        window.location.href = '/employee-profile';
+        window.location.href = "/employee-profile";
       };
     } catch (error) {
-      console.error('Lỗi khi xác minh token:', error);
+      console.error("Lỗi khi xác minh token:", error);
       // Token có thể hết hạn hoặc backend lỗi -> xóa và hiển thị lại nút đăng nhập
-      localStorage.removeItem('idToken');
+      localStorage.removeItem("idToken");
       loginButton.innerHTML = `<i class="fas fa-user"></i> Đăng nhập`;
-      loginButton.setAttribute('href', '/login');
+      loginButton.setAttribute("href", "/login");
       loginButton.onclick = null;
     }
   }

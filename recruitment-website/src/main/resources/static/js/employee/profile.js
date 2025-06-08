@@ -76,42 +76,42 @@ document.addEventListener("DOMContentLoaded", function () {
   // Functions
   function initializeProfileData() {
     // Load personal information
-    document.getElementById("fullName").textContent =
-      profileData.personal.fullName;
-    document.getElementById("email").textContent = profileData.personal.email;
-    document.getElementById("phone").textContent = profileData.personal.phone;
-    document.getElementById("birthday").textContent =
-      profileData.personal.birthday;
-    document.getElementById("gender").textContent = profileData.personal.gender;
-    document.getElementById("address").textContent =
-      profileData.personal.address;
-    document.getElementById("sidebarName").textContent =
-      profileData.personal.fullName;
-    document.getElementById("profileAvatar").src = profileData.personal.photo;
-    document.getElementById("profilePhoto").src = profileData.personal.photo;
+    const fullNameEl = document.getElementById("fullName");
+    const emailEl = document.getElementById("email");
+    const phoneEl = document.getElementById("phone");
+    const birthdayEl = document.getElementById("birthday");
+    const genderEl = document.getElementById("gender");
+    const addressEl = document.getElementById("address");
+    const sidebarNameEl = document.getElementById("sidebarName");
+    const profileAvatarEl = document.getElementById("profileAvatar");
+    const profilePhotoEl = document.getElementById("profilePhoto");
+    const careerObjectiveEl = document.getElementById("careerObjective");
 
-    // Load career objective
-    document.getElementById("careerObjective").textContent =
-      profileData.careerObjective;
+    if (fullNameEl) fullNameEl.textContent = profileData.personal.fullName;
+    if (emailEl) emailEl.textContent = profileData.personal.email;
+    if (phoneEl) phoneEl.textContent = profileData.personal.phone;
+    if (birthdayEl) birthdayEl.textContent = profileData.personal.birthday;
+    if (genderEl) genderEl.textContent = profileData.personal.gender;
+    if (addressEl) addressEl.textContent = profileData.personal.address;
+    if (sidebarNameEl)
+      sidebarNameEl.textContent = profileData.personal.fullName;
+    if (profileAvatarEl) profileAvatarEl.src = profileData.personal.photo;
+    if (profilePhotoEl) profilePhotoEl.src = profileData.personal.photo;
+    if (careerObjectiveEl)
+      careerObjectiveEl.textContent = profileData.careerObjective;
 
-    // Load experience
+    // Load other sections
     loadExperience();
-
-    // Load education
     loadEducation();
-
-    // Load skills
     loadSkills();
-
-    // Load languages
     loadLanguages();
-
-    // Load job notifications
     loadJobNotifications();
   }
 
   function loadExperience() {
     const experienceList = document.getElementById("experienceList");
+    if (!experienceList) return;
+
     experienceList.innerHTML = "";
 
     profileData.experiences.forEach((exp) => {
@@ -133,6 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function loadEducation() {
     const educationList = document.getElementById("educationList");
+    if (!educationList) return;
+
     educationList.innerHTML = "";
 
     profileData.education.forEach((edu) => {
@@ -151,6 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function loadSkills() {
     const skillsList = document.getElementById("skillsList");
+    if (!skillsList) return;
+
     skillsList.innerHTML = "";
 
     profileData.skills.forEach((skill) => {
@@ -171,6 +175,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function loadLanguages() {
     const languagesList = document.getElementById("languagesList");
+    if (!languagesList) return;
+
     languagesList.innerHTML = "";
 
     profileData.languages.forEach((lang) => {
@@ -188,6 +194,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const jobNotificationsList = document.getElementById(
       "jobNotificationsList"
     );
+    if (!jobNotificationsList) return;
+
     jobNotificationsList.innerHTML = "";
 
     profileData.jobNotifications.forEach((job) => {
@@ -270,239 +278,361 @@ document.addEventListener("DOMContentLoaded", function () {
         ),
         addBtn: document.getElementById("addLanguageBtn"),
       },
+      jobNotification: {
+        modal: document.getElementById("createJobModal"),
+        btn: document.getElementById("createJobBtn"),
+        form: document.getElementById("createJobForm"),
+        saveBtn: document.querySelector("#createJobModal .modal-save-btn"),
+        cancelBtn: document.querySelector("#createJobModal .modal-cancel-btn"),
+        closeBtn: document.querySelector("#createJobModal .modal-close-btn"),
+      },
     };
 
     // Photo upload
     const uploadPhotoBtn = document.querySelector(".upload-photo-btn");
     const uploadPhotoInput = document.getElementById("uploadPhotoInput");
-    uploadPhotoBtn.addEventListener("click", () => uploadPhotoInput.click());
-    uploadPhotoInput.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          profileData.personal.photo = event.target.result;
-          document.getElementById("profileAvatar").src =
-            profileData.personal.photo;
-          document.getElementById("profilePhoto").src =
-            profileData.personal.photo;
-          saveToLocalStorage("profileData", profileData);
-          showMessage("Ảnh đại diện đã được cập nhật");
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+
+    if (uploadPhotoBtn && uploadPhotoInput) {
+      uploadPhotoBtn.addEventListener("click", () => uploadPhotoInput.click());
+      uploadPhotoInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            profileData.personal.photo = event.target.result;
+            const profileAvatar = document.getElementById("profileAvatar");
+            const profilePhoto = document.getElementById("profilePhoto");
+            if (profileAvatar) profileAvatar.src = profileData.personal.photo;
+            if (profilePhoto) profilePhoto.src = profileData.personal.photo;
+            saveToLocalStorage("profileData", profileData);
+            showMessage("Ảnh đại diện đã được cập nhật");
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
 
     // Personal info modal
-    modals.personal.btn.addEventListener("click", () => {
-      modals.personal.modal.style.display = "flex";
-      document.getElementById("editFullName").value =
-        profileData.personal.fullName;
-      document.getElementById("editEmail").value = profileData.personal.email;
-      document.getElementById("editPhone").value = profileData.personal.phone;
-      document.getElementById("editBirthday").value =
-        profileData.personal.birthday;
-      document.getElementById("editGender").value = profileData.personal.gender;
-      document.getElementById("editAddress").value =
-        profileData.personal.address;
-    });
-    modals.personal.saveBtn.addEventListener("click", () => {
-      const formData = new FormData(modals.personal.form);
-      const updatedData = {
-        fullName: formData.get("fullName"),
-        email: formData.get("email"),
-        phone: formData.get("phone"),
-        birthday: formData.get("birthday"),
-        gender: formData.get("gender"),
-        address: formData.get("address"),
-        photo: profileData.personal.photo,
-      };
-      if (!validateEmail(updatedData.email)) {
-        showMessage("Email không hợp lệ");
-        return;
+    if (modals.personal.btn && modals.personal.modal) {
+      modals.personal.btn.addEventListener("click", () => {
+        modals.personal.modal.style.display = "flex";
+        document.getElementById("editFullName").value =
+          profileData.personal.fullName;
+        document.getElementById("editEmail").value = profileData.personal.email;
+        document.getElementById("editPhone").value = profileData.personal.phone;
+        document.getElementById("editBirthday").value =
+          profileData.personal.birthday;
+        document.getElementById("editGender").value =
+          profileData.personal.gender;
+        document.getElementById("editAddress").value =
+          profileData.personal.address;
+      });
+
+      if (modals.personal.saveBtn) {
+        modals.personal.saveBtn.addEventListener("click", () => {
+          const formData = new FormData(modals.personal.form);
+          const updatedData = {
+            fullName: formData.get("fullName"),
+            email: formData.get("email"),
+            phone: formData.get("phone"),
+            birthday: formData.get("birthday"),
+            gender: formData.get("gender"),
+            address: formData.get("address"),
+            photo: profileData.personal.photo,
+          };
+
+          if (!validateEmail(updatedData.email)) {
+            showMessage("Email không hợp lệ");
+            return;
+          }
+          if (!validatePhone(updatedData.phone)) {
+            showMessage("Số điện thoại không hợp lệ");
+            return;
+          }
+
+          profileData.personal = updatedData;
+
+          // Update display
+          const elements = {
+            fullName: document.getElementById("fullName"),
+            email: document.getElementById("email"),
+            phone: document.getElementById("phone"),
+            birthday: document.getElementById("birthday"),
+            gender: document.getElementById("gender"),
+            address: document.getElementById("address"),
+            sidebarName: document.getElementById("sidebarName"),
+          };
+
+          Object.keys(elements).forEach((key) => {
+            if (elements[key]) {
+              elements[key].textContent =
+                updatedData[key === "sidebarName" ? "fullName" : key];
+            }
+          });
+
+          saveToLocalStorage("profileData", profileData);
+          modals.personal.modal.style.display = "none";
+          showMessage("Thông tin cá nhân đã được cập nhật");
+        });
       }
-      if (!validatePhone(updatedData.phone)) {
-        showMessage("Số điện thoại không hợp lệ");
-        return;
-      }
-      profileData.personal = updatedData;
-      document.getElementById("fullName").textContent = updatedData.fullName;
-      document.getElementById("email").textContent = updatedData.email;
-      document.getElementById("phone").textContent = updatedData.phone;
-      document.getElementById("birthday").textContent = updatedData.birthday;
-      document.getElementById("gender").textContent = updatedData.gender;
-      document.getElementById("address").textContent = updatedData.address;
-      document.getElementById("sidebarName").textContent = updatedData.fullName;
-      saveToLocalStorage("profileData", profileData);
-      modals.personal.modal.style.display = "none";
-      showMessage("Thông tin cá nhân đã được cập nhật");
-    });
+    }
 
     // Career objective modal
-    modals.objective.btn.addEventListener("click", () => {
-      modals.objective.modal.style.display = "flex";
-      document.getElementById("editCareerObjective").value =
-        profileData.careerObjective;
-    });
-    modals.objective.saveBtn.addEventListener("click", () => {
-      const formData = new FormData(modals.objective.form);
-      profileData.careerObjective = formData.get("careerObjective");
-      document.getElementById("careerObjective").textContent =
-        profileData.careerObjective;
-      saveToLocalStorage("profileData", profileData);
-      modals.objective.modal.style.display = "none";
-      showMessage("Mục tiêu nghề nghiệp đã được cập nhật");
-    });
+    if (modals.objective.btn && modals.objective.modal) {
+      modals.objective.btn.addEventListener("click", () => {
+        modals.objective.modal.style.display = "flex";
+        document.getElementById("editCareerObjective").value =
+          profileData.careerObjective;
+      });
+
+      if (modals.objective.saveBtn) {
+        modals.objective.saveBtn.addEventListener("click", () => {
+          const formData = new FormData(modals.objective.form);
+          profileData.careerObjective = formData.get("careerObjective");
+          const careerObjectiveEl = document.getElementById("careerObjective");
+          if (careerObjectiveEl) {
+            careerObjectiveEl.textContent = profileData.careerObjective;
+          }
+          saveToLocalStorage("profileData", profileData);
+          modals.objective.modal.style.display = "none";
+          showMessage("Mục tiêu nghề nghiệp đã được cập nhật");
+        });
+      }
+    }
 
     // Experience modal
-    modals.experience.btn.addEventListener("click", () => {
-      modals.experience.modal.style.display = "flex";
-      const entriesContainer = document.getElementById("experienceEntries");
-      entriesContainer.innerHTML = "";
-      profileData.experiences.forEach((exp, index) => {
-        addExperienceEntry(exp, index);
-      });
-    });
-    modals.experience.addBtn.addEventListener("click", () => {
-      addExperienceEntry(
-        { title: "", company: "", duration: "", description: "" },
-        profileData.experiences.length
-      );
-    });
-    modals.experience.saveBtn.addEventListener("click", () => {
-      const entries = document.querySelectorAll(
-        "#experienceEntries .entry-group"
-      );
-      const updatedExperiences = [];
-      entries.forEach((entry) => {
-        const title = entry.querySelector("[name='title']").value;
-        const company = entry.querySelector("[name='company']").value;
-        const duration = entry.querySelector("[name='duration']").value;
-        const description = entry.querySelector("[name='description']").value;
-        if (title && company && duration && description) {
-          updatedExperiences.push({ title, company, duration, description });
+    if (modals.experience.btn && modals.experience.modal) {
+      modals.experience.btn.addEventListener("click", () => {
+        modals.experience.modal.style.display = "flex";
+        const entriesContainer = document.getElementById("experienceEntries");
+        if (entriesContainer) {
+          entriesContainer.innerHTML = "";
+          profileData.experiences.forEach((exp, index) => {
+            addExperienceEntry(exp, index);
+          });
         }
       });
-      profileData.experiences = updatedExperiences;
-      loadExperience();
-      saveToLocalStorage("profileData", profileData);
-      modals.experience.modal.style.display = "none";
-      showMessage("Kinh nghiệm làm việc đã được cập nhật");
-    });
+
+      if (modals.experience.addBtn) {
+        modals.experience.addBtn.addEventListener("click", () => {
+          addExperienceEntry(
+            { title: "", company: "", duration: "", description: "" },
+            profileData.experiences.length
+          );
+        });
+      }
+
+      if (modals.experience.saveBtn) {
+        modals.experience.saveBtn.addEventListener("click", () => {
+          const entries = document.querySelectorAll(
+            "#experienceEntries .entry-group"
+          );
+          const updatedExperiences = [];
+          entries.forEach((entry) => {
+            const title = entry.querySelector("[name='title']").value;
+            const company = entry.querySelector("[name='company']").value;
+            const duration = entry.querySelector("[name='duration']").value;
+            const description = entry.querySelector(
+              "[name='description']"
+            ).value;
+            if (title && company && duration && description) {
+              updatedExperiences.push({
+                title,
+                company,
+                duration,
+                description,
+              });
+            }
+          });
+          profileData.experiences = updatedExperiences;
+          loadExperience();
+          saveToLocalStorage("profileData", profileData);
+          modals.experience.modal.style.display = "none";
+          showMessage("Kinh nghiệm làm việc đã được cập nhật");
+        });
+      }
+    }
 
     // Education modal
-    modals.education.btn.addEventListener("click", () => {
-      modals.education.modal.style.display = "flex";
-      const entriesContainer = document.getElementById("educationEntries");
-      entriesContainer.innerHTML = "";
-      profileData.education.forEach((edu, index) => {
-        addEducationEntry(edu, index);
-      });
-    });
-    modals.education.addBtn.addEventListener("click", () => {
-      addEducationEntry(
-        { degree: "", school: "", year: "" },
-        profileData.education.length
-      );
-    });
-    modals.education.saveBtn.addEventListener("click", () => {
-      const entries = document.querySelectorAll(
-        "#educationEntries .entry-group"
-      );
-      const updatedEducation = [];
-      entries.forEach((entry) => {
-        const degree = entry.querySelector("[name='degree']").value;
-        const school = entry.querySelector("[name='school']").value;
-        const year = entry.querySelector("[name='year']").value;
-        if (degree && school && year) {
-          updatedEducation.push({ degree, school, year });
+    if (modals.education.btn && modals.education.modal) {
+      modals.education.btn.addEventListener("click", () => {
+        modals.education.modal.style.display = "flex";
+        const entriesContainer = document.getElementById("educationEntries");
+        if (entriesContainer) {
+          entriesContainer.innerHTML = "";
+          profileData.education.forEach((edu, index) => {
+            addEducationEntry(edu, index);
+          });
         }
       });
-      profileData.education = updatedEducation;
-      loadEducation();
-      saveToLocalStorage("profileData", profileData);
-      modals.education.modal.style.display = "none";
-      showMessage("Học vấn đã được cập nhật");
-    });
+
+      if (modals.education.addBtn) {
+        modals.education.addBtn.addEventListener("click", () => {
+          addEducationEntry(
+            { degree: "", school: "", year: "" },
+            profileData.education.length
+          );
+        });
+      }
+
+      if (modals.education.saveBtn) {
+        modals.education.saveBtn.addEventListener("click", () => {
+          const entries = document.querySelectorAll(
+            "#educationEntries .entry-group"
+          );
+          const updatedEducation = [];
+          entries.forEach((entry) => {
+            const degree = entry.querySelector("[name='degree']").value;
+            const school = entry.querySelector("[name='school']").value;
+            const year = entry.querySelector("[name='year']").value;
+            if (degree && school && year) {
+              updatedEducation.push({ degree, school, year });
+            }
+          });
+          profileData.education = updatedEducation;
+          loadEducation();
+          saveToLocalStorage("profileData", profileData);
+          modals.education.modal.style.display = "none";
+          showMessage("Học vấn đã được cập nhật");
+        });
+      }
+    }
 
     // Skills modal
-    modals.skills.btn.addEventListener("click", () => {
-      modals.skills.modal.style.display = "flex";
-      const entriesContainer = document.getElementById("skillsEntries");
-      entriesContainer.innerHTML = "";
-      profileData.skills.forEach((skill, index) => {
-        addSkillEntry(skill, index);
-      });
-    });
-    modals.skills.addBtn.addEventListener("click", () => {
-      addSkillEntry({ name: "", level: 50 }, profileData.skills.length);
-    });
-    modals.skills.saveBtn.addEventListener("click", () => {
-      const entries = document.querySelectorAll("#skillsEntries .entry-group");
-      const updatedSkills = [];
-      entries.forEach((entry) => {
-        const name = entry.querySelector("[name='skillName']").value;
-        const level = parseInt(
-          entry.querySelector("[name='skillLevel']").value
-        );
-        if (name && level >= 0 && level <= 100) {
-          updatedSkills.push({ name, level });
+    if (modals.skills.btn && modals.skills.modal) {
+      modals.skills.btn.addEventListener("click", () => {
+        modals.skills.modal.style.display = "flex";
+        const entriesContainer = document.getElementById("skillsEntries");
+        if (entriesContainer) {
+          entriesContainer.innerHTML = "";
+          profileData.skills.forEach((skill, index) => {
+            addSkillEntry(skill, index);
+          });
         }
       });
-      profileData.skills = updatedSkills;
-      loadSkills();
-      saveToLocalStorage("profileData", profileData);
-      modals.skills.modal.style.display = "none";
-      showMessage("Kỹ năng đã được cập nhật");
-    });
+
+      if (modals.skills.addBtn) {
+        modals.skills.addBtn.addEventListener("click", () => {
+          addSkillEntry({ name: "", level: 50 }, profileData.skills.length);
+        });
+      }
+
+      if (modals.skills.saveBtn) {
+        modals.skills.saveBtn.addEventListener("click", () => {
+          const entries = document.querySelectorAll(
+            "#skillsEntries .entry-group"
+          );
+          const updatedSkills = [];
+          entries.forEach((entry) => {
+            const name = entry.querySelector("[name='skillName']").value;
+            const level = parseInt(
+              entry.querySelector("[name='skillLevel']").value
+            );
+            if (name && level >= 0 && level <= 100) {
+              updatedSkills.push({ name, level });
+            }
+          });
+          profileData.skills = updatedSkills;
+          loadSkills();
+          saveToLocalStorage("profileData", profileData);
+          modals.skills.modal.style.display = "none";
+          showMessage("Kỹ năng đã được cập nhật");
+        });
+      }
+    }
 
     // Languages modal
-    modals.languages.btn.addEventListener("click", () => {
-      modals.languages.modal.style.display = "flex";
-      const entriesContainer = document.getElementById("languagesEntries");
-      entriesContainer.innerHTML = "";
-      profileData.languages.forEach((lang, index) => {
-        addLanguageEntry(lang, index);
-      });
-    });
-    modals.languages.addBtn.addEventListener("click", () => {
-      addLanguageEntry({ name: "", level: "" }, profileData.languages.length);
-    });
-    modals.languages.saveBtn.addEventListener("click", () => {
-      const entries = document.querySelectorAll(
-        "#languagesEntries .entry-group"
-      );
-      const updatedLanguages = [];
-      entries.forEach((entry) => {
-        const name = entry.querySelector("[name='languageName']").value;
-        const level = entry.querySelector("[name='languageLevel']").value;
-        if (name && level) {
-          updatedLanguages.push({ name, level });
+    if (modals.languages.btn && modals.languages.modal) {
+      modals.languages.btn.addEventListener("click", () => {
+        modals.languages.modal.style.display = "flex";
+        const entriesContainer = document.getElementById("languagesEntries");
+        if (entriesContainer) {
+          entriesContainer.innerHTML = "";
+          profileData.languages.forEach((lang, index) => {
+            addLanguageEntry(lang, index);
+          });
         }
       });
-      profileData.languages = updatedLanguages;
-      loadLanguages();
-      saveToLocalStorage("profileData", profileData);
-      modals.languages.modal.style.display = "none";
-      showMessage("Ngoại ngữ đã được cập nhật");
-    });
+
+      if (modals.languages.addBtn) {
+        modals.languages.addBtn.addEventListener("click", () => {
+          addLanguageEntry(
+            { name: "", level: "" },
+            profileData.languages.length
+          );
+        });
+      }
+
+      if (modals.languages.saveBtn) {
+        modals.languages.saveBtn.addEventListener("click", () => {
+          const entries = document.querySelectorAll(
+            "#languagesEntries .entry-group"
+          );
+          const updatedLanguages = [];
+          entries.forEach((entry) => {
+            const name = entry.querySelector("[name='languageName']").value;
+            const level = entry.querySelector("[name='languageLevel']").value;
+            if (name && level) {
+              updatedLanguages.push({ name, level });
+            }
+          });
+          profileData.languages = updatedLanguages;
+          loadLanguages();
+          saveToLocalStorage("profileData", profileData);
+          modals.languages.modal.style.display = "none";
+          showMessage("Ngoại ngữ đã được cập nhật");
+        });
+      }
+    }
+
+    // Job notification modal
+    if (modals.jobNotification.btn && modals.jobNotification.modal) {
+      modals.jobNotification.btn.addEventListener("click", () => {
+        modals.jobNotification.modal.style.display = "flex";
+      });
+
+      if (modals.jobNotification.saveBtn) {
+        modals.jobNotification.saveBtn.addEventListener("click", () => {
+          const formData = new FormData(modals.jobNotification.form);
+          const newJob = {
+            id: profileData.jobNotifications.length + 1,
+            title:
+              formData.get("jobTitle") ||
+              `Việc làm mới ${profileData.jobNotifications.length + 1}`,
+            link: formData.get("jobLink") || "#",
+          };
+          profileData.jobNotifications.push(newJob);
+          loadJobNotifications();
+          saveToLocalStorage("profileData", profileData);
+          modals.jobNotification.modal.style.display = "none";
+          showMessage("Thông báo việc làm đã được tạo");
+        });
+      }
+    }
 
     // Close and cancel buttons for all modals
     Object.values(modals).forEach((modal) => {
-      modal.closeBtn.addEventListener("click", () => {
-        modal.modal.style.display = "none";
-      });
-      modal.cancelBtn.addEventListener("click", () => {
-        modal.modal.style.display = "none";
-      });
+      if (modal.closeBtn) {
+        modal.closeBtn.addEventListener("click", () => {
+          modal.modal.style.display = "none";
+        });
+      }
+      if (modal.cancelBtn) {
+        modal.cancelBtn.addEventListener("click", () => {
+          modal.modal.style.display = "none";
+        });
+      }
     });
 
     // Edit profile button
-    document.getElementById("editProfileBtn").addEventListener("click", () => {
-      showMessage(
-        "Chức năng chỉnh sửa hồ sơ tổng quát sẽ được phát triển trong phiên bản tiếp theo"
-      );
-    });
+    const editProfileBtn = document.getElementById("editProfileBtn");
+    if (editProfileBtn) {
+      editProfileBtn.addEventListener("click", () => {
+        showMessage(
+          "Chức năng chỉnh sửa hồ sơ tổng quát sẽ được phát triển trong phiên bản tiếp theo"
+        );
+      });
+    }
 
     // Company links
     document.addEventListener("click", (e) => {
@@ -520,19 +650,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    // Create job notification button
-    document.getElementById("createJobBtn").addEventListener("click", () => {
-      const newJob = {
-        id: profileData.jobNotifications.length + 1,
-        title: `Việc làm mới ${profileData.jobNotifications.length + 1}`,
-        link: "#",
-      };
-      profileData.jobNotifications.push(newJob);
-      loadJobNotifications();
-      saveToLocalStorage("profileData", profileData);
-      showMessage("Thông báo việc làm đã được tạo");
-    });
-
     // Navigation links
     document.querySelectorAll(".nav-list-link").forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -544,16 +661,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Setup profile link
-    document
-      .querySelector(".setup-profile-btn")
-      .addEventListener("click", (e) => {
+    const setupProfileBtn = document.querySelector(".setup-profile-btn");
+    if (setupProfileBtn) {
+      setupProfileBtn.addEventListener("click", (e) => {
         e.preventDefault();
         showMessage("Tính năng thiết lập hồ sơ sẽ được phát triển");
       });
+    }
   }
 
   function addExperienceEntry(exp, index) {
     const entriesContainer = document.getElementById("experienceEntries");
+    if (!entriesContainer) return;
+
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
     entryDiv.innerHTML = `
@@ -585,6 +705,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function addEducationEntry(edu, index) {
     const entriesContainer = document.getElementById("educationEntries");
+    if (!entriesContainer) return;
+
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
     entryDiv.innerHTML = `
@@ -612,6 +734,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function addSkillEntry(skill, index) {
     const entriesContainer = document.getElementById("skillsEntries");
+    if (!entriesContainer) return;
+
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
     entryDiv.innerHTML = `
