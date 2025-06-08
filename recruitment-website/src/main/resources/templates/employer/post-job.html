@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -20,6 +20,119 @@
 
             <form th:object="${job}" id="job-form">
 
+                <div class="form-group">
+                    <label for="job-title">Job Title *</label>
+                    <input type="text" id="job-title" th:field="*{title}" required
+                        placeholder="e.g. Senior Software Engineer" />
+                </div>
+
+                <div class="form-group">
+                    <label for="employmentType">Employment Type *</label>
+                    <select id="employmentType" th:field="*{employmentType}" required>
+                        <option value="" disabled>Select employment type</option>
+                        <option th:each="type : ${T(com.example.recruitment_website.enums.EmploymentType).values()}"
+                            th:value="${type}" th:text="${type}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobLevel">Job Level *</label>
+                    <select id="jobLevel" th:field="*{jobLevel}" required>
+                        <option value="" disabled>Select job level</option>
+                        <option th:each="level : ${T(com.example.recruitment_website.enums.JobLevel).values()}"
+                            th:value="${level}" th:text="${level}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="salary-range">Salary</label>
+                    <input type="text" id="salary-range" th:field="*{salary}" placeholder="e.g. $80,000 - $120,000" />
+                </div>
+
+                <div class="form-group">
+                    <label for="experience-level">Experience</label>
+                    <input type="text" id="experience-level" th:field="*{experience}" placeholder="e.g. 3+ years" />
+                </div>
+
+                <div class="form-group">
+                    <label for="numberOfVacancies">Number of Vacancies</label>
+                    <input type="number" id="numberOfVacancies" th:field="*{numberOfVacancies}" min="0" value="1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Job Description</label>
+                    <textarea id="description" th:field="*{description}" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="requirements">Job Requirements</label>
+                    <textarea id="requirements" th:field="*{requirements}" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="benefits">Benefits</label>
+                    <textarea id="benefits" th:field="*{benefits}" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="deadline">Application Deadline</label>
+                    <input type="date" id="deadline" th:field="*{deadline}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" th:field="*{city}" placeholder="e.g. Ho Chi Minh" />
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Detailed Address</label>
+                    <input type="text" id="address" th:field="*{address}" placeholder="e.g. 123 Le Duan Street" />
+                </div>
+
+                <div class="form-group">
+                    <label for="workingHours">Working Hours</label>
+                    <select id="workingHours" th:field="*{workingHours}" class="form-control">
+                        <option value="" disabled selected>-- Select Working Hours --</option>
+                        <option th:each="wh : ${T(com.example.recruitment_website.enums.WorkingHours).values()}"
+                            th:value="${wh}" th:text="${wh.displayName}">
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Post Job</button>
+            </form>
+
+        </div>
+    </div>
+    <script th:src="@{/js/employer/post-job.js}"></script>
+    <script th:src="@{/js/employer/header.js}"></script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post New Job - TalentHub</title>
+    <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
+</head>
+
+<body>
+    <div class="container">
+        <div th:replace="employer/fragments/header :: header"></div>
+        <div th:replace="employer/fragments/nav :: nav"></div>
+
+        <div class="content">
+            <h2>Post New Job</h2>
+
+            <div id="alert-container" class="alert-container">
+                <div th:if="${message != null}" th:text="${message}" class="error-message"></div>
+            </div>
+
+            <form th:object="${job}" id="job-form">
                 <div class="form-group">
                     <label for="job-title">Job Title *</label>
                     <input type="text" id="job-title" th:field="*{title}" required

@@ -507,6 +507,51 @@ body {
     font-size: 14px;
 }
 
+/* Logged-in State Styles */
+.company-logo-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.company-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #fff; /* Match header's white accent */
+}
+
+.company-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    min-width: 150px;
+    z-index: 10;
+}
+
+.company-logo-container:hover .company-dropdown {
+    display: block;
+}
+
+.company-dropdown .dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    color: #000;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.company-dropdown .dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav {
@@ -524,4 +569,26 @@ body {
     .hero-card {
         max-width: 100%;
     }
+
+    .company-logo-container {
+        width: 100%;
+        justify-content: center;
+        padding: 8px 0;
+    }
+
+    .company-logo {
+        width: 28px;
+        height: 28px;
+    }
+
+    .company-dropdown {
+        width: 100%;
+        right: 0;
+        top: calc(100% + 5px);
+    }
+}
+
+/* Ensure dropdown is hidden by default */
+.hidden {
+    display: none !important;
 }

@@ -243,7 +243,7 @@ public class JobEntity {
         return jobLevel;
     }
 
-    public void setJobLevelе(JobLevel jobLevel) {
+    public void setJobLevel(JobLevel jobLevel) {
         this.jobLevel = jobLevel;
     }
 
