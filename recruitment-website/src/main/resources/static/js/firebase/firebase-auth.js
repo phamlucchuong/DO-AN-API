@@ -4,10 +4,12 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
   createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword
-  // FacebookAuthProvider
 } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js';
 
+
+// hàm đăng nhập bằng tài khoản gg
 export async function loginWithGoogle(role) {
   const provider = new GoogleAuthProvider();
   try {
@@ -37,6 +39,8 @@ export async function loginWithGoogle(role) {
 }
 
 
+
+// hàm đăng nhập email pwd 
 export async function loginWithEmailAndPwd(email, password, role) {
   try {
     const result = await signInWithEmailAndPassword(auth, email, password);
@@ -65,6 +69,7 @@ export async function loginWithEmailAndPwd(email, password, role) {
 }
 
 
+// hàm đăng ký email password
 export async function registerWithEmailAndPassword(email, password, role) {
   try {
     const userCredential = await firebaseCreateUserWithEmailAndPassword(auth, email, password);
@@ -100,36 +105,7 @@ export async function registerWithEmailAndPassword(email, password, role) {
 }
 
 
-
-// export async function loginWithFacebook(role) {
-//   const provider = new FacebookAuthProvider();
-//   try {
-//     const result = await signInWithPopup(auth, provider);
-//     const user = result.user;
-//     const token = await user.getIdToken();
-
-//     console.log('Facebook ID Token:', token);
-
-//     await fetch('/api/auth/verify-token', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ token }),
-//     }).then(res => {
-//       if (res.ok) {
-//         alert('Đăng nhập Facebook thành công!');
-//         window.location.href = '/index';
-//       } else {
-//         alert('Xác thực token thất bại!');
-//       }
-//     });
-
-//   } catch (error) {
-//     console.error('Lỗi đăng nhập Facebook:', error.message);
-//   }
-// }
-
-
-
+// hàm đăng xuất
 export async function logout() {
   try {
     await signOut(auth);
@@ -138,5 +114,23 @@ export async function logout() {
     window.location.href = '/index'; // Redirect sau khi logout
   } catch (error) {
     console.error('firebase-auth.js-logout: Lỗi khi đăng xuất:', error.message);
+  }
+}
+
+
+// Hàm quên mật khẩu
+export async function forgotPassword(email) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert('Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư đến.');
+  } catch (error) {
+    console.error('Lỗi khi gửi email đặt lại mật khẩu:', error.message);
+    if (error.code === 'auth/user-not-found') {
+      alert('Không tìm thấy người dùng với email này.');
+    } else if (error.code === 'auth/invalid-email') {
+      alert('Email không hợp lệ.');
+    } else {
+      alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+    }
   }
 }
