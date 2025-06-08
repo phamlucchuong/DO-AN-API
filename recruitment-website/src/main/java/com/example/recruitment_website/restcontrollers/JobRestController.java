@@ -2,6 +2,8 @@ package com.example.recruitment_website.restcontrollers;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +30,8 @@ import com.example.recruitment_website.services.JobService;
 @RequestMapping("/api/employer/job")
 public class JobRestController {
 
+    private static final Logger log = LoggerFactory.getLogger(JobRestController.class);
+
     @Autowired
     private JobService jobService;
 
@@ -36,11 +41,11 @@ public class JobRestController {
     @PostMapping(value = "/add", consumes = "multipart/form-data")
     public ResponseEntity<?> addJob(@ModelAttribute JobRequest jobRequest) {
         try {
-            // gọi service với jobRequest
+            log.info("Adding job for employerId: {}", jobRequest.getEmployerId());
             JobDTO savedJob = jobService.addJob(jobRequest);
-
             return ResponseEntity.ok(new EmployerLoginResponse("true", "Job added successfully", savedJob));
         } catch (Exception e) {
+            log.error("Error adding job: {}", e.getMessage());
             return ResponseEntity.badRequest().body(new EmployerLoginResponse("false", e.getMessage(), null));
         }
     }
@@ -50,27 +55,44 @@ public class JobRestController {
             @RequestParam("employerId") String employerId,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "limit", defaultValue = "10") int limit) {
-
-        Pageable pageable = PageRequest.of(page - 1, limit);
-        Page<JobEntity> jobPage = jobRepository.findByEmployerUid(employerId, pageable);
-        Map<String, Object> response = Map.of(
-                "jobs", jobPage.getContent(),
-                "totalCount", jobPage.getTotalElements(),
-                "totalPages", jobPage.getTotalPages(),
-                "currentPage", page
-        );
-
-        return ResponseEntity.ok(response);
+        try {
+            log.info("Fetching jobs for employerId: {}, page: {}, limit: {}", employerId, page, limit);
+            Pageable pageable = PageRequest.of(page - 1, limit);
+            Page<JobEntity> jobPage = jobRepository.findByEmployerUid(employerId, pageable);
+            Map<String, Object> response = Map.of(
+                    "jobs", jobPage.getContent(),
+                    "totalCount", jobPage.getTotalElements(),
+                    "totalPages", jobPage.getTotalPages(),
+                    "currentPage", page
+            );
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error fetching jobs: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> getJobById(@PathVariable Integer id) {
         try {
+            log.info("Fetching job detail for id: {}", id);
             JobDTO jobDTO = jobService.getJobById(id);
             return ResponseEntity.ok(jobDTO);
         } catch (Exception e) {
+            log.error("Error fetching job detail: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Không tìm thấy công việc"));
         }
     }
 
+    @PutMapping(value = "/update/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<?> updateJob(@PathVariable Integer id, @ModelAttribute JobRequest jobRequest) {
+        try {
+            log.info("Updating job id: {}, employerId: {}", id, jobRequest.getEmployerId());
+            JobDTO updatedJob = jobService.updateJob(id, jobRequest);
+            return ResponseEntity.ok(new EmployerLoginResponse("true", "Job updated successfully", updatedJob));
+        } catch (Exception e) {
+            log.error("Error updating job id: {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(new EmployerLoginResponse("false", e.getMessage(), null));
+        }
+    }
 }

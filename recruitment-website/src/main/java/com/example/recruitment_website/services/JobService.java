@@ -87,4 +87,53 @@ public class JobService {
         return jobMapper.toDTO(jobEntity);
     }
 
+    @Transactional
+    public JobDTO updateJob(Integer jobId, JobRequest jobRequest) {
+        // 1. Kiểm tra sự tồn tại của công việc
+        JobEntity jobEntity = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy công việc với ID: " + jobId));
+
+        // 2. Kiểm tra sự tồn tại của nhà tuyển dụng
+        String employerId = jobRequest.getEmployerId();
+        if (employerId == null || employerId.isEmpty()) {
+            throw new IllegalArgumentException("Employer ID must not be null or empty");
+        }
+        EmployerEntity employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà tuyển dụng với ID: " + employerId));
+
+        // 3. Kiểm tra quyền sở hữu
+        if (!jobEntity.getEmployer().getUid().equals(employerId)) {
+            throw new RuntimeException("Bạn không có quyền cập nhật công việc này");
+        }
+
+        // 4. Cập nhật các trường từ jobRequest, giữ nguyên nếu null
+        jobEntity.setTitle(jobRequest.getTitle() != null ? jobRequest.getTitle() : jobEntity.getTitle());
+        jobEntity.setSalary(jobRequest.getSalary() != null ? jobRequest.getSalary() : jobEntity.getSalary());
+        jobEntity.setExperience(jobRequest.getExperience() != null ? jobRequest.getExperience() : jobEntity.getExperience());
+        jobEntity.setDescription(jobRequest.getDescription() != null ? jobRequest.getDescription() : jobEntity.getDescription());
+        jobEntity.setRequirements(jobRequest.getRequirements() != null ? jobRequest.getRequirements() : jobEntity.getRequirements());
+        jobEntity.setBenefits(jobRequest.getBenefits() != null ? jobRequest.getBenefits() : jobEntity.getBenefits());
+        jobEntity.setDeadline(jobRequest.getDeadline() != null ? jobRequest.getDeadline() : jobEntity.getDeadline());
+        jobEntity.setStatus(jobRequest.getStatus() != null ? jobRequest.getStatus() : jobEntity.getStatus());
+        jobEntity.setNumberOfVacancies(jobRequest.getNumberOfVacancies() != null ? jobRequest.getNumberOfVacancies() : jobEntity.getNumberOfVacancies());
+        jobEntity.setJobLevel(jobRequest.getJobLevel() != null ? jobRequest.getJobLevel() : jobEntity.getJobLevel());
+        jobEntity.setEmploymentType(jobRequest.getEmploymentType() != null ? jobRequest.getEmploymentType() : jobEntity.getEmploymentType());
+        jobEntity.setCity(jobRequest.getCity() != null ? jobRequest.getCity() : jobEntity.getCity());
+        jobEntity.setAddress(jobRequest.getAddress() != null ? jobRequest.getAddress() : jobEntity.getAddress());
+        jobEntity.setWorkingHours(jobRequest.getWorkingHours() != null ? jobRequest.getWorkingHours() : jobEntity.getWorkingHours());
+
+        // 5. Không cập nhật isApproved và applicationCount
+        // jobEntity.setIsApproved(jobRequest.getIsApproved() != null ? jobRequest.getIsApproved() : jobEntity.getIsApproved());
+        // jobEntity.setApplicationCount(jobRequest.getApplicationCount() != null ? jobRequest.getApplicationCount() : jobEntity.getApplicationCount());
+
+        // 6. Gán lại employer
+        jobEntity.setEmployer(employer);
+
+        // 7. Lưu entity vào database
+        jobEntity = jobRepository.save(jobEntity);
+
+        // 8. Map entity sang DTO
+        return jobMapper.toDTO(jobEntity);
+    }
+
 }
