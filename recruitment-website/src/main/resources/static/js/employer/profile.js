@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const token = localStorage.getItem("idToken");
-
     // Hàm phân tích JWT
     function parseJwt(token) {
         if (!token) return null;
@@ -18,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Kiểm tra token
+    const token = localStorage.getItem("idToken");
     if (!token) {
         console.warn("Không tìm thấy token trong localStorage");
         displayError("Vui lòng đăng nhập để xem hồ sơ.");
@@ -32,50 +31,118 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     const uid = payload.user_id;
-    console.log("Gọi API với uid:", uid);
+    const viewContainer = document.getElementById("profile-view");
+    const editContainer = document.getElementById("profile-edit");
+    const editButton = document.getElementById("edit-profile-btn");
+    const cancelButton = document.getElementById("cancel-btn");
+    const form = document.getElementById("profile-form");
+    const logoInput = document.getElementById("profile-img");
+    const logoPreview = document.getElementById("profile-img-preview");
 
-    // Gọi API để lấy thông tin nhà tuyển dụng
-    fetch(`/api/employer/profile?uid=${uid}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        }
-    })
-    .then(response => {
-        console.log("Phản hồi API:", response);
-        if (!response.ok) {
-            return response.json().then(err => {
-                throw new Error(err.message || `Lỗi HTTP: ${response.status}`);
-            });
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Dữ liệu nhà tuyển dụng:", data);
-        updateProfile(data);
-    })
-    .catch(error => {
-        console.error("Lỗi khi lấy thông tin:", error);
-        displayError(`Lỗi khi tải hồ sơ: ${error.message}`);
-        const logoElement = document.getElementById("companyLogo");
-        if (logoElement) {
-            logoElement.src = 'https://png.pngtree.com/png-vector/20210129/ourmid/pngtree-upload-avatar-by-default-png-image_2854358.jpg';
-        }
-    });
+    let profileData = null;
 
-    // Hàm hiển thị lỗi
+    // Hàm hiển thị lỗi chung
     function displayError(message) {
         const errorElement = document.getElementById("error-message");
         if (errorElement) {
             errorElement.textContent = message;
             errorElement.style.display = "block";
-            document.querySelector(".profile-details-container").style.display = "none";
         }
     }
 
-    // Hàm cập nhật giao diện
-    function updateProfile(data) {
+    // Hàm hiển thị thông báo trạng thái (sửa để hỗ trợ cả success và error)
+    function displayStatus(message, isError = false) {
+        if (isError) {
+            const errorElement = document.getElementById("error-message");
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = "block";
+                setTimeout(() => {
+                    errorElement.style.display = "none";
+                }, 3000); // Ẩn sau 3 giây
+            }
+        } else {
+            const successElement = document.getElementById("success-message");
+            if (successElement) {
+                successElement.textContent = message;
+                successElement.style.display = "block";
+                setTimeout(() => {
+                    successElement.style.display = "none";
+                }, 3000); // Ẩn sau 3 giây
+            }
+        }
+    }
+
+    // Hàm hiển thị lỗi cho từng trường
+    function displayFieldErrors(errors) {
+        const fieldErrorMap = {
+            companyName: 'companyName-error',
+            companyAddress: 'companyAddress-error',
+            phoneNumber: 'phoneNumber-error',
+            taxCode: 'taxCode-error',
+            industry: 'industry-error',
+            companySize: 'companySize-error',
+            foundedDate: 'foundedDate-error',
+            city: 'city-error',
+            companyWebsite: 'companyWebsite-error',
+            companyDescription: 'companyDescription-error',
+            companyLogo: 'companyLogo-error'
+        };
+
+        Object.values(fieldErrorMap).forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = '';
+                element.style.display = 'none';
+            }
+        });
+
+        Object.keys(errors).forEach(field => {
+            const errorElement = document.getElementById(fieldErrorMap[field]);
+            if (errorElement) {
+                errorElement.textContent = errors[field];
+                errorElement.style.display = "block";
+            }
+        });
+    }
+
+    // Hàm chuyển sang chế độ xem
+    function switchToViewMode() {
+        if (viewContainer && editContainer) {
+            viewContainer.style.display = "block";
+            editContainer.style.display = "none";
+            document.getElementById("error-message").style.display = "none";
+            document.getElementById("success-message").style.display = "none";
+            displayFieldErrors({});
+        }
+    }
+
+    // Hàm chuyển sang chế độ chỉnh sửa
+    function switchToEditMode() {
+        if (viewContainer && editContainer) {
+            viewContainer.style.display = "none";
+            editContainer.style.display = "block";
+            populateForm(profileData);
+        }
+    }
+
+    // Xử lý preview logo
+    if (logoInput && logoPreview) {
+        logoInput.addEventListener("change", function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Hàm cập nhật giao diện chế độ xem
+    function updateProfileView(data) {
+        profileData = data;
         const fields = [
             { id: "companyLogo", value: data.companyLogo, isImage: true },
             { id: "companyName", value: data.companyName },
@@ -85,12 +152,12 @@ document.addEventListener("DOMContentLoaded", function() {
             { id: "companyDescription", value: data.companyDescription },
             { id: "companyWebsite", value: data.companyWebsite, isLink: true },
             { id: "phoneNumber", value: data.phoneNumber },
-            { id: "companySize", value: data.companySize ? `${data.companySize} employees` : null },
-            { id: "foundedDate", value: data.foundedDate },
+            { id: "companySize", value: data.companySize },
+            { id: "foundedDate", value: data.foundedDate ? new Date(data.foundedDate).toLocaleDateString('vi-VN') : null },
             { id: "taxCode", value: data.taxCode },
-            { id: "isApproved", value: data.isApproved ? "Approved" : "Pending" },
-            { id: "createdAt", value: data.createdAt },
-            { id: "updatedAt", value: data.updatedAt }
+            { id: "isApproved", value: data.isApproved ? "Đã duyệt" : "Chờ duyệt" },
+            { id: "createdAt", value: data.createdAt ? new Date(data.createdAt).toLocaleString('vi-VN') : null },
+            { id: "updatedAt", value: data.updatedAt ? new Date(data.updatedAt).toLocaleString('vi-VN') : null }
         ];
 
         fields.forEach(item => {
@@ -109,4 +176,128 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+
+    // Hàm điền dữ liệu vào biểu mẫu
+    function populateForm(data) {
+        if (!data) return;
+        const fields = [
+            { id: "editCompanyName", value: data.companyName },
+            { id: "industryUpdate", value: data.industry, isSelect: true },
+            { id: "editCompanyAddress", value: data.companyAddress },
+            { id: "editCity", value: data.city, isSelect: true },
+            { id: "editCompanyDescription", value: data.companyDescription, isTextarea: true },
+            { id: "editCompanyWebsite", value: data.companyWebsite },
+            { id: "editPhoneNumber", value: data.phoneNumber },
+            { id: "companySizeUpdate", value: data.companySize, isSelect: true },
+            { id: "editFoundedDate", value: data.foundedDate ? new Date(data.foundedDate).toISOString().split('T')[0] : '' },
+            { id: "editTaxCode", value: data.taxCode }
+        ];
+
+        fields.forEach(item => {
+            const element = document.getElementById(item.id);
+            if (element) {
+                if (item.isSelect) {
+                    const option = element.querySelector(`option[value="${item.value || ''}"]`);
+                    if (option) {
+                        option.selected = true;
+                    } else {
+                        console.warn(`Không tìm thấy tùy chọn với value "${item.value}" trong #${item.id}`);
+                        element.value = '';
+                    }
+                } else if (item.isTextarea) {
+                    element.textContent = item.value || '';
+                } else {
+                    element.value = item.value || '';
+                }
+            } else {
+                console.warn(`Không tìm thấy phần tử với id: ${item.id}`);
+            }
+        });
+
+        if (logoPreview && data.companyLogo) {
+            logoPreview.src = data.companyLogo;
+        }
+    }
+
+    // Lấy dữ liệu hồ sơ
+    function fetchProfile() {
+        fetch(`/api/employer/profile?uid=${uid}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || `Lỗi HTTP: ${response.status}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Dữ liệu hồ sơ:", data);
+            updateProfileView(data);
+        })
+        .catch(error => {
+            console.error("Lỗi khi lấy thông tin:", error);
+            displayError(`Lỗi khi tải hồ sơ: ${error.message}`);
+        });
+    }
+
+    // Xử lý nút chỉnh sửa
+    if (editButton) {
+        editButton.addEventListener("click", switchToEditMode);
+    }
+
+    // Xử lý nút Hủy
+    if (cancelButton) {
+        cancelButton.addEventListener("click", switchToViewMode);
+    }
+
+    // Xử lý submit biểu mẫu
+    if (form) {
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            formData.append("uid", uid);
+
+            document.getElementById("error-message").style.display = "none";
+            document.getElementById("success-message").style.display = "none";
+            displayFieldErrors({});
+
+            fetch(`/api/employer/profile/update`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        if (data.errors) {
+                            displayFieldErrors(data.errors);
+                        }
+                        throw new Error(data.message || `Lỗi HTTP: ${response.status}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Cập nhật hồ sơ thành công:", data);
+                displayStatus("Cập nhật hồ sơ thành công!", false);
+                updateProfileView(data.data);
+                setTimeout(switchToViewMode, 2000);
+            })
+            .catch(error => {
+                console.error("Lỗi khi cập nhật:", error);
+                displayStatus(`Lỗi: ${error.message}`, true);
+            });
+        });
+    }
+
+    // Tải dữ liệu ban đầu
+    fetchProfile();
 });

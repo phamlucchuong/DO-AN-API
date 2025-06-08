@@ -29,17 +29,17 @@ public class EmployerEntity {
 
     @NotNull
     @Size(max = 100)
-    @Column(length = 100)
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String companyName;
 
     @NotNull
     @Size(max = 200)
-    @Column(length = 200)
+    @Column(columnDefinition = "NVARCHAR(200)")
     private String companyAddress;
 
     @NotNull
     @Size(max = 15)
-    @Column(length = 15)
+    @Column(columnDefinition = "NVARCHAR(15)")
     private String phoneNumber;
 
     @NotNull
@@ -51,16 +51,35 @@ public class EmployerEntity {
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String companyDescription;
 
+    @Size(max = 255)
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String companyWebsite;
+
+    @Size(max = 255)
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String companyLogo;
+
+    @Size(max = 100)
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String industry;
+
+    @Size(max = 50)
+    @Column(columnDefinition = "NVARCHAR(50)")
     private String companySize;
 
     @NotNull
+    @Size(max = 50)
+    @Column(columnDefinition = "NVARCHAR(50)")
     private String taxCode;
 
     private LocalDate foundedDate;
+
+    @Size(max = 50)
+    @Column(columnDefinition = "NVARCHAR(50)")
     private String status;
+
+    @Size(max = 100)
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String city;
 
     @NotNull
@@ -83,7 +102,6 @@ public class EmployerEntity {
     }
 
     public EmployerEntity() {}
-
 
     public EmployerEntity(String uid, AccountEntity account, String companyName, String companyAddress,
                          String phoneNumber, Boolean isApproved, String companyDescription, String companyWebsite,
@@ -108,6 +126,7 @@ public class EmployerEntity {
         this.city = city;
     }
 
+    // Getters and Setters
     public String getUid() {
         return uid;
     }
@@ -116,11 +135,11 @@ public class EmployerEntity {
         this.uid = uid;
     }
 
-    public AccountEntity geAccount(){
+    public AccountEntity getAccount() {
         return account;
     }
 
-    public void setAccount(AccountEntity account){
+    public void setAccount(AccountEntity account) {
         this.account = account;
     }
 
