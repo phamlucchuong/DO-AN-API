@@ -1,20 +1,16 @@
-package com.example.recruitment_website.dtos;
+package com.example.recruitment_website.dtos.employee;
 
 public class EducationDTO {
 
-    private String uid;
     private String school;
     private String major;
     private String period;
 
     // Không chứa EmployeeEntity để tránh vòng lặp hoặc dư thừa dữ liệu
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+    public EducationDTO(String school, String major, String period) {
+        this.school = school;
+        this.major = major;
+        this.period = period;
     }
 
     public String getSchool() {

@@ -1,5 +1,6 @@
 package com.example.recruitment_website.entities;
 
+import com.example.recruitment_website.dtos.employee.PersonalDTO;
 import com.example.recruitment_website.enums.Degree;
 import com.example.recruitment_website.enums.Gender;
 import com.example.recruitment_website.enums.JobLevel;
@@ -22,50 +23,51 @@ public class EmployeeEntity {
     private AccountEntity account;
 
     @NotNull
-    @Size(max = 100)
+    @Size(max = 255)
+    @Column(columnDefinition = "nvarchar(255)")
     private String name;
 
     @NotNull
-    @Size(max = 100)
-    private String title;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private JobLevel jobLevel;
-
-    @NotNull
-    private int exp;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Degree degree;
-
-    @NotNull
-    private Boolean country;
+    @Size(max = 50)
+    private String email;
 
     @NotNull
     @Size(max = 20)
     private String phone;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @NotNull
     private LocalDate dateOfBirth;
 
     @NotNull
     @Size(max = 100)
+    @Column(columnDefinition = "nvarchar(100)")
     private String address;
-
-    @NotNull
-    @Size(max = 100)
+    
+    @Size(max = 50)
+    @Column(columnDefinition = "nvarchar(50)")
     private String location;
 
-    @NotNull
+    private String image;
+
+    @Size(max = 100)
+    private String title;
+
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private JobLevel jobLevel;
 
-    private String languages;
+    private int exp;
 
-    @Column(columnDefinition = "TEXT")
-    private String summary;
+    @Enumerated(EnumType.STRING)
+    private Degree degree;
+
+    private Boolean country;
+
+    @Column(columnDefinition = "nvarchar(max)")
+    private String careerObjective;
 
     private String cvLink;
 
@@ -77,11 +79,11 @@ public class EmployeeEntity {
 
     private Integer contactCount;
 
-    @ElementCollection
-    private List<String> skills;
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SkillEntity> skills;
 
-    @ElementCollection
-    private List<String> certifications;
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LanguageEntity> languages;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkExperienceEntity> workExperience;
@@ -113,6 +115,30 @@ public class EmployeeEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCompanyLogo() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getCareerObjective() {
+        return careerObjective;
+    }
+
+    public void setCareerObjective(String careerObjective) {
+        this.careerObjective = careerObjective;
     }
 
     public String getTitle() {
@@ -195,20 +221,12 @@ public class EmployeeEntity {
         this.gender = gender;
     }
 
-    public String getLanguages() {
+    public List<LanguageEntity> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String languages) {
+    public void setLanguages(List<LanguageEntity> languages) {
         this.languages = languages;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
     }
 
     public String getCvLink() {
@@ -251,20 +269,12 @@ public class EmployeeEntity {
         this.contactCount = contactCount;
     }
 
-    public List<String> getSkills() {
+    public List<SkillEntity> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<String> skills) {
+    public void setSkills(List<SkillEntity> skills) {
         this.skills = skills;
-    }
-
-    public List<String> getCertifications() {
-        return certifications;
-    }
-
-    public void setCertifications(List<String> certifications) {
-        this.certifications = certifications;
     }
 
     public List<WorkExperienceEntity> getWorkExperience() {

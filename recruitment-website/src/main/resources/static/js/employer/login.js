@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import {loginWithEmailAndPwd} from '../firebase/firebase-auth.js'
 
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
@@ -32,32 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-<<<<<<< HEAD
-    try {
-      const response = await fetch('/employer/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        errorMessage.textContent = errorData.message || 'Đăng nhập thất bại';
-        return;
-      }
-
-      const data = await response.json();
-      // Lưu ID vào localStorage hoặc sessionStorage dựa trên rememberMe
-      if (isRememberMe) {
-        localStorage.setItem('employerId', data.id);
-      } else {
-        sessionStorage.setItem('employerId', data.id);
-      }
-      
-      console.log('Đăng nhập thành công:', { email, password, isRememberMe, userId: data.id });
-=======
 
     try {
 
@@ -77,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       console.log('Đăng nhập thành công:');
->>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
       window.location.href = '/employer/dashboard';
 
     } catch (error) {
