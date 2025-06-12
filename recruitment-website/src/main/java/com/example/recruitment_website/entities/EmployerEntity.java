@@ -71,7 +71,7 @@ public class EmployerEntity {
 
     @NotNull
     @Size(max = 50)
-    @Column(columnDefinition = "NVARCHAR(50)")
+    @Column(columnDefinition = "NVARCHAR(50)", unique = true)
     private String taxCode;
 
     private LocalDate foundedDate;
