@@ -22,6 +22,7 @@ import jakarta.validation.constraints.Size;
 public class EmployerEntity {
 
     @Id
+    @Column(name = "uid") // hoặc tên thật trong DB
     private String uid;
 
     @OneToOne

@@ -14,6 +14,7 @@ import java.util.List;
 public class EmployeeEntity {
 
     @Id
+    @Column(name = "uid") // hoặc tên thật trong DB
     private String uid;
 
     @OneToOne

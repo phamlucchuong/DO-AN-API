@@ -1,4 +1,44 @@
-document.addEventListener("DOMContentLoaded", () => {
+
+async function postCv(uid, cvData) {
+  try {
+    const response = await fetch(`/api/application/${uid}/post`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(cvData)
+    });
+
+    if(!response.ok) {
+      console.log('Lỗi khi upload Cv');
+    }
+
+  } catch (error) {
+    console.error("Lỗi khi thêm cv", error);
+  }
+}
+
+async function getJobDetail(id) {
+  try {
+    const response = await fetch(`/api/employer/job/detail/${id}`, {
+      method: 'GET',
+    });
+
+    if(!response.ok) {
+      console.log('Lỗi khi lấy job detail');
+      return;
+    }
+
+    const job_detail = response.json();
+    return job_detail;
+
+  } catch (error) {
+    console.error("Lỗi khi lấy job detail", error);
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", async () => {
   // Dữ liệu mẫu (tổng hợp từ hotJobsData và suggestedJobsData)
   const allJobsData = [
     {
@@ -216,24 +256,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const jobId = parseInt(urlParams.get("id"));
 
   // Tìm công việc theo ID
-  const job = allJobsData.find((j) => j.id === jobId);
+  const job = await getJobDetail(jobId);
 
   if (job) {
     // Điền thông tin công việc
-    document.getElementById("companyLogo").src = job.companyLogo;
+    document.getElementById("companyLogo").src = job.employer.companyLogo;
     document.getElementById("jobTitle").textContent = job.title;
-    document.getElementById("companyName").textContent = job.company;
+    document.getElementById("companyName").textContent = job.employer.companyName;
     document.getElementById("jobSalary").textContent = `${job.salary} VNĐ`;
     document.getElementById(
       "jobLocation"
-    ).innerHTML = `<i class="fas fa-map-marker-alt"></i> ${job.location}`;
+    ).innerHTML = `<i class="fas fa-map-marker-alt"></i> ${job.address}`;
     document.getElementById(
       "jobExperience"
     ).innerHTML = `<i class="fas fa-briefcase"></i> ${job.experience}`;
     document.getElementById("jobDescription").textContent = job.description;
     document.getElementById(
       "postedDate"
-    ).textContent = `Đăng ngày: ${formatDate(job.postedDate)}`;
+    ).textContent = `Đăng ngày: ${formatDate(job.createdAt)}`;
 
     // Hiển thị badge nếu có
     if (job.isHot)
@@ -271,12 +311,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    submitCV.addEventListener("click", () => {
+    submitCV.addEventListener("click", async () => {
       const file = cvUpload.files[0];
       if (file && file.type === "application/pdf") {
         alert(`Đã gửi CV cho vị trí ${job.title} tại ${job.company}.`);
         applyModal.style.display = "none";
         cvUpload.value = ""; // Reset input file
+        const cvData = {
+          cvLink: file,
+          employer_id: job.employer.uid,
+          employee_id: localStorage.getItem('uid'),
+        }
+        await postCv(jobId, cvData);
       } else {
         alert("Vui lòng tải lên file PDF hợp lệ!");
       }
