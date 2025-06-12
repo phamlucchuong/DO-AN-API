@@ -222,9 +222,9 @@ async function postExperience(id, formData) {
 }
 
 
-async function deleteExperience(id, experienceID) {
+async function deleteExperience(id, expID) {
   try {
-    const response = await fetch(`/api/employee/${id}/work-experience?experienceID=${experienceID}`, {
+    const response = await fetch(`/api/employee/${id}/work-experience?expID=${expID}`, {
       method: 'DELETE',
     });
 
@@ -314,9 +314,9 @@ async function postEducation(id, data) {
 }
 
 
-async function deletetEducation(id, educationID) {
+async function deletetEducation(id, eduID) {
   try {
-    const response = await fetch(`/api/employee/${id}/education?educationID=${educationID}`, {
+    const response = await fetch(`/api/employee/${id}/education?eduID=${eduID}`, {
       method: 'DELETE',
     });
 
