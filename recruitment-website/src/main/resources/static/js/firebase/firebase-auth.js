@@ -57,7 +57,7 @@ export async function loginWithEmailAndPwd(email, password, role) {
     }).then(res => {
       if (res.ok) {
         alert('Đăng nhập thành công!');
-        window.location.href = role === 'Employee' ? '/index' : '/employer/dashboard';
+        window.location.href = role === 'Employee' ? '/index' : role === 'Employer' ? '/employer/dashboard' : role === 'Admin' ? '/admin/dashboard' : '/';
       } else {
         alert('Xác thực thất bại!');
       }

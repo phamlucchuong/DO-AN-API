@@ -1,5 +1,10 @@
 package com.example.recruitment_website.services;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +14,8 @@ import com.example.recruitment_website.dtos.EmployerDTO;
 import com.example.recruitment_website.entities.AccountEntity;
 import com.example.recruitment_website.entities.EmployerEntity;
 import com.example.recruitment_website.mappers.EmployerMapper;
-import com.example.recruitment_website.payloads.EmployerRegisterRequest;
 import com.example.recruitment_website.payloads.EmployerProfileUpdateRequest;
+import com.example.recruitment_website.payloads.EmployerRegisterRequest;
 import com.example.recruitment_website.repositories.AccountRepository;
 import com.example.recruitment_website.repositories.EmployerRepository;
 
@@ -18,6 +23,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class EmployerService {
+
     @Autowired
     private EmployerRepository employerRepository;
     @Autowired
@@ -193,4 +199,70 @@ public class EmployerService {
             throw new RuntimeException("Lỗi khi lưu cập nhật hồ sơ: " + ex.getMessage());
         }
     }
+
+    public List<EmployerDTO> getAllEmployers() {
+        logger.debug("Bắt đầu lấy danh sách tất cả employer");
+
+        List<EmployerEntity> employers = employerRepository.findAll();
+
+        if (employers.isEmpty()) {
+            logger.info("Không có employer nào trong hệ thống.");
+            return List.of(); // trả về danh sách rỗng
+        }
+
+        List<EmployerDTO> employerDTOs = employers.stream()
+                .map(employerMapper::toDTO)
+                .collect(Collectors.toList());
+
+        logger.info("Lấy danh sách tất cả employer thành công, tổng số: {}", employerDTOs.size());
+        return employerDTOs;
+    }
+
+    public void approveEmployer(String employerId) {
+        EmployerEntity employer = employerRepository.findById(employerId)
+                .orElseThrow(() -> new RuntimeException("Employer not found"));
+        employer.setIsApproved(true);
+        employerRepository.save(employer);
+    }
+
+    public Map<String, Long> getEmployerStatistics() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfCurrentMonth = now.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime startOfLastMonth = startOfCurrentMonth.minusMonths(1);
+        LocalDateTime endOfLastMonth = startOfCurrentMonth.minusSeconds(1);
+
+        // Số lượng công việc trong tháng hiện tại
+        long currentMonthJobs = employerRepository.countByCreatedAtBetween(startOfCurrentMonth, now);
+
+        // Số lượng công việc trong tháng trước
+        long lastMonthJobs = employerRepository.countByCreatedAtBetween(startOfLastMonth, endOfLastMonth);
+
+        return Map.of(
+                "currentMonth", currentMonthJobs,
+                "lastMonth", lastMonthJobs
+        );
+    }
+
+    public List<EmployerDTO> getPendingEmployers() {
+        logger.debug("Bắt đầu lấy danh sách employer đang pending duyệt");
+
+        List<EmployerEntity> pendingEmployers = employerRepository.findByIsApprovedFalse();
+
+        if (pendingEmployers.isEmpty()) {
+            logger.info("Không có employer nào đang pending.");
+            return List.of();
+        }
+
+        List<EmployerDTO> employerDTOs = pendingEmployers.stream()
+                .map(employerMapper::toDTO)
+                .collect(Collectors.toList());
+
+        logger.info("Lấy danh sách employer pending thành công, tổng số: {}", employerDTOs.size());
+        return employerDTOs;
+    }
+
+    public int countEmployersByMonthAndYear(int month, int year) {
+        return employerRepository.countEmployersByMonthAndYear(month, year);
+    }
+
 }

@@ -43,4 +43,9 @@ public class HomeController {
         return "employee/profile-detail"; 
     }
 
+    @GetMapping("/admin")
+    public String admin(){
+        return "/admin/login";
+    }
+
 }

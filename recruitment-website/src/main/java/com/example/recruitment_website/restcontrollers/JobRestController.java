@@ -72,6 +72,19 @@ public class JobRestController {
         }
     }
 
+    @GetMapping("/getAllJobs")
+    public ResponseEntity<?> getAllJobs() {
+        try {
+            log.info("Fetching all jobs");
+            return ResponseEntity.ok(jobService.getJobs());
+        } catch (Exception e) {
+            log.error("Error fetching all jobs: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> getJobById(@PathVariable Integer id) {
         try {
@@ -95,4 +108,18 @@ public class JobRestController {
             return ResponseEntity.badRequest().body(new EmployerLoginResponse("false", e.getMessage(), null));
         }
     }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<?> getJobStatistics() {
+        try {
+            log.info("Fetching job statistics for current and last month");
+            Map<String, Long> stats = jobService.getJobStatistics();
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            log.error("Error fetching job statistics: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Lỗi khi lấy thống kê bài tuyển dụng"));
+        }
+    }
+
 }

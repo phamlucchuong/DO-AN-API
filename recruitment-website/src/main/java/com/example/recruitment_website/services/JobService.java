@@ -1,6 +1,8 @@
 package com.example.recruitment_website.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -103,6 +105,11 @@ public class JobService {
         return jobMapper.toDTO(jobEntity);
     }
 
+    public List<JobDTO> getJobs() {
+        List<JobEntity> jobs = jobRepository.findAll();
+        return jobs.stream().map(jobMapper::toDTO).collect(Collectors.toList());
+    }
+
     @Transactional
     public JobDTO updateJob(Integer jobId, JobRequest jobRequest) {
         // 1. Kiểm tra sự tồn tại của công việc
@@ -155,7 +162,6 @@ public class JobService {
         // 6. Không cập nhật isApproved và applicationCount
         // jobEntity.setIsApproved(jobRequest.getIsApproved() != null ? jobRequest.getIsApproved() : jobEntity.getIsApproved());
         // jobEntity.setApplicationCount(jobRequest.getApplicationCount() != null ? jobRequest.getApplicationCount() : jobEntity.getApplicationCount());
-
         // 7. Gán lại employer
         jobEntity.setEmployer(employer);
 
@@ -171,4 +177,33 @@ public class JobService {
         // 9. Map entity sang DTO
         return jobMapper.toDTO(jobEntity);
     }
+
+    public Map<String, Long> getJobStatistics() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfCurrentMonth = now.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime startOfLastMonth = startOfCurrentMonth.minusMonths(1);
+        LocalDateTime endOfLastMonth = startOfCurrentMonth.minusSeconds(1);
+
+        // Số lượng công việc trong tháng hiện tại
+        long currentMonthJobs = jobRepository.countByCreatedAtBetween(startOfCurrentMonth, now);
+
+        // Số lượng công việc trong tháng trước
+        long lastMonthJobs = jobRepository.countByCreatedAtBetween(startOfLastMonth, endOfLastMonth);
+
+        return Map.of(
+                "currentMonth", currentMonthJobs,
+                "lastMonth", lastMonthJobs
+        );
+    }
+
+    public Integer getJobsCountByEmployerId(String id) {
+        EmployerEntity employer = employerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employer not found with id: " + id));
+        return jobRepository.countByEmployer(employer);
+    }
+
+    public int countJobsByMonthAndYear(int month, int year) {
+        return jobRepository.countJobsByMonthAndYear(month, year);
+    }
+
 }
