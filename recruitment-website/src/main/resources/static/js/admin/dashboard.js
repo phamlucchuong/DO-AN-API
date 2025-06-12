@@ -149,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((response) => response.json())
     .then((data) => {
       updateStatCard(3, data.currentMonth, data.lastMonth);
+      console.log(data.currentMonth, data.lastMonth);
     })
     .catch((error) =>
       console.error("Lỗi khi load thống kê nhà tuyển dụng:", error)

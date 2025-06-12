@@ -37,8 +37,12 @@
                 <div class="management-header">
                     <h3>Danh sách nhà tuyển dụng</h3>
                     <div class="management-actions">
-                        <input type="text" placeholder="Tìm kiếm nhà tuyển dụng..." class="search-bar"
-                            id="employerSearch">
+                        <input type="text" placeholder="Tìm kiếm nhà tuyển dụng..." class="search-bar" id="employerSearch">
+                        <select id="statusFilter" class="status-filter">
+                            <option value="all">Tất cả</option>
+                            <option value="approved">Đã duyệt</option>
+                            <option value="not-approved">Chưa duyệt</option>
+                        </select>
                         <input type="date" name="startDate" class="date-filter">
                         <input type="date" name="endDate" class="date-filter">
                         <button id="filterButton" type="button" class="action-button">
@@ -61,28 +65,14 @@
                             </tr>
                         </thead>
                         <tbody id="employerTableBody">
-                            <tr th:each="employer : ${employers}">
-                                <td th:text="${employer.id}">1</td>
-                                <td th:text="${employer.companyName}">Tech Company ABC</td>
-                                <td th:text="${employer.email}">contact@techabc.com</td>
-                                <td th:text="${employer.jobCount}">5</td>
-                                <td>
-                                    <span
-                                        th:class="${employer.status == 'APPROVED'} ? 'status active' : 'status pending'"
-                                        th:text="${employer.status == 'APPROVED'} ? 'Đã duyệt' : 'Chờ duyệt'">Đã
-                                        duyệt</span>
-                                </td>
-                                <td th:text="${#dates.format(employer.createdDate, 'dd/MM/yyyy')}">02/06/2025</td>
-                                <td>
-                                    <a th:if="${employer.status != 'APPROVED'}"
-                                        th:href="@{'/admin/employers-management/approve/' + ${employer.id}}"
-                                        class="action-icon approve">
-                                        <i class="fas fa-check-circle"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            <!-- Populated by JavaScript -->
                         </tbody>
                     </table>
+                    <div class="pagination-controls">
+                        <button id="prevBtn" disabled>Previous</button>
+                        <span id="currentPage">Trang 1 / 1</span>
+                        <button id="nextBtn">Next</button>
+                    </div>
                     <div id="employer-profile-overlay" style="display: none;">
                         <div class="profile-content">
                             <button id="close-profile">Đóng</button>

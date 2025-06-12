@@ -345,4 +345,5 @@ public class EmployerService {
             throw new RuntimeException("Lỗi khi lấy danh sách employer: " + ex.getMessage());
         }
     }
+
 }

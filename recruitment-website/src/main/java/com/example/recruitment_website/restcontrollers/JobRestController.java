@@ -73,17 +73,26 @@ public class JobRestController {
     }
 
     @GetMapping("/getAllJobs")
-    public ResponseEntity<?> getAllJobs() {
+    public ResponseEntity<?> getAllJobs(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
         try {
-            log.info("Fetching all jobs");
-            return ResponseEntity.ok(jobService.getJobs());
+            log.info("Fetching all jobs, page: {}, size: {}", page, size);
+            Pageable pageable = PageRequest.of(page, size);
+            Page<JobEntity> jobPage = jobRepository.findAll(pageable);
+            Map<String, Object> response = Map.of(
+                    "content", jobPage.getContent(),
+                    "totalElements", jobPage.getTotalElements(),
+                    "totalPages", jobPage.getTotalPages(),
+                    "currentPage", page
+            );
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error fetching all jobs: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", e.getMessage()));
         }
     }
-
 
     @GetMapping("/{id}/detail")
     public ResponseEntity<?> getJobById(@PathVariable Integer id) {
