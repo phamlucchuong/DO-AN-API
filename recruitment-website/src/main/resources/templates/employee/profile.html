@@ -29,7 +29,7 @@
                 ><i class="fas fa-briefcase"></i> Nhà tuyển dụng</a
               >
               <a href="#" class="nav-item"><i class="fas fa-wallet"></i> Ví</a>
-              <a href="/login" class="nav-item"
+              <a style="cursor: pointer;" id="logoutBtn" class="nav-item"
                 ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
               >
             </nav>
@@ -441,6 +441,10 @@
       </div>
     </footer>
 
-    <script src="js/employee/profile.js"></script>
+    <script  type="module" src="js/employee/profile.js"></script>
+    <script type="module">
+      import { logout } from '/js/firebase/firebase-auth.js';
+      document.getElementById("logoutBtn").addEventListener('click', logout);
+    </script>
   </body>
 </html>

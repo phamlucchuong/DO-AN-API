@@ -1,0 +1,152 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
+.company-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+/* employers.css */
+
+/* Container and Section Styling */
+.top-companies {
+    padding: 20px 0;
+    background-color: #fff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Section Header */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.view-all {
+    color: 
+#007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.view-all:hover {
+    text-decoration: underline;
+}
+
+/* Companies Grid */
+.companies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Company Card */
+/* Chỉ phần liên quan đến company-card */
+.company-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+.company-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.company-logo-small {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.company-details {
+    flex: 1;
+}
+
+.company-details h3 {
+    font-size: 20px;
+    color: #005f94;
+    margin-bottom: 10px;
+}
+
+.company-details p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.company-details a {
+    font-size: 14px;
+    color: #005f94;
+    text-decoration: none;
+}
+
+.company-details a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .company-card {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .company-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .company-logo-small {
+        margin-bottom: 10px;
+    }
+
+    .company-details {
+        width: 100%;
+    }
+}
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.pagination button:hover {
+    background-color: 
+#004876;
+}
