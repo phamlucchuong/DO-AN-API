@@ -1,450 +1,208 @@
-
-function convertDateToISO(dateString) {
-  // dateString format: "25/12/2023"
-  const [day, month, year] = dateString.split('/');
-  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-}
-
-function convertDateFromISO(isoString) {
-  // isoString format: "2023-12-25"
-  const [year, month, day] = isoString.split('-');
-  return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
-}
-
-
-
-
-// personal data
-async function getPersonal(id) {
-  try {
-    const response = await fetch(`/api/employee/${id}/personal`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-loadPersonal: không lấy được data");
-    }
-
-    const result = await response.json();
-    return result;
-
-  } catch (error) {
-    console.error('Lỗi khi tải profile:', error);
-  }
-}
-
-async function loadPersonal(id) {
-  const personalData = await getPersonal(id); // phải `await`
-
-  if (!personalData) {
-    console.error("Không có dữ liệu personal.");
-    return;
-  }
-
-  document.getElementById("fullName").textContent = personalData.name;
-  document.getElementById("email").textContent = personalData.email;
-  document.getElementById("phone").textContent = personalData.phone;
-  document.getElementById("birthday").textContent = convertDateFromISO(personalData.dateOfBirth);
-  document.getElementById("gender").textContent = personalData.gender === 'MALE' ? 'Nam' : 'Nữ';
-  document.getElementById("address").textContent = personalData.address;
-  document.getElementById("sidebarName").textContent = personalData.name;
-}
-
-async function updatePersonal(id, method, data) {
-
-  try {
-    const response = await fetch(`/api/employee/${id}/personal`, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json'
+// Profile page JavaScript functionality
+document.addEventListener("DOMContentLoaded", function () {
+  // Sample data - in real application, this would come from backend
+  let profileData = {
+    personal: {
+      fullName: "Vỹ Hà",
+      email: "vy1098@gmail.com",
+      phone: "+84 123 456 789",
+      birthday: "15/03/1990",
+      gender: "Nam",
+      address: "123 Nguyễn Huệ, Quận 1, TP.HCM",
+      photo: "https://via.placeholder.com/120x120?text=User",
+    },
+    careerObjective:
+      "Tìm kiếm vị trí CEO/Giám đốc điều hành tại một công ty công nghệ đầy tiềm năng. Với hơn 10 năm kinh nghiệm trong lĩnh vực quản lý và phát triển kinh doanh, tôi mong muốn đóng góp vào sự phát triển bền vững của doanh nghiệp.",
+    experiences: [
+      {
+        title: "Chief Executive Officer (CEO)",
+        company: "TechViet Solutions",
+        duration: "2020 - Hiện tại",
+        description:
+          "Điều hành và quản lý toàn bộ hoạt động của công ty công nghệ với hơn 200 nhân viên. Tăng trưởng doanh thu 150% trong 3 năm.",
       },
-      body: JSON.stringify(data)
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-updatePersonal: không thể cập nhật personal");
-    }
-
-    console.log("Cập nhật personal thành công!");
-    loadPersonal(id);
-
-  } catch (error) {
-    console.error('Lỗi khi tải profile:', error);
-  }
-}
-
-
-
-// career objective
-async function loadCareerObjective(id) {
-  try {
-    const response = await fetch(`/api/employee/${id}/career-objective`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-loadCareerObjective: không lấy được data");
-    }
-
-    // API trả về string text/plain, nên dùng response.text()
-    const data = await response.text();
-    document.getElementById("careerObjective").textContent = data || "Chưa có mục tiêu nghề nghiệp";
-
-  } catch (error) {
-    console.error('Lỗi khi tải careerObjective:', error);
-  }
-}
-
-async function updateCareerObjective(id) {
-
-  const careerObjective = document.getElementById("editCareerObjective").value;
-
-  try {
-    const response = await fetch(`/api/employee/${id}/career-objective`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
+      {
+        title: "Giám đốc Phát triển Kinh doanh",
+        company: "Digital Innovation Co.",
+        duration: "2017 - 2020",
+        description:
+          "Phát triển và mở rộng thị trường, xây dựng đối tác chiến lược. Tăng 80% khách hàng doanh nghiệp trong 2 năm.",
       },
-      body: JSON.stringify(careerObjective) // Đưa trực tiếp chuỗi theo controller
-    });
+      {
+        title: "Trưởng phòng Marketing",
+        company: "StartUp Hub",
+        duration: "2015 - 2017",
+        description:
+          "Xây dựng và triển khai chiến lược marketing tổng thể. Quản lý team 15 người và ngân sách marketing 2 tỷ đồng/năm.",
+      },
+    ],
+    education: [
+      {
+        degree: "Thạc sĩ Quản trị Kinh doanh (MBA)",
+        school: "Đại học Kinh tế TP.HCM",
+        year: "2015",
+      },
+      {
+        degree: "Cử nhân Công nghệ Thông tin",
+        school: "Đại học Bách Khoa TP.HCM",
+        year: "2012",
+      },
+    ],
+    skills: [
+      { name: "Quản lý và Lãnh đạo", level: 95 },
+      { name: "Phát triển Kinh doanh", level: 90 },
+      { name: "Marketing Strategy", level: 85 },
+      { name: "Project Management", level: 88 },
+      { name: "Digital Transformation", level: 80 },
+      { name: "Team Building", level: 92 },
+    ],
+    languages: [
+      { name: "Tiếng Việt", level: "Bản ngữ" },
+      { name: "Tiếng Anh", level: "Thành thạo" },
+      { name: "Tiếng Nhật", level: "Cơ bản" },
+    ],
+    jobNotifications: [
+      { id: 1, title: "Senior Developer at TechViet", link: "#" },
+      { id: 2, title: "Marketing Manager at Digital Innovation", link: "#" },
+    ],
+  };
 
-    if (!response.ok) {
-      throw new Error("profile.js-updateCareerObjective: không cập nhật được data");
-    }
+  // Initialize page data
+  initializeProfileData();
 
-    console.log("Cập nhật mục tiêu nghề nghiệp thành công!");
-    localStorage.setItem('careerObjective', careerObjective);
-    loadCareerObjective(id);
+  // Event listeners
+  setupEventListeners();
 
-  } catch (error) {
-    console.error('Lỗi khi cập nhật careerObjective:', error);
+  // Functions
+  function initializeProfileData() {
+    // Load personal information
+    const fullNameEl = document.getElementById("fullName");
+    const emailEl = document.getElementById("email");
+    const phoneEl = document.getElementById("phone");
+    const birthdayEl = document.getElementById("birthday");
+    const genderEl = document.getElementById("gender");
+    const addressEl = document.getElementById("address");
+    const sidebarNameEl = document.getElementById("sidebarName");
+    const profileAvatarEl = document.getElementById("profileAvatar");
+    const profilePhotoEl = document.getElementById("profilePhoto");
+    const careerObjectiveEl = document.getElementById("careerObjective");
+
+    if (fullNameEl) fullNameEl.textContent = profileData.personal.fullName;
+    if (emailEl) emailEl.textContent = profileData.personal.email;
+    if (phoneEl) phoneEl.textContent = profileData.personal.phone;
+    if (birthdayEl) birthdayEl.textContent = profileData.personal.birthday;
+    if (genderEl) genderEl.textContent = profileData.personal.gender;
+    if (addressEl) addressEl.textContent = profileData.personal.address;
+    if (sidebarNameEl)
+      sidebarNameEl.textContent = profileData.personal.fullName;
+    if (profileAvatarEl) profileAvatarEl.src = profileData.personal.photo;
+    if (profilePhotoEl) profilePhotoEl.src = profileData.personal.photo;
+    if (careerObjectiveEl)
+      careerObjectiveEl.textContent = profileData.careerObjective;
+
+    // Load other sections
+    loadExperience();
+    loadEducation();
+    loadSkills();
+    loadLanguages();
+    loadJobNotifications();
   }
-}
 
-
-
-
-// experience
-async function loadExperience(id) {
-  try {
-    const response = await fetch(`/api/employee/${id}/work-experience`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-loadExperience: không lấy được data");
-    }
-
-    const experiences = await response.json();
-
+  function loadExperience() {
     const experienceList = document.getElementById("experienceList");
+    if (!experienceList) return;
+
     experienceList.innerHTML = "";
 
-    if (!experiences || experiences.length === 0) {
-      experienceList.innerHTML = "<p>Bạn chưa có kinh nghiệm làm việc nào</p>";
-      return;
-    }
-
-    experiences.forEach((exp) => {
+    profileData.experiences.forEach((exp) => {
       const experienceItem = document.createElement("div");
       experienceItem.className = "experience-item";
       experienceItem.innerHTML = `
-        <div class="experience-timeline">
-          <div class="experience-duration">${exp.period}</div>
-        </div>
-        <div class="experience-details">
-          <div class="experience-title">${exp.role}</div>
-          <div class="experience-company"><a href="#" class="company-link" data-company="${exp.company}">${exp.company}</a></div>
-          <div class="experience-description">${exp.description}</div>
-        </div>
-      `;
+                <div class="experience-timeline">
+                    <div class="experience-duration">${exp.duration}</div>
+                </div>
+                <div class="experience-details">
+                    <div class="experience-title">${exp.title}</div>
+                    <div class="experience-company"><a href="#" class="company-link" data-company="${exp.company}">${exp.company}</a></div>
+                    <div class="experience-description">${exp.description}</div>
+                </div>
+            `;
       experienceList.appendChild(experienceItem);
     });
-
-  } catch (error) {
-    console.error('Lỗi khi tải experience:', error);
   }
-}
 
-
-async function postExperience(id, formData) {
-  try {
-    const response = await fetch(`/api/employee/${id}/work-experience`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-postExperience: không thêm được data");
-    }
-
-    console.log('thêm experience thành công');
-    loadExperience(id);
-
-  } catch (error) {
-    console.error('Lỗi khi post experience:', error);
-  }
-}
-
-
-// education
-async function loadEducation(id) {
-  try {
-    const response = await fetch(`/api/employee/${id}/education`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-loadEducation: không lấy được data");
-    }
-
-    const education = await response.json();
-
+  function loadEducation() {
     const educationList = document.getElementById("educationList");
+    if (!educationList) return;
+
     educationList.innerHTML = "";
 
-    if (!education || education.length === 0) {
-      educationList.innerHTML = "<p>Bạn chưa có thông tin học vấn nào</p>";
-      return;
-    }
-
-    education.forEach((edu) => {
+    profileData.education.forEach((edu) => {
       const educationItem = document.createElement("div");
       educationItem.className = "education-item";
       educationItem.innerHTML = `
-        <div class="education-year">${edu.period}</div>
-        <div class="education-details">
-          <div class="education-degree">${edu.major}</div>
-          <div class="education-school">${edu.school}</div>
-        </div>
-      `;
+                <div class="education-year">${edu.year}</div>
+                <div class="education-details">
+                    <div class="education-degree">${edu.degree}</div>
+                    <div class="education-school">${edu.school}</div>
+                </div>
+            `;
       educationList.appendChild(educationItem);
     });
-  } catch (error) {
-    console.error('Lỗi khi tải education:', error);
   }
-}
 
-
-
-async function postEducation(id, data) {
-  try {
-    const response = await fetch(`/api/employee/${id}/education`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-postEducation: không thêm được education");
-    }
-
-    console.log('post education thành công');
-    loadEducation(id);
-
-  } catch (error) {
-    console.error('Lỗi khi tải education:', error);
-  }
-}
-
-
-
-// skill
-async function loadSkills(id) {
-  try {
-    const response = await fetch(`/api/employee/${id}/skill`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-loadSkills: không lấy được data");
-    }
-
-    const skills = await response.json();
-
+  function loadSkills() {
     const skillsList = document.getElementById("skillsList");
+    if (!skillsList) return;
+
     skillsList.innerHTML = "";
 
-    if (!skills || skills.length === 0) {
-      skillsList.innerHTML = "<p>Bạn chưa có kỹ năng nào</p>";
-      return;
-    }
-
-    skills.forEach((skill) => {
+    profileData.skills.forEach((skill) => {
       const skillItem = document.createElement("div");
       skillItem.className = "skill-item";
       skillItem.innerHTML = `
-        <div class="skill-name">${skill.name}</div>
-        <div class="skill-level">
-          <div class="skill-bar">
-            <div class="skill-progress" style="width: ${skill.level}%"></div>
-          </div>
-          <div class="skill-percentage">${skill.level}%</div>
-        </div>
-      `;
+                <div class="skill-name">${skill.name}</div>
+                <div class="skill-level">
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: ${skill.level}%"></div>
+                    </div>
+                    <div class="skill-percentage">${skill.level}%</div>
+                </div>
+            `;
       skillsList.appendChild(skillItem);
     });
-  } catch (error) {
-    console.error('Lỗi khi tải skills:', error);
   }
-}
 
-
-async function postSkill(id, data) {
-  try {
-    const response = await fetch(`/api/employee/${id}/skill`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-postSkill: không thêm được skill");
-    }
-
-    console.log('post skill thành công');
-    loadSkills(id);
-
-  } catch (error) {
-    console.error('Lỗi khi tải education:', error);
-  }
-}
-
-
-
-async function loadLanguages(id) {
-  try {
-    const response = await fetch(`/api/employee/${id}/language`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("profile.js-loadLanguages: không lấy được data");
-    }
-
-    const languages = await response.json();
-
+  function loadLanguages() {
     const languagesList = document.getElementById("languagesList");
+    if (!languagesList) return;
+
     languagesList.innerHTML = "";
 
-    if (!languages || languages.length === 0) {
-      languagesList.innerHTML = "<p>Bạn chưa có ngôn ngữ nào</p>";
-      return;
-    }
-
-    languages.forEach((lang) => {
+    profileData.languages.forEach((lang) => {
       const languageItem = document.createElement("div");
       languageItem.className = "language-item";
       languageItem.innerHTML = `
-        <div class="language-name">${lang.name}</div>
-        <div class="language-level">${lang.level}</div>
-      `;
+                <div class="language-name">${lang.name}</div>
+                <div class="language-level">${lang.level}</div>
+            `;
       languagesList.appendChild(languageItem);
     });
-  } catch (error) {
-    console.error('Lỗi khi tải languages:', error);
   }
-}
 
+  function loadJobNotifications() {
+    const jobNotificationsList = document.getElementById(
+      "jobNotificationsList"
+    );
+    if (!jobNotificationsList) return;
 
-async function postLanguage(id, data) {
-  try {
-    const response = await fetch(`/api/employee/${id}/language`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+    jobNotificationsList.innerHTML = "";
+
+    profileData.jobNotifications.forEach((job) => {
+      const jobItem = document.createElement("li");
+      jobItem.innerHTML = `<a href="${job.link}" class="job-link" data-job-id="${job.id}">${job.title}</a>`;
+      jobNotificationsList.appendChild(jobItem);
     });
-
-    if (!response.ok) {
-      throw new Error("profile.js-postLanguage: không thêm được language");
-    }
-
-    console.log('post language thành công');
-    loadLanguages(id);
-
-  } catch (error) {
-    console.error('Lỗi khi tải education:', error);
-  }
-}
-
-
-// Profile page JavaScript functionality
-document.addEventListener("DOMContentLoaded", function () {
-  const uid = localStorage.getItem('uid');
-
-  // Initialize page data
-  initializeProfileData(uid);
-  // Event listeners
-  setupEventListeners(uid);
-
-  // Functions
-  async function initializeProfileData() {
-    const uid = localStorage.getItem('uid');
-
-    try {
-      const response = await fetch(`/api/employee/${uid}/exists`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const exists = await response.json();
-
-      if (!exists) {
-        console.log("Employee chua duoc tao");
-        localStorage.setItem('isUpdate', 'false');
-        return;
-      }
-
-      localStorage.setItem('isUpdate', 'true');
-      // Load personal information
-      loadPersonal(uid);
-      // Load career objective
-      loadCareerObjective(uid);
-      // Load experience
-      loadExperience(uid);
-      // Load education
-      loadEducation(uid);
-      // Load skills
-      loadSkills(uid);
-      // // Load languages
-      loadLanguages(uid);
-
-    } catch (error) {
-      console.error('Lỗi khi kiểm tra uid:', error);
-    }
   }
 
   function setupEventListeners() {
@@ -520,249 +278,361 @@ document.addEventListener("DOMContentLoaded", function () {
         ),
         addBtn: document.getElementById("addLanguageBtn"),
       },
+      jobNotification: {
+        modal: document.getElementById("createJobModal"),
+        btn: document.getElementById("createJobBtn"),
+        form: document.getElementById("createJobForm"),
+        saveBtn: document.querySelector("#createJobModal .modal-save-btn"),
+        cancelBtn: document.querySelector("#createJobModal .modal-cancel-btn"),
+        closeBtn: document.querySelector("#createJobModal .modal-close-btn"),
+      },
     };
 
     // Photo upload
     const uploadPhotoBtn = document.querySelector(".upload-photo-btn");
     const uploadPhotoInput = document.getElementById("uploadPhotoInput");
-    uploadPhotoBtn.addEventListener("click", () => uploadPhotoInput.click());
-    uploadPhotoInput.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          profileData.personal.photo = event.target.result;
-          document.getElementById("profileAvatar").src =
-            profileData.personal.photo;
-          document.getElementById("profilePhoto").src =
-            profileData.personal.photo;
-          saveToLocalStorage("profileData", profileData);
-          showMessage("Ảnh đại diện đã được cập nhật");
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+
+    if (uploadPhotoBtn && uploadPhotoInput) {
+      uploadPhotoBtn.addEventListener("click", () => uploadPhotoInput.click());
+      uploadPhotoInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            profileData.personal.photo = event.target.result;
+            const profileAvatar = document.getElementById("profileAvatar");
+            const profilePhoto = document.getElementById("profilePhoto");
+            if (profileAvatar) profileAvatar.src = profileData.personal.photo;
+            if (profilePhoto) profilePhoto.src = profileData.personal.photo;
+            saveToLocalStorage("profileData", profileData);
+            showMessage("Ảnh đại diện đã được cập nhật");
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
 
     // Personal info modal
-    modals.personal.btn.addEventListener("click", async () => {
-      modals.personal.modal.style.display = "flex";
-      const personalData = await getPersonal(uid);
-      document.getElementById("editFullName").value = personalData.name;
-      document.getElementById("editEmail").value = personalData.email;
-      document.getElementById("editPhone").value = personalData.phone;
-      document.getElementById("editBirthday").value = convertDateFromISO(personalData.dateOfBirth);
-      document.getElementById("editGender").value = personalData.gender === 'MALE' ? 'Nam' : 'Nữ';
-      document.getElementById("editAddress").value = personalData.address;
-    });
+    if (modals.personal.btn && modals.personal.modal) {
+      modals.personal.btn.addEventListener("click", () => {
+        modals.personal.modal.style.display = "flex";
+        document.getElementById("editFullName").value =
+          profileData.personal.fullName;
+        document.getElementById("editEmail").value = profileData.personal.email;
+        document.getElementById("editPhone").value = profileData.personal.phone;
+        document.getElementById("editBirthday").value =
+          profileData.personal.birthday;
+        document.getElementById("editGender").value =
+          profileData.personal.gender;
+        document.getElementById("editAddress").value =
+          profileData.personal.address;
+      });
 
-    // add personal event
-    modals.personal.saveBtn.addEventListener("click", () => {
-      const formData = new FormData(modals.personal.form);
-      const updatedData = {
-        name: formData.get("fullName"),
-        email: formData.get("email"),
-        phone: formData.get("phone"),
-        dateOfBirth: convertDateToISO(formData.get("birthday")), // ← Thêm conversion
-        gender: formData.get("gender") === 'Nam' ? 'MALE' : 'FEMALE',
-        address: formData.get("address"),
-        // photo: profileData.personal.photo,
-      };
-      if (!validateEmail(updatedData.email)) {
-        showMessage("Email không hợp lệ");
-        return;
+      if (modals.personal.saveBtn) {
+        modals.personal.saveBtn.addEventListener("click", () => {
+          const formData = new FormData(modals.personal.form);
+          const updatedData = {
+            fullName: formData.get("fullName"),
+            email: formData.get("email"),
+            phone: formData.get("phone"),
+            birthday: formData.get("birthday"),
+            gender: formData.get("gender"),
+            address: formData.get("address"),
+            photo: profileData.personal.photo,
+          };
+
+          if (!validateEmail(updatedData.email)) {
+            showMessage("Email không hợp lệ");
+            return;
+          }
+          if (!validatePhone(updatedData.phone)) {
+            showMessage("Số điện thoại không hợp lệ");
+            return;
+          }
+
+          profileData.personal = updatedData;
+
+          // Update display
+          const elements = {
+            fullName: document.getElementById("fullName"),
+            email: document.getElementById("email"),
+            phone: document.getElementById("phone"),
+            birthday: document.getElementById("birthday"),
+            gender: document.getElementById("gender"),
+            address: document.getElementById("address"),
+            sidebarName: document.getElementById("sidebarName"),
+          };
+
+          Object.keys(elements).forEach((key) => {
+            if (elements[key]) {
+              elements[key].textContent =
+                updatedData[key === "sidebarName" ? "fullName" : key];
+            }
+          });
+
+          saveToLocalStorage("profileData", profileData);
+          modals.personal.modal.style.display = "none";
+          showMessage("Thông tin cá nhân đã được cập nhật");
+        });
       }
-      if (!validatePhone(updatedData.phone)) {
-        showMessage("Số điện thoại không hợp lệ");
-        return;
-      }
-
-      updatePersonal(uid, localStorage.getItem('isUpdate') === 'true' ? 'PUT' : 'POST', updatedData);
-
-      saveToLocalStorage("profileData", profileData);
-      modals.personal.modal.style.display = "none";
-      showMessage("Thông tin cá nhân đã được cập nhật");
-    });
+    }
 
     // Career objective modal
-    modals.objective.btn.addEventListener("click", () => {
-      modals.objective.modal.style.display = "flex";
-      document.getElementById("editCareerObjective").value = localStorage.getItem('careerObjective');
-    });
+    if (modals.objective.btn && modals.objective.modal) {
+      modals.objective.btn.addEventListener("click", () => {
+        modals.objective.modal.style.display = "flex";
+        document.getElementById("editCareerObjective").value =
+          profileData.careerObjective;
+      });
 
-    modals.objective.saveBtn.addEventListener("click", () => {
-      updateCareerObjective(uid);
-      modals.objective.modal.style.display = "none";
-      showMessage("Mục tiêu nghề nghiệp đã được cập nhật");
-    });
+      if (modals.objective.saveBtn) {
+        modals.objective.saveBtn.addEventListener("click", () => {
+          const formData = new FormData(modals.objective.form);
+          profileData.careerObjective = formData.get("careerObjective");
+          const careerObjectiveEl = document.getElementById("careerObjective");
+          if (careerObjectiveEl) {
+            careerObjectiveEl.textContent = profileData.careerObjective;
+          }
+          saveToLocalStorage("profileData", profileData);
+          modals.objective.modal.style.display = "none";
+          showMessage("Mục tiêu nghề nghiệp đã được cập nhật");
+        });
+      }
+    }
 
     // Experience modal
-    modals.experience.btn.addEventListener("click", () => {
-      modals.experience.modal.style.display = "flex";
-      const entriesContainer = document.getElementById("experienceEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.experiences.forEach((exp, index) => {
-      //   addExperienceEntry(exp, index);
-      // });
-    });
-    modals.experience.addBtn.addEventListener("click", () => {
-      addExperienceEntry(
-        { title: "", company: "", duration: "", description: "" },
-        profileData.experiences.length
-      );
-    });
-    modals.experience.saveBtn.addEventListener("click", () => {
-      const entries = document.querySelectorAll(
-        "#experienceEntries .entry-group"
-      );
-      entries.forEach((entry) => {
-        const title = entry.querySelector("[name='title']").value;
-        const company = entry.querySelector("[name='company']").value;
-        const duration = entry.querySelector("[name='duration']").value;
-        const description = entry.querySelector("[name='description']").value;
-        if (title && company && duration && description) {
-          const formData = {
-            role: title,
-            company: company,
-            period: duration,
-            description: description
-          }
-          postExperience(uid, formData);
+    if (modals.experience.btn && modals.experience.modal) {
+      modals.experience.btn.addEventListener("click", () => {
+        modals.experience.modal.style.display = "flex";
+        const entriesContainer = document.getElementById("experienceEntries");
+        if (entriesContainer) {
+          entriesContainer.innerHTML = "";
+          profileData.experiences.forEach((exp, index) => {
+            addExperienceEntry(exp, index);
+          });
         }
       });
-      modals.experience.modal.style.display = "none";
-      showMessage("Kinh nghiệm làm việc đã được cập nhật");
-    });
+
+      if (modals.experience.addBtn) {
+        modals.experience.addBtn.addEventListener("click", () => {
+          addExperienceEntry(
+            { title: "", company: "", duration: "", description: "" },
+            profileData.experiences.length
+          );
+        });
+      }
+
+      if (modals.experience.saveBtn) {
+        modals.experience.saveBtn.addEventListener("click", () => {
+          const entries = document.querySelectorAll(
+            "#experienceEntries .entry-group"
+          );
+          const updatedExperiences = [];
+          entries.forEach((entry) => {
+            const title = entry.querySelector("[name='title']").value;
+            const company = entry.querySelector("[name='company']").value;
+            const duration = entry.querySelector("[name='duration']").value;
+            const description = entry.querySelector(
+              "[name='description']"
+            ).value;
+            if (title && company && duration && description) {
+              updatedExperiences.push({
+                title,
+                company,
+                duration,
+                description,
+              });
+            }
+          });
+          profileData.experiences = updatedExperiences;
+          loadExperience();
+          saveToLocalStorage("profileData", profileData);
+          modals.experience.modal.style.display = "none";
+          showMessage("Kinh nghiệm làm việc đã được cập nhật");
+        });
+      }
+    }
 
     // Education modal
-    modals.education.btn.addEventListener("click", () => {
-      modals.education.modal.style.display = "flex";
-      const entriesContainer = document.getElementById("educationEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.education.forEach((edu, index) => {
-      //   addEducationEntry(edu, index);
-      // });
-    });
-    modals.education.addBtn.addEventListener("click", () => {
-      addEducationEntry(
-        { degree: "", school: "", year: "" },
-        profileData.education.length
-      );
-    });
-    modals.education.saveBtn.addEventListener("click", () => {
-      const entries = document.querySelectorAll(
-        "#educationEntries .entry-group"
-      );
-      entries.forEach((entry) => {
-        const degree = entry.querySelector("[name='degree']").value;
-        const school = entry.querySelector("[name='school']").value;
-        const year = entry.querySelector("[name='year']").value;
-        if (degree && school && year) {
-          const data = {
-            major: degree,
-            school: school,
-            period: year
-          }
-          postEducation(uid, data);
+    if (modals.education.btn && modals.education.modal) {
+      modals.education.btn.addEventListener("click", () => {
+        modals.education.modal.style.display = "flex";
+        const entriesContainer = document.getElementById("educationEntries");
+        if (entriesContainer) {
+          entriesContainer.innerHTML = "";
+          profileData.education.forEach((edu, index) => {
+            addEducationEntry(edu, index);
+          });
         }
       });
-      modals.education.modal.style.display = "none";
-      showMessage("Học vấn đã được cập nhật");
-    });
+
+      if (modals.education.addBtn) {
+        modals.education.addBtn.addEventListener("click", () => {
+          addEducationEntry(
+            { degree: "", school: "", year: "" },
+            profileData.education.length
+          );
+        });
+      }
+
+      if (modals.education.saveBtn) {
+        modals.education.saveBtn.addEventListener("click", () => {
+          const entries = document.querySelectorAll(
+            "#educationEntries .entry-group"
+          );
+          const updatedEducation = [];
+          entries.forEach((entry) => {
+            const degree = entry.querySelector("[name='degree']").value;
+            const school = entry.querySelector("[name='school']").value;
+            const year = entry.querySelector("[name='year']").value;
+            if (degree && school && year) {
+              updatedEducation.push({ degree, school, year });
+            }
+          });
+          profileData.education = updatedEducation;
+          loadEducation();
+          saveToLocalStorage("profileData", profileData);
+          modals.education.modal.style.display = "none";
+          showMessage("Học vấn đã được cập nhật");
+        });
+      }
+    }
 
     // Skills modal
-    modals.skills.btn.addEventListener("click", () => {
-      modals.skills.modal.style.display = "flex";
-      const entriesContainer = document.getElementById("skillsEntries");
-      //   entriesContainer.innerHTML = "";
-      //   profileData.skills.forEach((skill, index) => {
-      //     addSkillEntry(skill, index);
-      //   });
-    });
-    modals.skills.addBtn.addEventListener("click", () => {
-      addSkillEntry({ name: "", level: 50 }, profileData.skills.length);
-    });
-    modals.skills.saveBtn.addEventListener("click", () => {
-      const entries = document.querySelectorAll("#skillsEntries .entry-group");
-      entries.forEach((entry) => {
-        const name = entry.querySelector("[name='skillName']").value;
-        const level = parseInt(
-          entry.querySelector("[name='skillLevel']").value
-        );
-        if (name && level >= 0 && level <= 100) {
-          const data = {
-            name: name,
-            level: level,
-          }
-          postSkill(uid, data);
+    if (modals.skills.btn && modals.skills.modal) {
+      modals.skills.btn.addEventListener("click", () => {
+        modals.skills.modal.style.display = "flex";
+        const entriesContainer = document.getElementById("skillsEntries");
+        if (entriesContainer) {
+          entriesContainer.innerHTML = "";
+          profileData.skills.forEach((skill, index) => {
+            addSkillEntry(skill, index);
+          });
         }
       });
-      modals.skills.modal.style.display = "none";
-      showMessage("Kỹ năng đã được cập nhật");
-    });
+
+      if (modals.skills.addBtn) {
+        modals.skills.addBtn.addEventListener("click", () => {
+          addSkillEntry({ name: "", level: 50 }, profileData.skills.length);
+        });
+      }
+
+      if (modals.skills.saveBtn) {
+        modals.skills.saveBtn.addEventListener("click", () => {
+          const entries = document.querySelectorAll(
+            "#skillsEntries .entry-group"
+          );
+          const updatedSkills = [];
+          entries.forEach((entry) => {
+            const name = entry.querySelector("[name='skillName']").value;
+            const level = parseInt(
+              entry.querySelector("[name='skillLevel']").value
+            );
+            if (name && level >= 0 && level <= 100) {
+              updatedSkills.push({ name, level });
+            }
+          });
+          profileData.skills = updatedSkills;
+          loadSkills();
+          saveToLocalStorage("profileData", profileData);
+          modals.skills.modal.style.display = "none";
+          showMessage("Kỹ năng đã được cập nhật");
+        });
+      }
+    }
 
     // Languages modal
-    modals.languages.btn.addEventListener("click", () => {
-      modals.languages.modal.style.display = "flex";
-      const entriesContainer = document.getElementById("languagesEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.languages.forEach((lang, index) => {
-      //   addLanguageEntry(lang, index);
-      // });
-    });
-    modals.languages.addBtn.addEventListener("click", () => {
-      addLanguageEntry({ name: "", level: "" }, profileData.languages.length);
-    });
-    modals.languages.saveBtn.addEventListener("click", () => {
-      const entries = document.querySelectorAll(
-        "#languagesEntries .entry-group"
-      );
-      entries.forEach((entry) => {
-        const name = entry.querySelector("[name='languageName']").value;
-        const level = entry.querySelector("[name='languageLevel']").value;
-        var languageLevel;
-        switch(level) {
-          case 'Bản ngữ':
-            languageLevel = 'NATIVE';
-            break;
-          case 'Thành thạo':
-            languageLevel = 'FLUENT';
-            break;
-          case 'Cơ bản':
-            languageLevel = 'BASIC';
-            break;
-          default:
-            break;
+    if (modals.languages.btn && modals.languages.modal) {
+      modals.languages.btn.addEventListener("click", () => {
+        modals.languages.modal.style.display = "flex";
+        const entriesContainer = document.getElementById("languagesEntries");
+        if (entriesContainer) {
+          entriesContainer.innerHTML = "";
+          profileData.languages.forEach((lang, index) => {
+            addLanguageEntry(lang, index);
+          });
         }
-
-        if (name && level) {
-          const data = {
-            name: name,
-            level: languageLevel,
-          }
-          postLanguage(uid, data);
-        }
-
       });
-      modals.languages.modal.style.display = "none";
-      showMessage("Ngoại ngữ đã được cập nhật");
-    });
+
+      if (modals.languages.addBtn) {
+        modals.languages.addBtn.addEventListener("click", () => {
+          addLanguageEntry(
+            { name: "", level: "" },
+            profileData.languages.length
+          );
+        });
+      }
+
+      if (modals.languages.saveBtn) {
+        modals.languages.saveBtn.addEventListener("click", () => {
+          const entries = document.querySelectorAll(
+            "#languagesEntries .entry-group"
+          );
+          const updatedLanguages = [];
+          entries.forEach((entry) => {
+            const name = entry.querySelector("[name='languageName']").value;
+            const level = entry.querySelector("[name='languageLevel']").value;
+            if (name && level) {
+              updatedLanguages.push({ name, level });
+            }
+          });
+          profileData.languages = updatedLanguages;
+          loadLanguages();
+          saveToLocalStorage("profileData", profileData);
+          modals.languages.modal.style.display = "none";
+          showMessage("Ngoại ngữ đã được cập nhật");
+        });
+      }
+    }
+
+    // Job notification modal
+    if (modals.jobNotification.btn && modals.jobNotification.modal) {
+      modals.jobNotification.btn.addEventListener("click", () => {
+        modals.jobNotification.modal.style.display = "flex";
+      });
+
+      if (modals.jobNotification.saveBtn) {
+        modals.jobNotification.saveBtn.addEventListener("click", () => {
+          const formData = new FormData(modals.jobNotification.form);
+          const newJob = {
+            id: profileData.jobNotifications.length + 1,
+            title:
+              formData.get("jobTitle") ||
+              `Việc làm mới ${profileData.jobNotifications.length + 1}`,
+            link: formData.get("jobLink") || "#",
+          };
+          profileData.jobNotifications.push(newJob);
+          loadJobNotifications();
+          saveToLocalStorage("profileData", profileData);
+          modals.jobNotification.modal.style.display = "none";
+          showMessage("Thông báo việc làm đã được tạo");
+        });
+      }
+    }
 
     // Close and cancel buttons for all modals
     Object.values(modals).forEach((modal) => {
-      modal.closeBtn.addEventListener("click", () => {
-        modal.modal.style.display = "none";
-      });
-      modal.cancelBtn.addEventListener("click", () => {
-        modal.modal.style.display = "none";
-      });
+      if (modal.closeBtn) {
+        modal.closeBtn.addEventListener("click", () => {
+          modal.modal.style.display = "none";
+        });
+      }
+      if (modal.cancelBtn) {
+        modal.cancelBtn.addEventListener("click", () => {
+          modal.modal.style.display = "none";
+        });
+      }
     });
 
     // Edit profile button
-    document.getElementById("editProfileBtn").addEventListener("click", () => {
-      showMessage(
-        "Chức năng chỉnh sửa hồ sơ tổng quát sẽ được phát triển trong phiên bản tiếp theo"
-      );
-    });
+    const editProfileBtn = document.getElementById("editProfileBtn");
+    if (editProfileBtn) {
+      editProfileBtn.addEventListener("click", () => {
+        showMessage(
+          "Chức năng chỉnh sửa hồ sơ tổng quát sẽ được phát triển trong phiên bản tiếp theo"
+        );
+      });
+    }
 
     // Company links
     document.addEventListener("click", (e) => {
@@ -780,19 +650,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    // Create job notification button
-    document.getElementById("createJobBtn").addEventListener("click", () => {
-      const newJob = {
-        id: profileData.jobNotifications.length + 1,
-        title: `Việc làm mới ${profileData.jobNotifications.length + 1}`,
-        link: "#",
-      };
-      profileData.jobNotifications.push(newJob);
-      loadJobNotifications();
-      saveToLocalStorage("profileData", profileData);
-      showMessage("Thông báo việc làm đã được tạo");
-    });
-
     // Navigation links
     document.querySelectorAll(".nav-list-link").forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -804,16 +661,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Setup profile link
-    document
-      .querySelector(".setup-profile-btn")
-      .addEventListener("click", (e) => {
+    const setupProfileBtn = document.querySelector(".setup-profile-btn");
+    if (setupProfileBtn) {
+      setupProfileBtn.addEventListener("click", (e) => {
         e.preventDefault();
         showMessage("Tính năng thiết lập hồ sơ sẽ được phát triển");
       });
+    }
   }
 
   function addExperienceEntry(exp, index) {
     const entriesContainer = document.getElementById("experienceEntries");
+    if (!entriesContainer) return;
+
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
     entryDiv.innerHTML = `
@@ -845,6 +705,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function addEducationEntry(edu, index) {
     const entriesContainer = document.getElementById("educationEntries");
+    if (!entriesContainer) return;
+
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
     entryDiv.innerHTML = `
@@ -872,6 +734,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function addSkillEntry(skill, index) {
     const entriesContainer = document.getElementById("skillsEntries");
+    if (!entriesContainer) return;
+
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
     entryDiv.innerHTML = `
@@ -906,12 +770,15 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="form-group">
         <label>Mức độ:</label>
         <select name="languageLevel" required>
-          <option value="Bản ngữ" ${lang.level === "Bản ngữ" ? "selected" : ""
-      }>Bản ngữ</option>
-          <option value="Thành thạo" ${lang.level === "Thành thạo" ? "selected" : ""
-      }>Thành thạo</option>
-          <option value="Cơ bản" ${lang.level === "Cơ bản" ? "selected" : ""
-      }>Cơ bản</option>
+          <option value="Bản ngữ" ${
+            lang.level === "Bản ngữ" ? "selected" : ""
+          }>Bản ngữ</option>
+          <option value="Thành thạo" ${
+            lang.level === "Thành thạo" ? "selected" : ""
+          }>Thành thạo</option>
+          <option value="Cơ bản" ${
+            lang.level === "Cơ bản" ? "selected" : ""
+          }>Cơ bản</option>
         </select>
       </div>
     `;
