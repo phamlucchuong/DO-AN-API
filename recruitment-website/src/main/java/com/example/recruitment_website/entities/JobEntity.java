@@ -1,13 +1,16 @@
 package com.example.recruitment_website.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.example.recruitment_website.enums.EmploymentType;
 import com.example.recruitment_website.enums.JobLevel;
 import com.example.recruitment_website.enums.StatusJob;
 import com.example.recruitment_website.enums.WorkingHours;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,6 +20,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -88,6 +92,9 @@ public class JobEntity {
     @Column(nullable = false)
     private Integer applicationCount;
 
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ApplicationEntity> applications = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         Date now = new Date();
@@ -112,12 +119,13 @@ public class JobEntity {
         updatedAt = new Date();
     }
 
-    public JobEntity() {}
+    public JobEntity() {
+    }
 
     public JobEntity(Integer id, EmployerEntity employer, String title, String salary, String experience,
-                     String description, String requirements, String benefits, LocalDate deadline,
-                     JobLevel jobLevel, EmploymentType employmentType, String city,
-                     String address, WorkingHours workingHours) {
+            String description, String requirements, String benefits, LocalDate deadline,
+            JobLevel jobLevel, EmploymentType employmentType, String city,
+            String address, WorkingHours workingHours) {
         this.id = id;
         this.employer = employer;
         this.title = title;
@@ -134,6 +142,8 @@ public class JobEntity {
         this.workingHours = workingHours;
     }
 
+    
+
     // Getters and Setters
     public Integer getId() {
         return id;
@@ -149,6 +159,14 @@ public class JobEntity {
 
     public void setEmployer(EmployerEntity employer) {
         this.employer = employer;
+    }
+
+    public List<ApplicationEntity> getApplication() {
+        return applications;
+    }
+
+    public void setApplication(List<ApplicationEntity> applications) {
+        this.applications = applications;
     }
 
     public String getTitle() {
@@ -294,5 +312,6 @@ public class JobEntity {
     public void setApplicationCount(Integer applicationCount) {
         this.applicationCount = applicationCount;
     }
-}
 
+    
+}

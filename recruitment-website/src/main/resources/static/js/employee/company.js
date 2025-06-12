@@ -1,3 +1,22 @@
+// async function getCompany(uid) {
+//   try {
+//     const response = await fetch(`/api/employee/${uid}/employer`, {
+//       method: 'GET'
+//     });
+
+//     if(!response.ok) {
+//       console.log('loi khi lay company');
+//       return
+//     }
+
+//     const company = await response.json();
+//     return company;
+
+//   } catch (error) {
+    
+//   }
+// }
+
 document.addEventListener("DOMContentLoaded", function () {
   // Sample data
   let companyData = {

@@ -13,7 +13,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -33,28 +33,17 @@ public class ApplicationEntity {
 
     private String cvLink;
 
-    @OneToOne
-    @JoinColumn(name = "employee_uid")
+    @ManyToOne // ✅ sửa lại từ OneToOne -> ManyToOne
+    @JoinColumn(name = "employee_uid", nullable = false)
     private EmployeeEntity employee;
 
-    @OneToOne
-    @JoinColumn(name = "job_id")
+    @ManyToOne // ✅ sửa lại từ OneToOne -> ManyToOne
+    @JoinColumn(name = "job_id", nullable = false)
     private JobEntity job;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    public ApplicationEntity() {
-    }
-
-    public ApplicationEntity(LocalDate createdDate, String cvLink, EmployeeEntity employee, JobEntity job, Status status) {
-        this.createdDate = createdDate;
-        this.cvLink = cvLink;
-        this.employee = employee;
-        this.job = job;
-        this.status = status;
-    }
 
     public String getId() {
         return id;
@@ -88,12 +77,12 @@ public class ApplicationEntity {
         this.employee = employee;
     }
 
-    public void setJob(JobEntity job) {
-        this.job = job;
-    }
-
     public JobEntity getJob() {
         return job;
+    }
+
+    public void setJob(JobEntity job) {
+        this.job = job;
     }
 
     public Status getStatus() {
@@ -103,4 +92,8 @@ public class ApplicationEntity {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    // constructor, getter, setter không đổi
+
+    
 }

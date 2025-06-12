@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.recruitment_website.dtos.employee.WorkExperienceDTO;
@@ -13,6 +14,7 @@ import com.example.recruitment_website.entities.EmployeeEntity;
 import com.example.recruitment_website.entities.LanguageEntity;
 import com.example.recruitment_website.entities.SkillEntity;
 import com.example.recruitment_website.entities.WorkExperienceEntity;
+import com.example.recruitment_website.dtos.EmployerDTO;
 import com.example.recruitment_website.dtos.employee.EducationDTO;
 import com.example.recruitment_website.dtos.employee.LanguageDTO;
 import com.example.recruitment_website.dtos.employee.PersonalDTO;
@@ -336,6 +338,12 @@ public class EmployeeService {
 
         employeeRepository.delete(employee);
     }
+
+    // public EmployerDTO getEmployer(String id) {
+    //     EmployeeEntity employee = employeeRepository.findById(id)
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'getEmployer'");
+    // }
 
     // @Transactional
     // public void postLanguages(String id, LanguageDTO dto) {

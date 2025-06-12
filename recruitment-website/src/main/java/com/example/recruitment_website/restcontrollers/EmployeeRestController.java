@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/api/employee")
@@ -166,6 +168,12 @@ public class EmployeeRestController {
         employeeService.deleteEmployee(id);
         return ResponseEntity.ok("Xoas employee thành công");
     }
+
+    // @GetMapping("/{id}/employer")
+    // public ResponseEntity<?> getEmployer(@PathVariable String id) {
+    //     return employeeService.getEmployer(id);
+    // }
+    
     // Dưới đây là các method có thể dùng sau này (chưa mở):
     /*
      * @GetMapping("/{id}/certifications")
