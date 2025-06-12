@@ -1,4 +1,5 @@
 package com.example.recruitment_website.restcontrollers;
+
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.recruitment_website.dtos.EmployerDTO;
 import com.example.recruitment_website.payloads.EmployerProfileUpdateRequest;
 import com.example.recruitment_website.payloads.EmployerRegisterRequest;
+import com.example.recruitment_website.repositories.EmployerRepository;
 import com.example.recruitment_website.services.EmployerService;
 import com.example.recruitment_website.services.JobService;
 
@@ -32,6 +34,9 @@ public class EmployerRestController {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private EmployerRepository employerRepository;
 
     @PostMapping(value = "/register", consumes = "multipart/form-data")
     public ResponseEntity<?> registerEmployer(@ModelAttribute EmployerRegisterRequest employerRegisterRequest) {
@@ -59,6 +64,7 @@ public class EmployerRestController {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(EmployerRestController.class);
+
     @GetMapping("/profile")
     public ResponseEntity<EmployerDTO> getEmployerProfile(@RequestParam("uid") String uid) {
         try {
@@ -103,8 +109,26 @@ public class EmployerRestController {
     }
 
     @GetMapping("/get")
-    public List<EmployerDTO> getAllEmployers(){
-        return employerService.getAllEmployers();
+    public ResponseEntity<?> getAllEmployers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            logger.info("Lấy danh sách tất cả employer với trang {} và kích thước {}", page, size);
+            Map<String, Object> response = employerService.getAllEmployers(page, size);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException ex) {
+            logger.error("Lỗi tham số không hợp lệ: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "success", false,
+                    "message", ex.getMessage()
+            ));
+        } catch (Exception ex) {
+            logger.error("Lỗi khi lấy danh sách employer: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "success", false,
+                    "message", "Lỗi khi lấy danh sách employer: " + ex.getMessage()
+            ));
+        }
     }
 
     @GetMapping("/approve/{id}")
@@ -143,5 +167,28 @@ public class EmployerRestController {
     public ResponseEntity<Integer> getJobsCountByEmployerId(@PathVariable String id) {
         Integer count = jobService.getJobsCountByEmployerId(id);
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/getTopEmployers")
+    public ResponseEntity<?> getTopEmployers() {
+        List<Map<String, Object>> topEmployers = employerService.getTopEmployers();
+        // List<Map<String, Object>> topEmployers = employerRepository.findTopEmployers();
+        return ResponseEntity.ok(topEmployers);
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<EmployerDTO> getEmployerDetail(@RequestParam("uid") String uid) {
+        try {
+            logger.info("Lấy hồ sơ nhà tuyển dụng với uid: {}", uid);
+            EmployerDTO employer = employerService.getEmployerByUid(uid);
+            if (employer == null) {
+                logger.warn("Không tìm thấy nhà tuyển dụng với uid: {}", uid);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.ok(employer);
+        } catch (Exception e) {
+            logger.error("Lỗi khi lấy hồ sơ nhà tuyển dụng với uid: {}", uid, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

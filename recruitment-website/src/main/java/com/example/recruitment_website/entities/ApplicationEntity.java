@@ -1,16 +1,29 @@
 package com.example.recruitment_website.entities;
 
 import java.time.LocalDate;
+import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "application")
+@Table(
+    name = "application",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"employee_uid", "job_id"})
+)
 public class ApplicationEntity {
     @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(columnDefinition = "VARCHAR(36)")
     private String id;
 
     private LocalDate createdDate;
@@ -22,29 +35,18 @@ public class ApplicationEntity {
     private EmployeeEntity employee;
 
     @OneToOne
-    @JoinColumn(name = "employer_uid")
-    private EmployerEntity employer;
-
-    @OneToOne
     @JoinColumn(name = "job_id")
     private JobEntity job;
 
     public ApplicationEntity() {
     }
 
-    
-
-    public ApplicationEntity(String id, LocalDate createdDate, String cvLink, EmployeeEntity employee,
-            EmployerEntity employer, JobEntity job) {
-        this.id = id;
+    public ApplicationEntity(LocalDate createdDate, String cvLink, EmployeeEntity employee, JobEntity job) {
         this.createdDate = createdDate;
         this.cvLink = cvLink;
         this.employee = employee;
-        this.employer = employer;
         this.job = job;
     }
-
-
 
     public String getId() {
         return id;
@@ -76,14 +78,6 @@ public class ApplicationEntity {
 
     public void setEmployee(EmployeeEntity employee) {
         this.employee = employee;
-    }
-
-    public EmployerEntity getEmployer() {
-        return employer;
-    }
-
-    public void setEmployer(EmployerEntity employer) {
-        this.employer = employer;
     }
 
     public void setJob(JobEntity job) {

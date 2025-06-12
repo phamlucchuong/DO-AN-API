@@ -1,6 +1,7 @@
 package com.example.recruitment_website.services;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,6 +9,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.recruitment_website.dtos.EmployerDTO;
@@ -24,6 +29,8 @@ import jakarta.transaction.Transactional;
 @Service
 public class EmployerService {
 
+    private final JobService jobService;
+
     @Autowired
     private EmployerRepository employerRepository;
     @Autowired
@@ -33,6 +40,10 @@ public class EmployerService {
     @Autowired
     private ImageUploadService imageUploadService;
     private static final Logger logger = LoggerFactory.getLogger(EmployerService.class);
+
+    EmployerService(JobService jobService) {
+        this.jobService = jobService;
+    }
 
     @Transactional
     public EmployerDTO registerEmployer(EmployerRegisterRequest employerRegisterRequest) {
@@ -265,4 +276,73 @@ public class EmployerService {
         return employerRepository.countEmployersByMonthAndYear(month, year);
     }
 
+    public List<Map<String, Object>> getTopEmployers() {
+        List<EmployerEntity> employers = employerRepository.findAll();
+
+        List<Map<String, Object>> result = employers.stream()
+                .map(employer -> {
+                    int jobCount = jobService.getJobsByEmployerId(employer.getUid()).size();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("uid", employer.getUid());
+                    map.put("companyName", employer.getCompanyName());
+                    map.put("industry", employer.getIndustry());
+                    map.put("companyLogo", employer.getCompanyLogo());
+                    map.put("city", employer.getCity());
+                    map.put("companyDescription", employer.getCompanyDescription());
+                    map.put("jobCount", jobCount);
+                    return map;
+                })
+                .sorted((m1, m2) -> ((Integer) m2.get("jobCount")).compareTo((Integer) m1.get("jobCount")))
+                .limit(6)
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
+    public Map<String, Object> getAllEmployers(int page, int size) {
+        logger.debug("Bắt đầu lấy danh sách tất cả employer với trang {} và kích thước {}", page, size);
+
+        try {
+            // Validate page and size
+            if (page < 0 || size <= 0) {
+                logger.error("Số trang hoặc kích thước không hợp lệ: page={}, size={}", page, size);
+                throw new IllegalArgumentException("Số trang và kích thước phải là số dương");
+            }
+
+            // Create Pageable object with sorting (e.g., by companyName)
+            Pageable pageable = PageRequest.of(page, size, Sort.by("companyName").ascending());
+
+            // Fetch paginated data
+            Page<EmployerEntity> employerPage = employerRepository.findAll(pageable);
+
+            if (employerPage.isEmpty()) {
+                logger.info("Không có employer nào trong hệ thống cho trang {}.", page);
+                return Map.of(
+                    "content", List.of(),
+                    "totalElements", 0L,
+                    "totalPages", 0,
+                    "currentPage", page
+                );
+            }
+
+            // Map entities to DTOs
+            List<EmployerDTO> employerDTOs = employerPage.getContent().stream()
+                    .map(employerMapper::toDTO)
+                    .collect(Collectors.toList());
+
+            logger.info("Lấy danh sách tất cả employer thành công, tổng số: {}, trang hiện tại: {}", 
+                employerPage.getTotalElements(), page);
+
+            // Return paginated response
+            return Map.of(
+                "content", employerDTOs,
+                "totalElements", employerPage.getTotalElements(),
+                "totalPages", employerPage.getTotalPages(),
+                "currentPage", page
+            );
+        } catch (Exception ex) {
+            logger.error("Lỗi khi lấy danh sách employer: {}", ex.getMessage(), ex);
+            throw new RuntimeException("Lỗi khi lấy danh sách employer: " + ex.getMessage());
+        }
+    }
 }
