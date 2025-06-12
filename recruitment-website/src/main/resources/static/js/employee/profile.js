@@ -791,6 +791,165 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         showMessage("Tính năng thiết lập hồ sơ sẽ được phát triển");
       });
+
+    //PDF appearance
+    // PDF Upload Modal
+    const pdfUploadModal = document.getElementById("pdfUploadModal");
+    const pdfBrowseBtn = document.getElementById("pdfBrowseBtn");
+    const pdfFileInput = document.getElementById("pdfFileInput");
+    const pdfUploadArea = document.getElementById("pdfUploadArea");
+    const pdfFileInfo = document.getElementById("pdfFileInfo");
+    const pdfFileName = document.getElementById("pdfFileName");
+    const pdfFileSize = document.getElementById("pdfFileSize");
+    const pdfRemoveBtn = document.getElementById("pdfRemoveBtn");
+    const uploadPdfBtn = document.getElementById("uploadPdfBtn");
+    const closePdfModal = document.getElementById("closePdfModal");
+    const cancelPdfUpload = document.getElementById("cancelPdfUpload");
+    const errorMessage = document.getElementById("errorMessage");
+    const successMessage = document.getElementById("successMessage");
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
+
+    let selectedFile = null;
+
+    // Open PDF Upload Modal when clicking editProfileBtn
+    document.getElementById("editProfileBtn").addEventListener("click", () => {
+      pdfUploadModal.style.display = "flex";
+      resetPdfModal();
+    });
+
+    // Reset modal state
+    function resetPdfModal() {
+      selectedFile = null;
+      pdfFileInput.value = "";
+      pdfFileInfo.style.display = "none";
+      pdfUploadArea.style.display = "flex";
+      uploadPdfBtn.disabled = true;
+      errorMessage.textContent = "";
+      successMessage.textContent = "";
+      progressFill.style.width = "0%";
+      progressText.textContent = "Đang tải lên... 0%";
+      pdfUploadArea.classList.remove("dragover");
+    }
+
+    // Handle file selection
+    function handleFileSelect(file) {
+      if (!file) return;
+
+      if (file.type !== "application/pdf") {
+        errorMessage.textContent = "Vui lòng chọn file PDF.";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        // Limit 5MB
+        errorMessage.textContent = "File quá lớn (giới hạn 5MB).";
+        return;
+      }
+
+      selectedFile = file;
+      pdfFileName.textContent = file.name;
+      pdfFileSize.textContent = `${(file.size / 1024).toFixed(2)} KB`;
+      pdfFileInfo.style.display = "flex";
+      pdfUploadArea.style.display = "none";
+      uploadPdfBtn.disabled = false;
+      errorMessage.textContent = "";
+    }
+
+    // File input change event
+    pdfFileInput.addEventListener("change", (e) => {
+      handleFileSelect(e.target.files[0]);
+    });
+
+    // Browse button click
+    pdfBrowseBtn.addEventListener("click", () => {
+      pdfFileInput.click();
+    });
+
+    // Drag and drop events
+    pdfUploadArea.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      pdfUploadArea.classList.add("dragover");
+    });
+
+    pdfUploadArea.addEventListener("dragleave", () => {
+      pdfUploadArea.classList.remove("dragover");
+    });
+
+    pdfUploadArea.addEventListener("drop", (e) => {
+      e.preventDefault();
+      pdfUploadArea.classList.remove("dragover");
+      handleFileSelect(e.dataTransfer.files[0]);
+    });
+
+    // Remove selected file
+    pdfRemoveBtn.addEventListener("click", () => {
+      resetPdfModal();
+    });
+
+    // Upload file to server
+    uploadPdfBtn.addEventListener("click", async () => {
+      if (!selectedFile) return;
+
+      const formData = new FormData();
+      formData.append("cv", selectedFile);
+
+      try {
+        uploadPdfBtn.disabled = true;
+        errorMessage.textContent = "";
+        successMessage.textContent = "";
+        progressFill.style.width = "0%";
+        progressText.textContent = "Đang tải lên... 0%";
+
+        const response = await fetch(`/api/employee/${uid}/upload-cv`, {
+          method: "POST",
+          body: formData,
+        });
+
+        // Simulate progress (since fetch doesn't support progress natively)
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 10;
+          if (progress <= 100) {
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `Đang tải lên... ${progress}%`;
+          }
+        }, 200);
+
+        if (!response.ok) {
+          clearInterval(interval);
+          throw new Error("Không thể tải lên file PDF.");
+        }
+
+        clearInterval(interval);
+        progressFill.style.width = "100%";
+        progressText.textContent = "Tải lên hoàn tất!";
+        successMessage.textContent = "File PDF đã được tải lên thành công!";
+        uploadPdfBtn.disabled = true;
+
+        setTimeout(() => {
+          pdfUploadModal.style.display = "none";
+          resetPdfModal();
+          showMessage("Hồ sơ đã được nộp thành công!");
+        }, 2000);
+      } catch (error) {
+        errorMessage.textContent =
+          error.message || "Đã xảy ra lỗi khi tải lên.";
+        uploadPdfBtn.disabled = false;
+        console.error("Lỗi khi tải lên PDF:", error);
+      }
+    });
+
+    // Close modal
+    closePdfModal.addEventListener("click", () => {
+      pdfUploadModal.style.display = "none";
+      resetPdfModal();
+    });
+
+    cancelPdfUpload.addEventListener("click", () => {
+      pdfUploadModal.style.display = "none";
+      resetPdfModal();
+    });
   }
 
   function addExperienceEntry(exp, index) {
