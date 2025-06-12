@@ -295,3 +295,4 @@ public class JobEntity {
         this.applicationCount = applicationCount;
     }
 }
+

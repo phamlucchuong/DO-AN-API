@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
     "com.example.recruitment_website.configs",
     "com.example.recruitment_website.mappers",
 })
+
 @EntityScan(basePackages = "com.example.recruitment_website.entities")
 public class RecruitmentWebsiteApplication {
 

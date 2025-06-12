@@ -1,5 +1,6 @@
 package com.example.recruitment_website.entities;
 
+
 import java.time.LocalDate;
 import java.util.Date;
 

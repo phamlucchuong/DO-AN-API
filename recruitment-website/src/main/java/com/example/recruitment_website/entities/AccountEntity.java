@@ -16,8 +16,7 @@ public class AccountEntity {
     private String id;
 
     @NotNull
-    // @Size(max = 25)
-    @Size(max = 100)
+    @Size(max = 50)
     @Column(unique = true)
     private String email;
 

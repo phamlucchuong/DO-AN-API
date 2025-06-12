@@ -1,5 +1,4 @@
 package com.example.recruitment_website.restcontrollers;
-
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +59,6 @@ public class EmployerRestController {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(EmployerRestController.class);
-
     @GetMapping("/profile")
     public ResponseEntity<EmployerDTO> getEmployerProfile(@RequestParam("uid") String uid) {
         try {
@@ -146,5 +144,4 @@ public class EmployerRestController {
         Integer count = jobService.getJobsCountByEmployerId(id);
         return ResponseEntity.ok(count);
     }
-
 }

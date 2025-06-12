@@ -1,5 +1,4 @@
 package com.example.recruitment_website.restcontrollers;
-
 import java.util.Map;
 
 import org.slf4j.Logger;

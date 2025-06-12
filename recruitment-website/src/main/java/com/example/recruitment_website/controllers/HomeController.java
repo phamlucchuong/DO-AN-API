@@ -48,4 +48,19 @@ public class HomeController {
         return "/admin/login";
     }
 
+    @GetMapping("/profile")
+    public String profile() {
+        return "employee/profile"; 
+    }
+
+    @GetMapping("/company-profile")
+    public String company() {
+        return "employee/company"; 
+    }
+
+    @GetMapping("/jobs-profile")
+    public String jobs() {
+        return "employee/jobs"; 
+    }
+
 }

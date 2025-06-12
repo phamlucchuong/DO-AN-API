@@ -24,8 +24,13 @@ export async function loginWithGoogle(role) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, role }),
-    }).then(res => {
+    }).then(async res => {
       if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('uid', data.uid);
+        localStorage.setItem('email', data.email);
+        localStorage.setItem('avatarURL', data.avatarURL);
+        localStorage.setItem('role', data.role);
         alert('Đăng nhập thành công!');
         window.location.href = '/index'; // hoặc bất kỳ trang nào bạn muốn chuyển đến
       } else {
@@ -54,8 +59,13 @@ export async function loginWithEmailAndPwd(email, password, role) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, role }),
-    }).then(res => {
+    }).then(async res => {
       if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('uid', data.uid);
+        localStorage.setItem('email', data.email);
+        localStorage.setItem('avatarURL', data.avatarURL);
+        localStorage.setItem('role', data.role);
         alert('Đăng nhập thành công!');
         window.location.href = role === 'Employee' ? '/index' : role === 'Employer' ? '/employer/dashboard' : role === 'Admin' ? '/admin/dashboard' : '/';
       } else {
@@ -90,7 +100,7 @@ export async function registerWithEmailAndPassword(email, password, role) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, role }),
-    });
+    }).then()
 
     if (!res.ok) {
       const errorText = await res.text();

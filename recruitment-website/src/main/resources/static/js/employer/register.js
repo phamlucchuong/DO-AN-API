@@ -1,3 +1,4 @@
+
 import { registerWithEmailAndPassword } from '../firebase/firebase-auth.js';
 
 document.addEventListener("DOMContentLoaded", () => {

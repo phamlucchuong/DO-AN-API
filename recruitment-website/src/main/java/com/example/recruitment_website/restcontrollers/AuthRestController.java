@@ -23,30 +23,6 @@ public class AuthRestController {
     @Autowired
     private AccountRepository accountRepository;
 
-    // @PostMapping("/verify-token")
-    // public ResponseEntity<?> verifyToken(@RequestBody Map<String, String> body) {
-    //     try {
-    //         String token = body.get("token");
-    //         String role = body.get("role"); // mặc định USER nếu không có
-    //         FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-    //         String uid = decodedToken.getUid();
-    //         String email = decodedToken.getEmail();
-    //         String img = decodedToken.getPicture();
-    //         // Nếu account chưa tồn tại thì tạo
-    //         if (!accountRepository.existsById(uid)) {
-    //             AccountEntity account = new AccountEntity();
-    //             account.setUid(uid);
-    //             account.setEmail(email);
-    //             account.setRole(role);
-    //             account.setIsDeleted(false);
-    //             accountRepository.save(account);
-    //         }
-    //         return ResponseEntity.ok(Map.of("uid", uid, "email", email, "avatarURL", img, "role", role));
-    //     } catch (FirebaseAuthException e) {
-    //         e.printStackTrace();
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-    //     }
-    // }
     @PostMapping("/verify-token")
     public ResponseEntity<?> verifyToken(@RequestBody Map<String, String> body) {
         try {

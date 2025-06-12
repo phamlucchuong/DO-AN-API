@@ -1,7 +1,4 @@
 import { loginWithGoogle, loginWithEmailAndPwd, forgotPassword } from '../firebase/firebase-auth.js';
-// import { loginWithGoogle, loginWithEmailAndPwd, forgotPassword } from '/js/firebase/firebase-auth.js';
-
-
 
 function togglePassword() {
     const passwordInput = document.getElementById('password');

@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/employer")
 public class EmployerController {
-
     private static final Logger logger = LoggerFactory.getLogger(EmployerController.class);
 
     @GetMapping("/")
