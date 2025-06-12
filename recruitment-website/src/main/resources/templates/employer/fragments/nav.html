@@ -1,0 +1,23 @@
+<div th:fragment="nav">
+    <nav class="nav-tabs">
+        <a th:href="@{/employer/dashboard}"
+           th:classappend="${requestURI == '/employer/dashboard'} ? ' active' : ''"
+           class="nav-tab">📊 Dashboard</a>
+
+        <a th:href="@{/employer/post-job}"
+           th:classappend="${requestURI == '/employer/post-job'} ? ' active' : ''"
+           class="nav-tab">📝 Post Job</a>
+
+        <!-- <a th:href="@{/employer/manage-jobs}"
+           th:classappend="${requestURI == '/employer/manage-jobs'} ? ' active' : ''"
+           class="nav-tab">💼 Manage Jobs</a> -->
+
+        <a th:href="@{/employer/candidates}"
+           th:classappend="${requestURI == '/employer/candidates'} ? ' active' : ''"
+           class="nav-tab">👥 Candidates</a>
+
+        <a th:href="@{/employer/statistics}"
+           th:classappend="${requestURI == '/employer/statistics'} ? ' active' : ''"
+           class="nav-tab">📈 Statistics</a>
+    </nav>
+</div>

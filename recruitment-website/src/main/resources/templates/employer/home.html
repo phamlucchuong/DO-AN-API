@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VietnamWorks</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/employer/home.css}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="header-left">
+                <img th:src="${logoUrl}" alt="VietnamWorks" class="logo">
+                <nav class="nav hidden md:flex">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">Dịch Vụ <i class="fas fa-chevron-down"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item">Đăng Tin Tuyển Dụng</a>
+                            <a href="#" class="dropdown-item">Dịch vụ cao cấp</a>
+                            <a href="#" class="dropdown-item">Dịch Vụ Tìm kiếm Hồ Sơ</a>
+                        </div>
+                    </div>
+                    <button class="nav-link">HR Insider</button>
+                    <button class="nav-link">Giới Thiệu</button>
+                    <button class="nav-link">Liên Hệ</button>
+                    <button class="nav-link">Cho Người Tìm Việc</button>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="hidden md:flex header-right-inner">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle">Tiếng Việt <i class="fas fa-chevron-down"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item">English</a>
+                            <a href="#" class="dropdown-item">Tiếng Việt</a>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline">
+                        <a th:href="@{/employer/login}">Đăng nhập</a>
+                    </button>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu hidden">
+            <button id="close-mobile-menu"><i class="fas fa-times"></i></button>
+            <nav class="mobile-nav">
+                <button class="mobile-nav-link">Dịch Vụ</button>
+                <button class="mobile-nav-link">HR Insider</button>
+                <button class="mobile-nav-link">Giới Thiệu</button>
+                <button class="mobile-nav-link">Liên Hệ</button>
+                <button class="mobile-nav-link">Cho Người Tìm Việc</button>
+                <div class="mobile-nav-divider"></div>
+                <button class="mobile-nav-link">English</button>
+                <button class="mobile-nav-link">Tiếng Việt</button>
+                <button class="btn btn-primary mobile-login">Đăng nhập</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <div class="hero-card">
+                    <div class="hero-card-inner">
+                        <span class="hero-badge">AI</span>
+                        <h1 class="hero-title">APPLICATION<br>SCREENING</h1>
+                    </div>
+                    <p class="hero-description" th:text="${heroDescription}">Lọc nhanh CV, chọn người xứng đáng</p>
+                    <button class="btn btn-primary">TRẢI NGHIỆM NGAY</button>
+                </div>
+            </div>
+            <div class="hero-image hidden lg:block">
+                <img th:src="${heroImageUrl}" alt="Professional man with laptop" class="hero-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">DỊCH VỤ CỦA CHÚNG TÔI</h2>
+                <p class="section-description" th:text="${servicesDescription}">
+                    Chúng tôi cung cấp nhiều dịch vụ giúp nhà tuyển dụng kết nối với nhiều nhân tài hơn,
+                    để họ có thể kết nối với ứng cử viên nhanh hơn
+                </p>
+            </div>
+            <div class="services-grid">
+                <!-- Job Posting Service -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Đăng Tuyển</h3>
+                        <div class="card-price">
+                            <span class="price" th:text="${jobPostingPrice}">2,160,000VND</span>
+                            <span class="original-price" th:text="${jobPostingOriginalPrice}">2,400,000 VND</span>
+                            <span class="discount">−10% khi mua online</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>Đảm bảo hiệu quả 100%</li>
+                            <li>Đăng tuyển nhanh chóng và nhận hồ sơ ngay lập tức</li>
+                            <li>Quản lý hồ sơ trực tuyến của bạn dễ dàng</li>
+                        </ul>
+                        <p class="card-note" th:text="${jobPostingNote}">
+                            Chương trình chỉ áp dụng cho đơn hàng trực tuyến, không áp dụng đồng thời với các chương trình khuyến mãi khác
+                        </p>
+                        <button class="btn btn-primary">Mua ngay</button>
+                    </div>
+                </div>
+                <!-- Resume Search Service -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tìm hồ sơ</h3>
+                        <div class="card-price">
+                            <span class="price" th:text="${resumeSearchPrice}">4,644,000 VND</span>
+                            <span class="original-price" th:text="${resumeSearchOriginalPrice}">5,160,000 VND</span>
+                            <span class="discount">−10% khi mua online</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>30 ngày truy cập không giới hạn hệ thống dữ liệu chuyên nghiệp</li>
+                            <li>Tìm ứng viên hiệu quả và nhanh chóng</li>
+                            <li>Chủ động tìm kiếm ứng viên ngay hôm nay</li>
+                        </ul>
+                        <p class="card-note" th:text="${resumeSearchNote}">
+                            Chương trình chỉ áp dụng cho đơn hàng trực tuyến, không áp dụng đồng thời với các chương trình khuyến mãi khác
+                        </p>
+                        <button class="btn btn-primary">Mua ngay</button>
+                    </div>
+                </div>
+                <!-- Brand Advertising Service -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Quảng bá thương hiệu</h3>
+                        <div class="card-price">
+                            <span class="price" th:text="${brandAdvertisingPrice}">23,200,000 VND</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <ul class="card-list">
+                            <li>Trang chủ VietnamWorks nhận được hơn 7 triệu lượt truy cập mỗi tháng từ các ứng viên và chuyên gia giỏi nhất tại Việt Nam</li>
+                            <li>Đặt Logo và Banner tại trang chủ sẽ là vị trí chiến lược để thu hút nhân tài</li>
+                        </ul>
+                        <button class="btn btn-secondary">Liên Hệ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Khách hàng nói gì về chúng tôi?</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text" th:text="${testimonial1Text}">
+                        "VietnamWorks tư vấn nhiệt tình, hỗ trợ tận tâm, đồng hành cùng doanh nghiệp."
+                    </p>
+                    <p class="testimonial-author" th:text="${testimonial1Author}">
+                        Công ty TNHH Nước Giải Khát Suntory Pepsico Việt Nam
+                    </p>
+                </div>
+                <div class="testimonial">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text" th:text="${testimonial2Text}">
+                        "Nhân viên tư vấn VietnamWorks hỗ trợ tốt, bất kể yêu cầu qua mail hay qua call đều được hỗ trợ nhanh chóng."
+                    </p>
+                    <p class="testimonial-author" th:text="${testimonial2Author}">
+                        Công ty TNHH BHNT Prudential Việt Nam
+                    </p>
+                </div>
+                <div class="testimonial">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text" th:text="${testimonial3Text}">
+                        "Rất ấn tượng về sự tận tâm và phục vụ khách hàng của VietnamWorks, chúng tôi đã thu hút được rất nhiều nhân tài từ đây!"
+                    </p>
+                    <p class="testimonial-author" th:text="${testimonial3Author}">
+                        Ngân hàng TMCP Kỹ thương Việt Nam
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Logos Section -->
+    <section class="company-logos">
+        <div class="container">
+            <h3 class="section-title">Các Doanh Nghiệp Hàng Đầu Lựa Chọn VietnamWorks</h3>
+            <div class="logos">
+                <img th:src="${companyLogo1}" alt="Company 1" class="logo">
+                <img th:src="${companyLogo2}" alt="Company 2" class="logo">
+                <img th:src="${companyLogo3}" alt="Company 3" class="logo">
+                <img th:src="${companyLogo4}" alt="Company 4" class="logo">
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="section-title">Đăng tuyển ngay hôm nay? Bắt đầu ngay trong vài phút</h2>
+            <button class="btn btn-primary">Đăng Tuyển</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-column">
+                <h4 class="footer-title">Thông tin liên hệ</h4>
+                <div class="footer-links">
+                    <div class="footer-link"><i class="fas fa-phone"></i><span th:text="${contactHCM}">(84 28) 3925 8456</span></div>
+                    <div class="footer-link"><i class="fas fa-phone"></i><span th:text="${contactHanoi}">(84 24) 3944 0568</span></div>
+                    <div class="footer-link"><i class="fas fa-envelope"></i><span th:text="${contactEmail}">Jobsupport@vietnamworks.com</span></div>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4 class="footer-title">Công ty</h4>
+                <div class="footer-links">
+                    <button class="footer-link-btn">Giới Thiệu</button>
+                    <button class="footer-link-btn">Bảo Mật Thông Tin</button>
+                    <button class="footer-link-btn">Quy định Sử Dụng</button>
+                    <button class="footer-link-btn">HR Insider</button>
+                    <button class="footer-link-btn">Hỏi đáp</button>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4 class="footer-title">Ứng dụng di động</h4>
+                <div class="footer-links">
+                    <img th:src="${appStoreUrl}" alt="App Store" class="app-logo">
+                    <img th:src="${googlePlayUrl}" alt="Google Play" class="app-logo">
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4 class="footer-title">Kết Nối Với VietnamWorks</h4>
+                <div class="social-links">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-youtube"></i>
+                    <i class="fab fa-linkedin-in"></i>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p th:text="${footerCopyright}">Bản Quyền © Công Ty Cổ Phần Navigos Group Việt Nam</p>
+            <p th:text="${footerAddress}">Tầng 20, tòa nhà E.Town Central, 11 Đoàn Văn Bơ, Phường 13, Quận 4, TP.HCM, Vietnam</p>
+        </div>
+    </footer>
+    <script th:src="@{js/employer/home.js}"></script>
+</body>
+</html>

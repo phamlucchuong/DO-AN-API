@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi">
+<<<<<<< HEAD
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký tài khoản công ty</title>
+  <link rel="stylesheet" th:href="@{/css/employer/register.css}">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Đăng ký tài khoản công ty</h1>
+    </div>
+
+    <form id="registration-form">
+      <div class="form-group">
+        <label for="email">Địa chỉ email <span>*</span></label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mật khẩu <span>*</span></label>
+        <input type="password" id="password" name="password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="companyName">Tên công ty <span>*</span></label>
+        <input type="text" id="companyName" name="companyName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="companyAddress">Địa chỉ công ty <span>*</span></label>
+        <input type="text" id="companyAddress" name="companyAddress" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Số điện thoại <span>*</span></label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" required>
+      </div>
+
+      <div class="buttons">
+        <button type="submit" class="btn btn-primary">Đăng ký</button>
+=======
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký công ty</title>
+  <link rel="stylesheet" th:href="@{/css/employer/register.css}">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Đăng ký thông tin công ty</h1>
+    </div>
+
+    <form id="registration-form" enctype="multipart/form-data">
+      <div class="form-section">
+
+        <div class="form-group">
+          <label for="email">Địa chỉ email <span>*</span></label>
+          <input type="email" id="email" name="email" required>
+          <span id="email-error" class="error-message"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Mật khẩu<span>*</span></label>
+          <input type="password" id="password" name="password" required>
+          <span id="password-error" class="error-message"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="companyName">Tên công ty <span>*</span></label>
+          <input type="text" id="companyName" name="companyName" required>
+          <span id="companyName-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="companyLogo">Logo công ty</label>
+          <input type="file" id="companyLogo" name="companyLogo" accept="image/*">
+          <span id="companyLogo-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="companyAddress">Địa chỉ công ty <span>*</span></label>
+          <input type="text" id="companyAddress" name="companyAddress" required>
+          <span id="companyAddress-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Số điện thoại <span>*</span></label>
+          <input type="tel" id="phoneNumber" name="phoneNumber" required>
+          <span id="phoneNumber-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="taxCode">Mã số thuế <span>*</span></label>
+          <input type="text" id="taxCode" name="taxCode" required>
+          <span id="taxCode-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="industry">Ngành nghề <span>*</span></label>
+          <select id="industry" name="industry" required>
+            <option value="">Chọn ngành nghề</option>
+            <option value="Công nghệ thông tin">Công nghệ thông tin</option>
+            <option value="Tài chính">Tài chính</option>
+            <option value="Giáo dục">Giáo dục</option>
+            <option value="Sản xuất">Sản xuất</option>
+            <option value="Khác">Khác</option>
+          </select>
+          <span id="industry-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="companySize">Quy mô công ty <span>*</span></label>
+          <select id="companySize" name="companySize" required>
+            <option value="">Chọn quy mô</option>
+            <option value="1-10">1-10 nhân viên</option>
+            <option value="11-50">11-50 nhân viên</option>
+            <option value="51-200">51-200 nhân viên</option>
+            <option value="201-500">201-500 nhân viên</option>
+            <option value=">500">Trên 500 nhân viên</option>
+          </select>
+          <span id="companySize-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="foundedDate">Ngày thành lập <span>*</span></label>
+          <input type="date" id="foundedDate" name="foundedDate" required>
+          <span id="foundedDate-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="city">Thành phố <span>*</span></label>
+          <select id="city" name="city" required>
+            <option value="">Chọn tỉnh/thành phố</option>
+            <option value="An Giang">An Giang</option>
+            <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+            <option value="Bắc Giang">Bắc Giang</option>
+            <option value="Bắc Kạn">Bắc Kạn</option>
+            <option value="Bạc Liêu">Bạc Liêu</option>
+            <option value="Bắc Ninh">Bắc Ninh</option>
+            <option value="Bến Tre">Bến Tre</option>
+            <option value="Bình Định">Bình Định</option>
+            <option value="Bình Dương">Bình Dương</option>
+            <option value="Bình Phước">Bình Phước</option>
+            <option value="Bình Thuận">Bình Thuận</option>
+            <option value="Cà Mau">Cà Mau</option>
+            <option value="Cần Thơ">Cần Thơ</option>
+            <option value="Cao Bằng">Cao Bằng</option>
+            <option value="Đà Nẵng">Đà Nẵng</option>
+            <option value="Đắk Lắk">Đắk Lắk</option>
+            <option value="Đắk Nông">Đắk Nông</option>
+            <option value="Điện Biên">Điện Biên</option>
+            <option value="Đồng Nai">Đồng Nai</option>
+            <option value="Đồng Tháp">Đồng Tháp</option>
+            <option value="Gia Lai">Gia Lai</option>
+            <option value="Hà Giang">Hà Giang</option>
+            <option value="Hà Nam">Hà Nam</option>
+            <option value="Hà Nội">Hà Nội</option>
+            <option value="Hà Tĩnh">Hà Tĩnh</option>
+            <option value="Hải Dương">Hải Dương</option>
+            <option value="Hải Phòng">Hải Phòng</option>
+            <option value="Hậu Giang">Hậu Giang</option>
+            <option value="Hòa Bình">Hòa Bình</option>
+            <option value="Hưng Yên">Hưng Yên</option>
+            <option value="Khánh Hòa">Khánh Hòa</option>
+            <option value="Kiên Giang">Kiên Giang</option>
+            <option value="Kon Tum">Kon Tum</option>
+            <option value="Lai Châu">Lai Châu</option>
+            <option value="Lâm Đồng">Lâm Đồng</option>
+            <option value="Lạng Sơn">Lạng Sơn</option>
+            <option value="Lào Cai">Lào Cai</option>
+            <option value="Long An">Long An</option>
+            <option value="Nam Định">Nam Định</option>
+            <option value="Nghệ An">Nghệ An</option>
+            <option value="Ninh Bình">Ninh Bình</option>
+            <option value="Ninh Thuận">Ninh Thuận</option>
+            <option value="Phú Thọ">Phú Thọ</option>
+            <option value="Phú Yên">Phú Yên</option>
+            <option value="Quảng Bình">Quảng Bình</option>
+            <option value="Quảng Nam">Quảng Nam</option>
+            <option value="Quảng Ngãi">Quảng Ngãi</option>
+            <option value="Quảng Ninh">Quảng Ninh</option>
+            <option value="Quảng Trị">Quảng Trị</option>
+            <option value="Sóc Trăng">Sóc Trăng</option>
+            <option value="Sơn La">Sơn La</option>
+            <option value="Tây Ninh">Tây Ninh</option>
+            <option value="Thái Bình">Thái Bình</option>
+            <option value="Thái Nguyên">Thái Nguyên</option>
+            <option value="Thanh Hóa">Thanh Hóa</option>
+            <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+            <option value="Tiền Giang">Tiền Giang</option>
+            <option value="TP Hồ Chí Minh">TP Hồ Chí Minh</option>
+            <option value="Trà Vinh">Trà Vinh</option>
+            <option value="Tuyên Quang">Tuyên Quang</option>
+            <option value="Vĩnh Long">Vĩnh Long</option>
+            <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+            <option value="Yên Bái">Yên Bái</option>
+          </select>
+          <span id="city-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="companyWebsite">Website công ty</label>
+          <input type="url" id="companyWebsite" name="companyWebsite">
+          <span id="companyWebsite-error" class="error-message"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="companyDescription">Mô tả công ty</label>
+          <textarea id="companyDescription" name="companyDescription" rows="4" cols="84"></textarea>
+          <span id="companyDescription-error" class="error-message"></span>
+        </div>
+
+        <div class="buttons">
+          <button type="submit" class="btn btn-primary">Đăng ký</button>
+          <span id="status-message" class="status-message"></span>
+        </div>
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
+      </div>
+    </form>
+
+    <div class="help-text">
+      <span>Đã có tài khoản? <a href="/employer/login">Đăng nhập</a></span>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 Employer Portal. All rights reserved.</p>
+    </div>
+  </div>
+
+<<<<<<< HEAD
+  <script th:src="@{/js/employer/register.js}"></script>
+</body>
+=======
+  <script type="module" th:src="@{/js/employer/register.js}"></script>
+</body>
+
+>>>>>>> 54bd3df142c5d84d5be09e1d494e215c82fd8f86
+</html>
