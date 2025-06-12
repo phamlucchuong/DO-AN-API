@@ -1,6 +1,5 @@
 package com.example.recruitment_website.entities;
 
-import com.example.recruitment_website.dtos.employee.PersonalDTO;
 import com.example.recruitment_website.enums.Degree;
 import com.example.recruitment_website.enums.Gender;
 import com.example.recruitment_website.enums.JobLevel;

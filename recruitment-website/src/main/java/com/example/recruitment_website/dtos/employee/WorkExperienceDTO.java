@@ -1,17 +1,25 @@
 package com.example.recruitment_website.dtos.employee;
 
 public class WorkExperienceDTO {
+    private String uid;
     private String role;
     private String company;
     private String period;
     private String description;
 
 
-    public WorkExperienceDTO(String role, String company, String period, String description) {
+    public WorkExperienceDTO(String uid, String role, String company, String period, String description) {
+        this.uid = uid;
         this.role = role;
         this.company = company;
         this.period = period;
         this.description = description;
+    }
+    public String getUid() {
+        return uid;
+    }
+    public void setUid(String uid) {
+        this.uid = uid;
     }
     public String getRole() {
         return role;

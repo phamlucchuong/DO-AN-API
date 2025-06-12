@@ -12,6 +12,18 @@ function convertDateFromISO(isoString) {
 }
 
 
+function formatName(input) {
+  if (!input || typeof input !== 'string') return '';
+
+  return input
+    .trim()                            // Xóa khoảng trắng đầu/cuối
+    .toLowerCase()                     // Chuyển tất cả về thường
+    .split(/\s+/)                      // Tách từ theo khoảng trắng
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Viết hoa chữ cái đầu
+    .join(' ');                        // Ghép lại bằng khoảng trắng
+}
+
+
 
 
 // personal data
@@ -131,7 +143,7 @@ async function updateCareerObjective(id) {
 
 
 // experience
-async function loadExperience(id) {
+async function getExperience(id) {
   try {
     const response = await fetch(`/api/employee/${id}/work-experience`, {
       method: 'GET',
@@ -145,6 +157,17 @@ async function loadExperience(id) {
     }
 
     const experiences = await response.json();
+    return experiences;
+
+  } catch (error) {
+    console.error('Lỗi khi tải experience:', error);
+  }
+}
+
+
+async function loadExperience(id) {
+  try {
+    const experiences = await getExperience(id);
 
     const experienceList = document.getElementById("experienceList");
     experienceList.innerHTML = "";
@@ -199,8 +222,24 @@ async function postExperience(id, formData) {
 }
 
 
+async function deleteExperience(id, experienceID) {
+  try {
+    const response = await fetch(`/api/employee/${id}/work-experience?experienceID=${experienceID}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error("profile.js-deleteExperience: không xoas được data");
+    }
+
+  } catch (error) {
+    console.error('Lỗi khi xoas Experience:', error);
+  }
+}
+
+
 // education
-async function loadEducation(id) {
+async function getEducation(id) {
   try {
     const response = await fetch(`/api/employee/${id}/education`, {
       method: 'GET',
@@ -214,6 +253,17 @@ async function loadEducation(id) {
     }
 
     const education = await response.json();
+    return education;
+
+  } catch (error) {
+    console.error('Lỗi khi tải education:', error);
+  }
+}
+
+
+async function loadEducation(id) {
+  try {
+    const education = await getEducation(id);
 
     const educationList = document.getElementById("educationList");
     educationList.innerHTML = "";
@@ -241,7 +291,6 @@ async function loadEducation(id) {
 }
 
 
-
 async function postEducation(id, data) {
   try {
     const response = await fetch(`/api/employee/${id}/education`, {
@@ -265,9 +314,26 @@ async function postEducation(id, data) {
 }
 
 
+async function deletetEducation(id, educationID) {
+  try {
+    const response = await fetch(`/api/employee/${id}/education?educationID=${educationID}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error("profile.js-deletetEducation: không xoas được data");
+    }
+
+  } catch (error) {
+    console.error('Lỗi khi xoas educationID:', error);
+  }
+}
+
+
+
 
 // skill
-async function loadSkills(id) {
+async function getSkills(id) {
   try {
     const response = await fetch(`/api/employee/${id}/skill`, {
       method: 'GET',
@@ -281,6 +347,17 @@ async function loadSkills(id) {
     }
 
     const skills = await response.json();
+    return skills;
+
+  } catch (error) {
+    console.error('Lỗi khi tải skills:', error);
+  }
+}
+
+
+async function loadSkills(id) {
+  try {
+    const skills = await getSkills(id);
 
     const skillsList = document.getElementById("skillsList");
     skillsList.innerHTML = "";
@@ -333,8 +410,26 @@ async function postSkill(id, data) {
 }
 
 
+async function deleteSkill(id, skillID) {
+  try {
+    const response = await fetch(`/api/employee/${id}/skill?skillID=${skillID}`, {
+      method: 'DELETE',
+    });
 
-async function loadLanguages(id) {
+    if (!response.ok) {
+      throw new Error("profile.js-deleteSkill: không xoas được data");
+    }
+
+  } catch (error) {
+    console.error('Lỗi khi xoas Skill:', error);
+  }
+}
+
+
+
+
+// language
+async function getLanguages(id) {
   try {
     const response = await fetch(`/api/employee/${id}/language`, {
       method: 'GET',
@@ -348,27 +443,35 @@ async function loadLanguages(id) {
     }
 
     const languages = await response.json();
+    return languages;
 
-    const languagesList = document.getElementById("languagesList");
-    languagesList.innerHTML = "";
-
-    if (!languages || languages.length === 0) {
-      languagesList.innerHTML = "<p>Bạn chưa có ngôn ngữ nào</p>";
-      return;
-    }
-
-    languages.forEach((lang) => {
-      const languageItem = document.createElement("div");
-      languageItem.className = "language-item";
-      languageItem.innerHTML = `
-        <div class="language-name">${lang.name}</div>
-        <div class="language-level">${lang.level}</div>
-      `;
-      languagesList.appendChild(languageItem);
-    });
   } catch (error) {
     console.error('Lỗi khi tải languages:', error);
   }
+}
+
+
+async function loadLanguages(id) {
+
+  const languages = await getLanguages(id);
+
+  const languagesList = document.getElementById("languagesList");
+  languagesList.innerHTML = "";
+
+  if (!languages || languages.length === 0) {
+    languagesList.innerHTML = "<p>Bạn chưa có ngôn ngữ nào</p>";
+    return;
+  }
+
+  languages.forEach((lang) => {
+    const languageItem = document.createElement("div");
+    languageItem.className = "language-item";
+    languageItem.innerHTML = `
+        <div class="language-name">${lang.name}</div>
+        <div class="language-level">${lang.level}</div>
+      `;
+    languagesList.appendChild(languageItem);
+  });
 }
 
 
@@ -391,6 +494,22 @@ async function postLanguage(id, data) {
 
   } catch (error) {
     console.error('Lỗi khi tải education:', error);
+  }
+}
+
+
+async function deleteLanguage(id, languageID) {
+  try {
+    const response = await fetch(`/api/employee/${id}/language?languageID=${languageID}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error("profile.js-deteleLanguage: không xoas được data");
+    }
+
+  } catch (error) {
+    console.error('Lỗi khi xoas languages:', error);
   }
 }
 
@@ -596,18 +715,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Experience modal
-    modals.experience.btn.addEventListener("click", () => {
+    modals.experience.btn.addEventListener("click", async () => {
       modals.experience.modal.style.display = "flex";
       const entriesContainer = document.getElementById("experienceEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.experiences.forEach((exp, index) => {
-      //   addExperienceEntry(exp, index);
-      // });
+      entriesContainer.innerHTML = "";
+      const experiences = await getExperience(uid);
+
+      if(experiences.length === 0) return;
+
+      experiences.forEach((exp) => {
+        addExperienceEntry(exp);
+      });
     });
     modals.experience.addBtn.addEventListener("click", () => {
       addExperienceEntry(
-        { title: "", company: "", duration: "", description: "" },
-        profileData.experiences.length
+        { role: "", company: "", period: "", description: "" }
       );
     });
     modals.experience.saveBtn.addEventListener("click", () => {
@@ -634,18 +756,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Education modal
-    modals.education.btn.addEventListener("click", () => {
+    modals.education.btn.addEventListener("click", async () => {
       modals.education.modal.style.display = "flex";
       const entriesContainer = document.getElementById("educationEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.education.forEach((edu, index) => {
-      //   addEducationEntry(edu, index);
-      // });
+      entriesContainer.innerHTML = "";
+      const education = await getEducation(uid);
+
+      if(education.length === 0) return;
+
+      education.forEach((edu) => {
+        addEducationEntry(edu);
+      });
     });
     modals.education.addBtn.addEventListener("click", () => {
       addEducationEntry(
-        { degree: "", school: "", year: "" },
-        profileData.education.length
+        { major: "", school: "", period: "" }
       );
     });
     modals.education.saveBtn.addEventListener("click", () => {
@@ -670,13 +795,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Skills modal
-    modals.skills.btn.addEventListener("click", () => {
+    modals.skills.btn.addEventListener("click", async () => {
       modals.skills.modal.style.display = "flex";
       const entriesContainer = document.getElementById("skillsEntries");
-      //   entriesContainer.innerHTML = "";
-      //   profileData.skills.forEach((skill, index) => {
-      //     addSkillEntry(skill, index);
-      //   });
+        entriesContainer.innerHTML = "";
+        const skills = await getSkills(uid);
+        if(skills.length === 0) return;
+        skills.forEach((skill) => {
+          addSkillEntry(skill);
+        });
     });
     modals.skills.addBtn.addEventListener("click", () => {
       addSkillEntry({ name: "", level: 50 }, profileData.skills.length);
@@ -690,7 +817,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
         if (name && level >= 0 && level <= 100) {
           const data = {
-            name: name,
+            name: formatName(name),
             level: level,
           }
           postSkill(uid, data);
@@ -701,16 +828,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Languages modal
-    modals.languages.btn.addEventListener("click", () => {
+    modals.languages.btn.addEventListener("click", async () => {
       modals.languages.modal.style.display = "flex";
       const entriesContainer = document.getElementById("languagesEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.languages.forEach((lang, index) => {
-      //   addLanguageEntry(lang, index);
-      // });
+      entriesContainer.innerHTML = "";
+      const languages = await getLanguages(uid);
+      if(languages.length === 0) return;
+      languages.forEach((lang) => {
+        addLanguageEntry(lang);
+      });
     });
     modals.languages.addBtn.addEventListener("click", () => {
-      addLanguageEntry({ name: "", level: "" }, profileData.languages.length);
+      addLanguageEntry({ name: "", level: "" });
     });
     modals.languages.saveBtn.addEventListener("click", () => {
       const entries = document.querySelectorAll(
@@ -720,7 +849,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const name = entry.querySelector("[name='languageName']").value;
         const level = entry.querySelector("[name='languageLevel']").value;
         var languageLevel;
-        switch(level) {
+        switch (level) {
           case 'Bản ngữ':
             languageLevel = 'NATIVE';
             break;
@@ -736,7 +865,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (name && level) {
           const data = {
-            name: name,
+            name: formatName(name),
             level: languageLevel,
           }
           postLanguage(uid, data);
@@ -812,7 +941,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  function addExperienceEntry(exp, index) {
+  function addExperienceEntry(exp) {
     const entriesContainer = document.getElementById("experienceEntries");
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
@@ -820,7 +949,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <button type="button" class="remove-entry-btn"><i class="fas fa-trash"></i></button>
       <div class="form-group">
         <label>Chức vụ:</label>
-        <input type="text" name="title" value="${exp.title}" required>
+        <input type="text" name="title" value="${exp.role}" required>
       </div>
       <div class="form-group">
         <label>Công ty:</label>
@@ -828,7 +957,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
       <div class="form-group">
         <label>Thời gian:</label>
-        <input type="text" name="duration" value="${exp.duration}" required>
+        <input type="text" name="duration" value="${exp.period}" required>
       </div>
       <div class="form-group">
         <label>Mô tả:</label>
@@ -837,13 +966,15 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     entryDiv
       .querySelector(".remove-entry-btn")
-      .addEventListener("click", () => {
+      .addEventListener("click", async () => {
         entryDiv.remove();
+        console.log(exp.uid);
+        await deleteExperience(uid, exp.uid);
       });
     entriesContainer.appendChild(entryDiv);
   }
 
-  function addEducationEntry(edu, index) {
+  function addEducationEntry(edu) {
     const entriesContainer = document.getElementById("educationEntries");
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
@@ -851,7 +982,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <button type="button" class="remove-entry-btn"><i class="fas fa-trash"></i></button>
       <div class="form-group">
         <label>Bằng cấp:</label>
-        <input type="text" name="degree" value="${edu.degree}" required>
+        <input type="text" name="degree" value="${edu.major}" required>
       </div>
       <div class="form-group">
         <label>Trường học:</label>
@@ -859,18 +990,20 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
       <div class="form-group">
         <label>Năm:</label>
-        <input type="text" name="year" value="${edu.year}" required>
+        <input type="text" name="year" value="${edu.period}" required>
       </div>
     `;
     entryDiv
       .querySelector(".remove-entry-btn")
-      .addEventListener("click", () => {
+      .addEventListener("click", async () => {
         entryDiv.remove();
+        console.log(edu.uid);
+        await deletetEducation(uid, edu.uid);
       });
     entriesContainer.appendChild(entryDiv);
   }
 
-  function addSkillEntry(skill, index) {
+  function addSkillEntry(skill) {
     const entriesContainer = document.getElementById("skillsEntries");
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
@@ -887,16 +1020,33 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     entryDiv
       .querySelector(".remove-entry-btn")
-      .addEventListener("click", () => {
+      .addEventListener("click", async () => {
         entryDiv.remove();
+        console.log(skill.id);
+        await deleteSkill(uid, skill.id);
       });
     entriesContainer.appendChild(entryDiv);
   }
 
-  function addLanguageEntry(lang, index) {
+  function addLanguageEntry(lang) {
     const entriesContainer = document.getElementById("languagesEntries");
     const entryDiv = document.createElement("div");
     entryDiv.className = "entry-group";
+    const level = lang.level;
+    var languageLevel;
+    switch (level) {
+      case 'NATIVE':
+        languageLevel = 'Bản ngữ';
+        break;
+      case 'FLUENT':
+        languageLevel = 'Thành thạo';
+        break;
+      case 'BASIC':
+        languageLevel = 'Cơ bản';
+        break;
+      default:
+        break;
+    }
     entryDiv.innerHTML = `
       <button type="button" class="remove-entry-btn"><i class="fas fa-trash"></i></button>
       <div class="form-group">
@@ -906,19 +1056,21 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="form-group">
         <label>Mức độ:</label>
         <select name="languageLevel" required>
-          <option value="Bản ngữ" ${lang.level === "Bản ngữ" ? "selected" : ""
+          <option value="Bản ngữ" ${languageLevel === "Bản ngữ" ? "selected" : ""
       }>Bản ngữ</option>
-          <option value="Thành thạo" ${lang.level === "Thành thạo" ? "selected" : ""
+          <option value="Thành thạo" ${languageLevel === "Thành thạo" ? "selected" : ""
       }>Thành thạo</option>
-          <option value="Cơ bản" ${lang.level === "Cơ bản" ? "selected" : ""
+          <option value="Cơ bản" ${languageLevel === "Cơ bản" ? "selected" : ""
       }>Cơ bản</option>
         </select>
       </div>
     `;
     entryDiv
       .querySelector(".remove-entry-btn")
-      .addEventListener("click", () => {
+      .addEventListener("click", async () => {
         entryDiv.remove();
+        console.log(lang.uid);
+        await deleteLanguage(uid, lang.uid);
       });
     entriesContainer.appendChild(entryDiv);
   }

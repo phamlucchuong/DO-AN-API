@@ -85,7 +85,11 @@ public class EmployeeRestController {
         return ResponseEntity.ok("Cập nhật kinh nghiệm làm việc thành công");
     }
 
-
+    @DeleteMapping("/{id}/work-experience")
+    public ResponseEntity<?> deleteWorkExperience(@PathVariable String id, @RequestParam String expID) {
+        employeeService.deleteWorkExperience(id, expID);
+        return ResponseEntity.ok("Xoas kỹ năng thành công");
+    }
     
     @GetMapping("/{id}/education")
     public ResponseEntity<?> getEducation(@PathVariable String id) {
@@ -103,6 +107,11 @@ public class EmployeeRestController {
         return ResponseEntity.ok("Cập nhật học vấn thành công");
     }
 
+    @DeleteMapping("/{id}/education")
+    public ResponseEntity<?> deleteEducation(@PathVariable String id, @RequestParam String eduID) {
+        employeeService.deleteEducation(id, eduID);
+        return ResponseEntity.ok("Xoas học vấn thành công");
+    }
 
     @GetMapping("/{id}/skill")
     public ResponseEntity<?> getSkills(@PathVariable String id) {
@@ -120,6 +129,12 @@ public class EmployeeRestController {
         return ResponseEntity.ok("Cập nhật kĩ năng thành công");
     }
 
+    @DeleteMapping("/{id}/skill")
+    public ResponseEntity<?> deleteSkills(@PathVariable String id, @RequestParam String skillID) {
+        employeeService.deleteSkill(id, skillID);
+        return ResponseEntity.ok("Xoas kỹ năng thành công");
+    }
+
     @GetMapping("/{id}/language")
     public ResponseEntity<?> getLanguages(@PathVariable String id) {
         try {
@@ -135,6 +150,13 @@ public class EmployeeRestController {
         employeeService.postLanguages(id, dto);
         return ResponseEntity.ok("Cập nhật ngôn ngữ thành công");
     }
+    
+    @DeleteMapping("/{id}/language")
+    public ResponseEntity<?> deleteLanguages(@PathVariable String id, @RequestParam String languageID) {
+        employeeService.deleteLanguages(id, languageID);
+        return ResponseEntity.ok("Xoas ngôn ngữ thành công");
+    }
+
 
     // Dưới đây là các method có thể dùng sau này (chưa mở):
     /*
