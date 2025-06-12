@@ -90,6 +90,45 @@
           </div>
         </div>
       </section>
+
+      <!-- Modal for Editing CV -->
+      <div class="modal" id="editCVModal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Sửa CV</h2>
+            <button class="modal-close-btn" id="closeEditModal">&times;</button>
+          </div>
+          <div class="form-group">
+            <label for="editCVUpload">Tải lên CV mới (PDF):</label>
+            <input type="file" id="editCVUpload" accept="application/pdf" />
+          </div>
+          <div class="form-actions">
+            <button class="modal-save-btn" id="saveEditCV">Lưu</button>
+            <button class="modal-cancel-btn" id="cancelEditCV">Hủy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for Deleting CV -->
+      <div class="modal" id="deleteCVModal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Xác nhận xóa CV</h2>
+            <button class="modal-close-btn" id="closeDeleteModal">
+              &times;
+            </button>
+          </div>
+          <p>
+            Bạn có chắc chắn muốn xóa CV cho vị trí
+            <span id="deleteJobTitle"></span> tại
+            <span id="deleteCompany"></span>?
+          </p>
+          <div class="form-actions">
+            <button class="modal-save-btn" id="confirmDeleteCV">Xóa</button>
+            <button class="modal-cancel-btn" id="cancelDeleteCV">Hủy</button>
+          </div>
+        </div>
+      </div>
     </main>
 
     <footer class="footer">
