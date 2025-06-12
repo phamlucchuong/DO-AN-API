@@ -58,5 +58,8 @@ public class HomeController {
         return "employee/jobs"; 
     }
 
-    
+    @GetMapping("/application-profile")
+    public String application() {
+        return "employee/application-profile"; 
+    }    
 }
