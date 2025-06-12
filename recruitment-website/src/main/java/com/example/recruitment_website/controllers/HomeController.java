@@ -6,8 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.recruitment_website.dtos.EmployerDTO;
 import com.example.recruitment_website.dtos.JobDTO;
-import com.example.recruitment_website.entities.JobEntity;
+import com.example.recruitment_website.services.EmployerService;
 import com.example.recruitment_website.services.JobService;
 
 @Controller
@@ -15,6 +16,9 @@ public class HomeController {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private EmployerService employerService;
 
     @GetMapping("/index")
     public String index() {
@@ -37,7 +41,12 @@ public class HomeController {
     }
 
     @GetMapping("/company-detail")
-    public String companyDetail(@RequestParam(value = "id", required = false) Integer companyId) {
+    public String companyDetail(@RequestParam(value = "uid", required = false) String employeyrID, Model model) {
+        EmployerDTO employer = employerService.getEmployerByUid(employeyrID);
+        if (employer == null) {
+            return "error/404"; // hoặc redirect về trang khác
+        }
+        model.addAttribute("employer", employer);
         return "details/company-detail";
     }
 
@@ -71,14 +80,6 @@ public class HomeController {
     return "employee/company";
     }
 
-    // @GetMapping("/job-detail")
-    // public String jobProfile(@RequestParam("id") Integer jobId, Model model) {
-    //     JobDTO job = jobService.getJobById(jobId);
-    //     if (job == null) {
-    //         return "error/404"; // hoặc redirect về trang khác
-    //     }
-    //     model.addAttribute("job", job);
-    // }
 
     @GetMapping("/jobs-profile")
     public String jobs() {

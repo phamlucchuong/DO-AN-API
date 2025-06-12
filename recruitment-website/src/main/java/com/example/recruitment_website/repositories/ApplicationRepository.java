@@ -15,4 +15,5 @@ public interface ApplicationRepository extends JpaRepository<ApplicationEntity, 
     List<ApplicationEntity> findByEmployee_Uid(String employeeId);
     List<ApplicationEntity> findByJob_Id(Integer jobId);
     Optional<ApplicationEntity> findByEmployeeAndJob(EmployeeEntity employee, JobEntity job);
+    void deleteByEmployee(EmployeeEntity employee);
 }

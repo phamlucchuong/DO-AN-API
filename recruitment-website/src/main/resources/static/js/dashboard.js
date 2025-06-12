@@ -47,7 +47,7 @@ function renderTopCompanies() {
           } = company;
 
           return `
-            <div class="company-card" onclick="viewCompany('${uid}')">
+            <div class="company-card" onclick="window.location.href = \`/company-detail?uid=${uid}\`">
               <div class="company-header">
                 <img src="${companyLogo || 'https://via.placeholder.com/50'}" alt="${companyName}" class="company-logo">
                 <div class="company-info">
@@ -74,18 +74,6 @@ function renderTopCompanies() {
 }
 
 let hotJobsData = [];
-
-
-function viewJob(jobId) {
-  // const allJobs = hotJobsData;
-  // const job = allJobs.find((j) => j.id === jobId);
-  // if (job) {
-    window.location.href = `/jobs-profile?id=${jobId}`;
-  // } else {
-  //   console.error("Job not found:", jobId);
-  //   alert("Không tìm thấy công việc!");
-  // }
-}
 
 
 // Render Hot Jobs
@@ -202,16 +190,6 @@ function createCV() {
   alert("Chuyển hướng đến trang tạo CV...");
 }
 
-// New event handlers for dynamic content
-function viewCompany(companyId) {
-  // const company = topCompaniesData.find((c) => c.id === companyId);
-  // if (company) {
-    window.location.href = `/employer/detail?uid=${companyId}`;
-  // } else {
-    // console.error("Company not found:", companyId);
-    // alert("Không tìm thấy công ty!");
-  // }
-}
 
 
 function quickApply(jobId) {

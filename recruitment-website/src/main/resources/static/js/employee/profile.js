@@ -1,3 +1,6 @@
+import { logout } from '../firebase/firebase-auth.js';
+
+
 // Khai báo profileData để tránh lỗi
 let profileData = {
   personal: {
@@ -550,26 +553,28 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
           }
 
-          const response = await fetch(`/api/employee/${uid}`, {
+          const response = await fetch(`/api/employee/${uid}/delete`, {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
             },
           });
 
+          
           if (!response.ok) {
             throw new Error("Không thể xóa tài khoản");
           }
-
+          
           localStorage.removeItem("uid");
           localStorage.removeItem("isUpdate");
           localStorage.removeItem("profileData");
           localStorage.removeItem("careerObjective");
-
+          
           deleteAccountModal.style.display = "none";
           showMessage("Tài khoản đã được xóa thành công");
           setTimeout(() => {
-            window.location.href = "/login";
+            logout();
+            // window.location.href = "/login";
           }, 2000);
         } catch (error) {
           console.error("Lỗi khi xóa tài khoản:", error);
