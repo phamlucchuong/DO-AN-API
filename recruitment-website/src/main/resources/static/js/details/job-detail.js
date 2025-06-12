@@ -1,287 +1,150 @@
-
-async function postCv(uid, cvData) {
+async function postCv(jobId, cvData) {
   try {
-    const response = await fetch(`/api/application/${uid}/post`,{
-      method: 'POST',
+    const response = await fetch(`/api/application/${jobId}/post`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(cvData)
+      body: JSON.stringify(cvData),
     });
 
-    if(!response.ok) {
-      console.log('Lỗi khi upload Cv');
+    if (!response.ok) {
+      throw new Error("Lỗi khi upload CV");
     }
-
+    return await response.json();
   } catch (error) {
-    console.error("Lỗi khi thêm cv", error);
+    console.error("Lỗi khi thêm CV:", error);
+    throw error;
   }
 }
 
 async function getJobDetail(id) {
   try {
     const response = await fetch(`/api/employer/job/detail/${id}`, {
-      method: 'GET',
+      method: "GET",
     });
 
-    if(!response.ok) {
-      console.log('Lỗi khi lấy job detail');
-      return;
+    if (!response.ok) {
+      throw new Error("Lỗi khi lấy job detail");
     }
 
-    const job_detail = response.json();
-    return job_detail;
-
+    const jobDetail = await response.json();
+    return jobDetail;
   } catch (error) {
-    console.error("Lỗi khi lấy job detail", error);
+    console.error("Lỗi khi lấy job detail:", error);
+    return null;
   }
 }
 
-
 document.addEventListener("DOMContentLoaded", async () => {
-  // Dữ liệu mẫu (tổng hợp từ hotJobsData và suggestedJobsData)
+  // Sample data updated with all DTO fields
   const allJobsData = [
     {
       id: 1,
       title: "Senior Frontend Developer (React/Vue)",
-      company: "FPT Software",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23FF6600'/%3E%3Ctext x='15' y='35' font-family='Arial' font-size='8' fill='white'%3EFPT%3C/text%3E%3C/svg%3E",
-      location: "Hồ Chí Minh",
+      employer: {
+        companyName: "FPT Software",
+        companyLogo:
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23FF6600'/%3E%3Ctext x='15' y='35' font-family='Arial' font-size='8' fill='white'%3EFPT%3C/text%3E%3C/svg%3E",
+        uid: "fpt123",
+        address: "Lô E2a-7, Đường D1, Khu Công nghệ cao, TP.HCM",
+        city: "Hồ Chí Minh",
+      },
       salary: "25 - 35 triệu",
       experience: "3-5 năm",
-      jobType: "Toàn thời gian",
-      skills: ["React", "Vue.js", "JavaScript", "HTML/CSS"],
-      postedDate: "2024-01-15",
-      isHot: true,
-      isUrgent: false,
       description:
         "Phát triển giao diện người dùng bằng React và Vue.js, tối ưu hiệu suất ứng dụng, làm việc với đội ngũ thiết kế và backend.",
-    },
-    {
-      id: 2,
-      title: "Digital Marketing Manager",
-      company: "Shopee",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23EE4D2D'/%3E%3Ctext x='8' y='35' font-family='Arial' font-size='7' fill='white'%3ESHOPEE%3C/text%3E%3C/svg%3E",
-      location: "Hồ Chí Minh",
-      salary: "20 - 30 triệu",
-      experience: "2-4 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Digital Marketing", "SEO", "Google Ads", "Facebook Ads"],
-      postedDate: "2024-01-14",
-      isHot: true,
-      isUrgent: true,
-      description:
-        "Quản lý chiến dịch marketing số, tối ưu hóa SEO và quảng cáo trên Google Ads/Facebook Ads.",
-    },
-    {
-      id: 3,
-      title: "Business Analyst",
-      company: "Vietcombank",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23009639'/%3E%3Ctext x='12' y='35' font-family='Arial' font-size='7' fill='white'%3EVCB%3C/text%3E%3C/svg%3E",
-      location: "Hà Nội",
-      salary: "18 - 25 triệu",
-      experience: "1-3 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Business Analysis", "SQL", "Excel", "Power BI"],
-      postedDate: "2024-01-13",
-      isHot: false,
-      isUrgent: true,
-      description:
-        "Phân tích dữ liệu kinh doanh, hỗ trợ ra quyết định chiến lược bằng SQL và Power BI.",
-    },
-    {
-      id: 4,
-      title: "Quality Assurance Engineer",
-      company: "Samsung Vietnam",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%231428A0'/%3E%3Ctext x='5' y='35' font-family='Arial' font-size='6' fill='white'%3ESAMSUNG%3C/text%3E%3C/svg%3E",
-      location: "Bắc Ninh",
-      salary: "15 - 22 triệu",
-      experience: "1-3 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Testing", "Automation", "Selenium", "Java"],
-      postedDate: "2024-01-12",
+      requirements:
+        "Thành thạo React, Vue.js, JavaScript, HTML/CSS. Có kinh nghiệm làm việc với API và tối ưu hiệu suất.",
+      benefits: "Bảo hiểm sức khỏe, thưởng cuối năm, hỗ trợ đào tạo.",
+      deadline: "2025-02-15",
+      createdAt: "2025-01-15T10:00:00Z",
+      updatedAt: "2025-01-20T15:30:00Z",
+      status: "Open",
+      numberOfVacancies: 2,
+      jobLevel: "Senior",
+      employmentType: "Toàn thời gian",
+      city: "Hồ Chí Minh",
+      address: "Lô E2a-7, Đường D1, Khu Công nghệ cao, TP.HCM",
+      workingHours: "8h-17h, Thứ 2 - Thứ 6",
+      isApproved: true,
+      applicationCount: 15,
+      skills: ["React", "Vue.js", "JavaScript", "HTML/CSS"],
       isHot: true,
       isUrgent: false,
-      description:
-        "Thực hiện kiểm thử phần mềm, phát triển kịch bản tự động bằng Selenium và Java.",
     },
-    {
-      id: 5,
-      title: "Product Manager",
-      company: "VinGroup",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23C41E3A'/%3E%3Ctext x='15' y='35' font-family='Arial' font-size='8' fill='white'%3EVIN%3C/text%3E%3C/svg%3E",
-      location: "Hà Nội",
-      salary: "30 - 45 triệu",
-      experience: "3-5 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Product Management", "Agile", "Market Research", "Analytics"],
-      postedDate: "2024-01-11",
-      isHot: true,
-      isUrgent: true,
-      description:
-        "Quản lý vòng đời sản phẩm, nghiên cứu thị trường và áp dụng phương pháp Agile.",
-    },
-    {
-      id: 6,
-      title: "DevOps Engineer",
-      company: "Techcombank",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%234A90E2'/%3E%3Ctext x='12' y='35' font-family='Arial' font-size='7' fill='white'%3ETCB%3C/text%3E%3C/svg%3E",
-      location: "Hồ Chí Minh",
-      salary: "28 - 40 triệu",
-      experience: "2-4 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Docker", "Kubernetes", "AWS", "Jenkins"],
-      postedDate: "2024-01-10",
-      isHot: false,
-      isUrgent: false,
-      description:
-        "Quản lý hạ tầng DevOps, triển khai Docker và Kubernetes trên AWS.",
-    },
-    {
-      id: 7,
-      title: "UI/UX Designer",
-      company: "Zalo",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%230068FF'/%3E%3Ctext x='12' y='35' font-family='Arial' font-size='8' fill='white'%3EZALO%3C/text%3E%3C/svg%3E",
-      location: "Hồ Chí Minh",
-      salary: "18 - 28 triệu",
-      experience: "2-4 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Figma", "Adobe XD", "Sketch", "Prototyping"],
-      postedDate: "2024-01-09",
-      isHot: false,
-      isUrgent: false,
-      description:
-        "Thiết kế giao diện người dùng và trải nghiệm bằng Figma và Adobe XD.",
-    },
-    {
-      id: 8,
-      title: "Data Scientist",
-      company: "Grab",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%2300B14F'/%3E%3Ctext x='10' y='35' font-family='Arial' font-size='8' fill='white'%3EGRAB%3C/text%3E%3C/svg%3E",
-      location: "Hồ Chí Minh",
-      salary: "25 - 40 triệu",
-      experience: "2-5 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Python", "Machine Learning", "SQL", "Tableau"],
-      postedDate: "2024-01-08",
-      isHot: true,
-      isUrgent: false,
-      description:
-        "Phân tích dữ liệu lớn, xây dựng mô hình Machine Learning bằng Python.",
-    },
-    {
-      id: 9,
-      title: "Sales Executive",
-      company: "Unilever",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23005AAA'/%3E%3Ctext x='5' y='35' font-family='Arial' font-size='6' fill='white'%3EUNILEVER%3C/text%3E%3C/svg%3E",
-      location: "Hà Nội",
-      salary: "12 - 18 triệu",
-      experience: "1-2 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Sales", "Communication", "CRM", "Negotiation"],
-      postedDate: "2024-01-07",
-      isHot: false,
-      isUrgent: true,
-      description:
-        "Phát triển khách hàng, đàm phán và quản lý quan hệ bằng CRM.",
-    },
-    {
-      id: 10,
-      title: "Backend Developer (Node.js)",
-      company: "Tiki",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23189EFF'/%3E%3Ctext x='12' y='35' font-family='Arial' font-size='8' fill='white'%3ETIKI%3C/text%3E%3C/svg%3E",
-      location: "Hồ Chí Minh",
-      salary: "22 - 32 triệu",
-      experience: "2-4 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Node.js", "MongoDB", "Express", "Docker"],
-      postedDate: "2024-01-06",
-      isHot: true,
-      isUrgent: false,
-      description:
-        "Phát triển backend bằng Node.js, quản lý cơ sở dữ liệu MongoDB.",
-    },
-    {
-      id: 11,
-      title: "HR Business Partner",
-      company: "Masan Group",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23D4171F'/%3E%3Ctext x='5' y='35' font-family='Arial' font-size='7' fill='white'%3EMASAN%3C/text%3E%3C/svg%3E",
-      location: "Hồ Chí Minh",
-      salary: "20 - 28 triệu",
-      experience: "3-5 năm",
-      jobType: "Toàn thời gian",
-      skills: [
-        "HR Management",
-        "Recruitment",
-        "Performance Management",
-        "Employee Relations",
-      ],
-      postedDate: "2024-01-05",
-      isHot: false,
-      isUrgent: false,
-      description:
-        "Hỗ trợ quản lý nhân sự, tuyển dụng và phát triển nhân viên.",
-    },
-    {
-      id: 12,
-      title: "Mobile Developer (Flutter)",
-      company: "VNG Corporation",
-      companyLogo:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23FF6B00'/%3E%3Ctext x='12' y='35' font-family='Arial' font-size='8' fill='white'%3EVNG%3C/text%3E%3C/svg%3E",
-      location: "Hồ Chí Minh",
-      salary: "20 - 30 triệu",
-      experience: "1-3 năm",
-      jobType: "Toàn thời gian",
-      skills: ["Flutter", "Dart", "Firebase", "Mobile Development"],
-      postedDate: "2024-01-04",
-      isHot: false,
-      isUrgent: true,
-      description: "Phát triển ứng dụng di động bằng Flutter và Firebase.",
-    },
+    // Add more sample jobs as needed, following the same structure
   ];
 
-  // Lấy ID công việc từ URL
+  // Get job ID from URL
   const urlParams = new URLSearchParams(window.location.search);
   const jobId = parseInt(urlParams.get("id"));
 
-  // Tìm công việc theo ID
-  const job = await getJobDetail(jobId);
+  // Fetch job details (use API or sample data for now)
+  const job =
+    allJobsData.find((j) => j.id === jobId) || (await getJobDetail(jobId));
 
   if (job) {
-    // Điền thông tin công việc
+    // Populate job details
     document.getElementById("companyLogo").src = job.employer.companyLogo;
     document.getElementById("jobTitle").textContent = job.title;
-    document.getElementById("companyName").textContent = job.employer.companyName;
-    document.getElementById("jobSalary").textContent = `${job.salary} VNĐ`;
+    document.getElementById("companyName").textContent =
+      job.employer.companyName;
+    document.getElementById(
+      "jobSalary"
+    ).innerHTML = `<i class="fas fa-money-bill-wave"></i> ${job.salary}`;
     document.getElementById(
       "jobLocation"
-    ).innerHTML = `<i class="fas fa-map-marker-alt"></i> ${job.address}`;
+    ).innerHTML = `<i class="fas fa-map-marker-alt"></i> ${job.city}, ${job.address}`;
     document.getElementById(
       "jobExperience"
     ).innerHTML = `<i class="fas fa-briefcase"></i> ${job.experience}`;
+    document.getElementById(
+      "jobLevel"
+    ).innerHTML = `<i class="fas fa-level-up-alt"></i> ${job.jobLevel}`;
+    document.getElementById(
+      "employmentType"
+    ).innerHTML = `<i class="fas fa-clock"></i> ${job.employmentType}`;
     document.getElementById("jobDescription").textContent = job.description;
+    document.getElementById("jobRequirements").textContent = job.requirements;
+    document.getElementById("jobBenefits").textContent = job.benefits;
+    document.getElementById(
+      "employerName"
+    ).textContent = `Tên công ty: ${job.employer.companyName}`;
+    document.getElementById(
+      "employerAddress"
+    ).textContent = `Địa chỉ: ${job.employer.address}`;
+    document.getElementById(
+      "employerCity"
+    ).textContent = `Thành phố: ${job.employer.city}`;
+    document.getElementById("numberOfVacancies").textContent =
+      job.numberOfVacancies;
+    document.getElementById("workingHours").textContent = job.workingHours;
+    document.getElementById("deadline").textContent = formatDate(job.deadline);
+    document.getElementById("isApproved").textContent = job.isApproved
+      ? "Đã phê duyệt"
+      : "Chưa phê duyệt";
+    document.getElementById("applicationCount").textContent =
+      job.applicationCount;
+    document.getElementById("createdAt").textContent = formatDateTime(
+      job.createdAt
+    );
+    document.getElementById("updatedAt").textContent = formatDateTime(
+      job.updatedAt
+    );
+    document.getElementById("jobStatus").textContent = job.status;
     document.getElementById(
       "postedDate"
     ).textContent = `Đăng ngày: ${formatDate(job.createdAt)}`;
 
-    // Hiển thị badge nếu có
+    // Display badges
     if (job.isHot)
       document.getElementById("jobHotBadge").style.display = "inline-block";
     if (job.isUrgent)
       document.getElementById("jobUrgentBadge").style.display = "inline-block";
+    document.getElementById("jobStatus").style.display = "inline-block";
 
-    // Hiển thị kỹ năng
+    // Populate skills
     const skillsList = document.getElementById("jobSkills");
     job.skills.forEach((skill) => {
       const skillTag = document.createElement("span");
@@ -290,7 +153,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       skillsList.appendChild(skillTag);
     });
 
-    // Xử lý nút ứng tuyển
+    // Handle apply button and modal
     const applyButton = document.getElementById("applyButton");
     const applyModal = document.getElementById("applyModal");
     const closeModal = document.querySelector(".close-modal");
@@ -314,15 +177,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     submitCV.addEventListener("click", async () => {
       const file = cvUpload.files[0];
       if (file && file.type === "application/pdf") {
-        alert(`Đã gửi CV cho vị trí ${job.title} tại ${job.company}.`);
-        applyModal.style.display = "none";
-        cvUpload.value = ""; // Reset input file
         const cvData = {
           cvLink: file,
           employer_id: job.employer.uid,
-          employee_id: localStorage.getItem('uid'),
+          employee_id: localStorage.getItem("uid"),
+        };
+        try {
+          await postCv(jobId, cvData);
+          alert(
+            `Đã gửi CV cho vị trí ${job.title} tại ${job.employer.companyName}.`
+          );
+          applyModal.style.display = "none";
+          cvUpload.value = ""; // Reset input file
+        } catch (error) {
+          alert("Lỗi khi gửi CV. Vui lòng thử lại!");
         }
-        await postCv(jobId, cvData);
       } else {
         alert("Vui lòng tải lên file PDF hợp lệ!");
       }
@@ -332,7 +201,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       '<div class="container"><h2>Không tìm thấy công việc</h2></div>';
   }
 
-  // Hàm định dạng ngày
+  // Format date for display
   function formatDate(dateString) {
     const date = new Date(dateString);
     const now = new Date();
@@ -343,5 +212,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (diffDays < 7) return `${diffDays} ngày trước`;
     if (diffDays < 30) return `${Math.floor(diffDays / 7)} tuần trước`;
     return `${Math.floor(diffDays / 30)} tháng trước`;
+  }
+
+  // Format date and time for createdAt/updatedAt
+  function formatDateTime(dateTimeString) {
+    const date = new Date(dateTimeString);
+    return date.toLocaleString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
   }
 });

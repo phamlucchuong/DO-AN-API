@@ -45,7 +45,7 @@ function renderApplications() {
 
     const date = document.createElement("div");
     date.className = "application-date";
-    date.textContent = `Ngày ứng tuyển: ${app.date}`;
+    date.textContent = `Ngày ứng tuyển: ${formatDate(app.date)}`;
 
     const status = document.createElement("div");
     status.className = `application-status status-${app.status}`;
@@ -56,13 +56,42 @@ function renderApplications() {
         ? "Đang chờ duyệt"
         : "Bị từ chối";
 
+    const actions = document.createElement("div");
+    actions.className = "application-actions";
+
+    const editButton = document.createElement("button");
+    editButton.className = "application-action-btn";
+    editButton.innerHTML = '<i class="fas fa-edit"></i> Sửa CV';
+    editButton.dataset.appId = app.id;
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "application-action-btn delete";
+    deleteButton.innerHTML = '<i class="fas fa-trash"></i> Xóa CV';
+    deleteButton.dataset.appId = app.id;
+
     applicationInfo.appendChild(title);
     applicationInfo.appendChild(company);
     applicationInfo.appendChild(date);
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
     applicationItem.appendChild(applicationInfo);
     applicationItem.appendChild(status);
+    applicationItem.appendChild(actions);
     applicationsList.appendChild(applicationItem);
   });
+}
+
+// Function to format date
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now - date);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 1) return "Hôm qua";
+  if (diffDays < 7) return `${diffDays} ngày trước`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} tuần trước`;
+  return `${Math.floor(diffDays / 30)} tháng trước`;
 }
 
 // Initialize page
@@ -73,4 +102,101 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Render applications
   renderApplications();
+
+  // Modal elements
+  const editCVModal = document.getElementById("editCVModal");
+  const deleteCVModal = document.getElementById("deleteCVModal");
+  const closeEditModal = document.getElementById("closeEditModal");
+  const cancelEditCV = document.getElementById("cancelEditCV");
+  const saveEditCV = document.getElementById("saveEditCV");
+  const editCVUpload = document.getElementById("editCVUpload");
+  const closeDeleteModal = document.getElementById("closeDeleteModal");
+  const cancelDeleteCV = document.getElementById("cancelDeleteCV");
+  const confirmDeleteCV = document.getElementById("confirmDeleteCV");
+  const deleteJobTitle = document.getElementById("deleteJobTitle");
+  const deleteCompany = document.getElementById("deleteCompany");
+
+  let currentAppId = null;
+
+  // Handle Edit CV button clicks
+  document
+    .querySelectorAll(".application-action-btn:not(.delete)")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        currentAppId = parseInt(button.dataset.appId);
+        editCVModal.style.display = "flex";
+      });
+    });
+
+  // Handle Delete CV button clicks
+  document
+    .querySelectorAll(".application-action-btn.delete")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        currentAppId = parseInt(button.dataset.appId);
+        const app = applications.find((a) => a.id === currentAppId);
+        if (app) {
+          deleteJobTitle.textContent = app.title;
+          deleteCompany.textContent = app.company;
+          deleteCVModal.style.display = "flex";
+        }
+      });
+    });
+
+  // Close modals
+  closeEditModal.addEventListener("click", () => {
+    editCVModal.style.display = "none";
+    editCVUpload.value = "";
+  });
+
+  cancelEditCV.addEventListener("click", () => {
+    editCVModal.style.display = "none";
+    editCVUpload.value = "";
+  });
+
+  closeDeleteModal.addEventListener("click", () => {
+    deleteCVModal.style.display = "none";
+  });
+
+  cancelDeleteCV.addEventListener("click", () => {
+    deleteCVModal.style.display = "none";
+  });
+
+  // Handle click outside modals
+  window.addEventListener("click", (event) => {
+    if (event.target === editCVModal) {
+      editCVModal.style.display = "none";
+      editCVUpload.value = "";
+    }
+    if (event.target === deleteCVModal) {
+      deleteCVModal.style.display = "none";
+    }
+  });
+
+  // Handle Save Edit CV
+  saveEditCV.addEventListener("click", () => {
+    const file = editCVUpload.files[0];
+    if (file && file.type === "application/pdf") {
+      const app = applications.find((a) => a.id === currentAppId);
+      if (app) {
+        alert(`Đã cập nhật CV cho vị trí ${app.title} tại ${app.company}.`);
+        editCVModal.style.display = "none";
+        editCVUpload.value = "";
+      }
+    } else {
+      alert("Vui lòng tải lên file PDF hợp lệ!");
+    }
+  });
+
+  // Handle Confirm Delete CV
+  confirmDeleteCV.addEventListener("click", () => {
+    const appIndex = applications.findIndex((a) => a.id === currentAppId);
+    if (appIndex !== -1) {
+      const app = applications[appIndex];
+      alert(`Đã xóa CV cho vị trí ${app.title} tại ${app.company}.`);
+      applications.splice(appIndex, 1);
+      renderApplications();
+      deleteCVModal.style.display = "none";
+    }
+  });
 });
