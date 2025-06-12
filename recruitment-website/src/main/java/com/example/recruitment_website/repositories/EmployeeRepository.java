@@ -26,7 +26,6 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, String
 
     // 1. Lấy PersonalDTO
     @Query("SELECT new com.example.recruitment_website.dtos.employee.PersonalDTO(e.name, e.email, e.phone, e.dateOfBirth, e.gender, e.address) FROM EmployeeEntity e WHERE e.uid = :uid")
-    // @Query("SELECT new com.example.recruitment_website.dtos.employee.PersonalDTO(e.name, e.email, e.phone, e.dateOfBirth, e.gender, e.address, e.image) FROM EmployeeEntity e WHERE e.uid = :uid")
     PersonalDTO findPersonalByUid(@Param("uid") String uid);
 
     // 2. Lấy CareerObjective

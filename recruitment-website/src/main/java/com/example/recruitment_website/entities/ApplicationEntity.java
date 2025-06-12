@@ -1,8 +1,6 @@
 package com.example.recruitment_website.entities;
 
 import java.time.LocalDate;
-import java.util.UUID;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -26,21 +24,27 @@ public class ApplicationEntity {
     @OneToOne
     @JoinColumn(name = "employer_uid")
     private EmployerEntity employer;
-    
+
     @OneToOne
     @JoinColumn(name = "job_id")
     private JobEntity job;
 
+    public ApplicationEntity() {
+    }
 
+    
 
-    public ApplicationEntity( LocalDate createdDate, String cvLink, EmployeeEntity employee,
-            EmployerEntity employer) {
-        this.id = UUID.randomUUID().toString();
+    public ApplicationEntity(String id, LocalDate createdDate, String cvLink, EmployeeEntity employee,
+            EmployerEntity employer, JobEntity job) {
+        this.id = id;
         this.createdDate = createdDate;
         this.cvLink = cvLink;
         this.employee = employee;
         this.employer = employer;
+        this.job = job;
     }
+
+
 
     public String getId() {
         return id;
@@ -58,11 +62,11 @@ public class ApplicationEntity {
         this.createdDate = createdDate;
     }
 
-    public String getCv_link() {
+    public String getCvLink() {
         return cvLink;
     }
 
-    public void setCv_link(String cvLink) {
+    public void setCvLink(String cvLink) {
         this.cvLink = cvLink;
     }
 
@@ -82,5 +86,11 @@ public class ApplicationEntity {
         this.employer = employer;
     }
 
-    
+    public void setJob(JobEntity job) {
+        this.job = job;
+    }
+
+    public JobEntity getJob() {
+        return job;
+    }
 }
