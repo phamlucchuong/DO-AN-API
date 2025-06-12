@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -46,7 +47,7 @@ public class EmployeeEntity {
     @Size(max = 100)
     @Column(columnDefinition = "nvarchar(100)")
     private String address;
-    
+
     @Size(max = 50)
     @Column(columnDefinition = "nvarchar(50)")
     private String location;
@@ -54,6 +55,7 @@ public class EmployeeEntity {
     private String image;
 
     @Size(max = 100)
+    @Column(columnDefinition = "nvarchar(100)")
     private String title;
 
     @Enumerated(EnumType.STRING)
@@ -90,6 +92,9 @@ public class EmployeeEntity {
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EducationEntity> education;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ApplicationEntity> applications = new ArrayList<>();
 
     // Getters and Setters
 
@@ -291,5 +296,13 @@ public class EmployeeEntity {
 
     public void setEducation(List<EducationEntity> education) {
         this.education = education;
+    }
+
+    public List<ApplicationEntity> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<ApplicationEntity> applications) {
+        this.applications = applications;
     }
 }

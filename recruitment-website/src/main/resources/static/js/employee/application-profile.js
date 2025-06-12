@@ -1,32 +1,67 @@
-// Sample data for applications (replace with actual API call in production)
-const applications = [
-  {
-    id: 1,
-    title: "Senior Software Engineer",
-    company: "TechCorp",
-    date: "2025-06-01",
-    status: "approved",
-  },
-  {
-    id: 2,
-    title: "Product Manager",
-    company: "Innovate Ltd",
-    date: "2025-05-28",
-    status: "pending",
-  },
-  {
-    id: 3,
-    title: "UI/UX Designer",
-    company: "DesignHub",
-    date: "2025-05-20",
-    status: "rejected",
-  },
-];
+
+async function getApplies(uid) {
+  try {
+    const response = await fetch(`/api/application/${uid}/list`, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      console.log("loi khi lay apply");
+      return;
+    }
+
+    const applies = await response.json();
+    return applies;
+
+  } catch (error) {
+    console.error("loi khi lay apply", error);
+  }
+}
+
+async function putApplies(uid, cvLink) {
+  try {
+    const response = await fetch(`/api/application/${uid}/list`, {
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(cvLink),
+    });
+
+    if (!response.ok) {
+      console.log("loi khi lay apply");
+      return;
+    }
+
+
+  } catch (error) {
+    console.error("loi khi lay apply", error);
+  }
+}
+
+async function deleteApplies(uid) {
+  try {
+    const response = await fetch(`/api/application/${uid}/list`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      console.log("loi khi xoa apply");
+      return;
+    }
+
+
+  } catch (error) {
+    console.error("loi khi xoa apply", error);
+  }
+}
 
 // Function to render applications
-function renderApplications() {
+async function renderApplications() {
   const applicationsList = document.getElementById("applicationsList");
   applicationsList.innerHTML = "";
+
+  const applications = await getApplies(localStorage.getItem('uid'));
 
   applications.forEach((app) => {
     const applicationItem = document.createElement("div");
@@ -37,43 +72,63 @@ function renderApplications() {
 
     const title = document.createElement("div");
     title.className = "application-title";
-    title.textContent = app.title;
+    title.textContent = app.job.title;
 
     const company = document.createElement("div");
     company.className = "application-company";
-    company.textContent = `Công ty: ${app.company}`;
+    company.textContent = `Công ty: ${app.job.employer.companyName}`;
 
     const date = document.createElement("div");
     date.className = "application-date";
-    date.textContent = `Ngày ứng tuyển: ${formatDate(app.date)}`;
+    date.textContent = `Ngày ứng tuyển: ${formatDate(app.createdDate)}`;
 
     const status = document.createElement("div");
     status.className = `application-status status-${app.status}`;
-    status.textContent =
-      app.status === "approved"
-        ? "Đã duyệt"
-        : app.status === "pending"
-        ? "Đang chờ duyệt"
-        : "Bị từ chối";
+
+    var color;
+    switch (app.status) {
+      case 'CANCEL':
+        color = 'Yellow';
+        break;
+      case 'REFUSE':
+        color = 'Red';
+        break;
+      case 'PENDING':
+        color = 'Blue';
+        break;
+      case 'APPROVED':
+        color = 'Green';
+        break;
+      default:
+        break;
+
+    }
+
+    applicationItem.style.borderColor = color;
 
     const actions = document.createElement("div");
     actions.className = "application-actions";
 
-    const editButton = document.createElement("button");
-    editButton.className = "application-action-btn";
-    editButton.innerHTML = '<i class="fas fa-edit"></i> Sửa CV';
-    editButton.dataset.appId = app.id;
+    if (app.status === 'PENDING') {
+      const editButton = document.createElement("button");
+      editButton.className = "application-action-btn";
+      editButton.innerHTML = '<i class="fas fa-edit"></i> Sửa CV';
+      editButton.dataset.appId = app.id;
 
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "application-action-btn delete";
-    deleteButton.innerHTML = '<i class="fas fa-trash"></i> Xóa CV';
-    deleteButton.dataset.appId = app.id;
+      const deleteButton = document.createElement("button");
+      deleteButton.className = "application-action-btn delete";
+      deleteButton.innerHTML = '<i class="fas fa-trash"></i> Xóa CV';
+      deleteButton.dataset.appId = app.id;
+
+      actions.appendChild(editButton);
+      actions.appendChild(deleteButton);
+    }
+
 
     applicationInfo.appendChild(title);
     applicationInfo.appendChild(company);
     applicationInfo.appendChild(date);
-    actions.appendChild(editButton);
-    actions.appendChild(deleteButton);
+
     applicationItem.appendChild(applicationInfo);
     applicationItem.appendChild(status);
     applicationItem.appendChild(actions);

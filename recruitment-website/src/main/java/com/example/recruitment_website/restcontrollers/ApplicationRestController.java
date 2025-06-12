@@ -12,6 +12,11 @@ import com.example.recruitment_website.services.ApplicationService;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/api/application")
@@ -27,5 +32,23 @@ public class ApplicationRestController {
         applicationService.createNewApply(job_id, dto, file);
         return ResponseEntity.ok("Thêm hồ sơ ứng tuyển thành công!");
     }
+
+    @GetMapping("/{uid}/list")
+    public ResponseEntity<?> getApplies(@PathVariable String uid) {
+        return ResponseEntity.ok(applicationService.getApplies(uid));
+    }
+
+    @PutMapping("/{uid}/list")
+    public ResponseEntity<?> putApplies(@PathVariable String uid, @RequestBody MultipartFile file) {
+        applicationService.putApplies(uid, file);
+        return ResponseEntity.ok("");
+    }
+
+    @DeleteMapping("/{uid}/list")
+    public ResponseEntity<?> deleteApplies(@PathVariable String uid) {
+        applicationService.deleteApplies(uid);
+        return ResponseEntity.ok("");
+    }
+    
 
 }

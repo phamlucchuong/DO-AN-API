@@ -1,5 +1,8 @@
 package com.example.recruitment_website.dtos;
+import java.io.ObjectInputFilter.Status;
 import java.time.LocalDate;
+
+import com.example.recruitment_website.entities.JobEntity;
 
 public class ApplicationDTO {
 
@@ -7,7 +10,8 @@ public class ApplicationDTO {
     private LocalDate createdDate;
     private String cvLink;
     private String employee_id;
-    private Integer job_id;
+    private JobDTO job;
+    private Status status;
 
 
     public ApplicationDTO() {
@@ -15,12 +19,13 @@ public class ApplicationDTO {
 
     
 
-    public ApplicationDTO(String id, LocalDate createdDate, String cvLink, String employee_id, Integer job_id) {
+    public ApplicationDTO(String id, LocalDate createdDate, String cvLink, String employee_id, JobEntity job, Status status) {
         this.id = id;
         this.createdDate = createdDate;
         this.cvLink = cvLink;
         this.employee_id = employee_id;
-        this.job_id = job_id;
+        this.job = new JobDTO(job);
+        this.status = status;
     }
 
 
@@ -49,6 +54,22 @@ public class ApplicationDTO {
         this.cvLink = cvLink;
     }
 
+    public String getEmployee() {
+        return employee_id;
+    }
+
+    public void setEmployee(String employee_id) {
+        this.employee_id = employee_id;
+    }
+
+    public JobDTO getJob() {
+        return job;
+    }
+
+    public void setJob(JobDTO job) {
+        this.job = job;
+    }
+
     public String getEmployee_id() {
         return employee_id;
     }
@@ -57,11 +78,11 @@ public class ApplicationDTO {
         this.employee_id = employee_id;
     }
 
-    public Integer getJob_id() {
-        return job_id;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setJob_id(Integer job_id) {
-        this.job_id = job_id;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

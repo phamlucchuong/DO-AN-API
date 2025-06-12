@@ -3,6 +3,9 @@ package com.example.recruitment_website.dtos;
 import java.time.LocalDate;
 import java.util.Date;
 
+import com.example.recruitment_website.entities.EmployeeEntity;
+import com.example.recruitment_website.entities.EmployerEntity;
+
 public class EmployerDTO {
 
     private String uid;
@@ -71,6 +74,26 @@ public class EmployerDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.city = city;
+    }
+
+    public EmployerDTO(EmployerEntity employer) {
+        this.uid = employer.getUid();
+        this.account = new AccountDTO(employer.getAccount());
+        this.companyName = employer.getCompanyName();
+        this.companyAddress = employer.getCompanyAddress();
+        this.phoneNumber = employer.getPhoneNumber();
+        this.isApproved = employer.getIsApproved();
+        this.companyDescription = employer.getCompanyDescription();
+        this.companyWebsite = employer.getCompanyWebsite();
+        this.companyLogo = employer.getCompanyLogo();
+        this.industry = employer.getIndustry();
+        this.companySize = employer.getCompanySize();
+        this.taxCode = employer.getTaxCode();
+        this.foundedDate = employer.getFoundedDate();
+        this.status = employer.getStatus();
+        this.createdAt = employer.getCreatedAt();
+        this.updatedAt = employer.getUpdatedAt();
+        this.city = employer.getCity();
     }
 
     public String getUid() {

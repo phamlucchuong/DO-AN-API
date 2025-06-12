@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.example.recruitment_website.enums.Gender;
 
 public class PersonalDTO {
+    // private String uid;
     private String name;
     private String email;
     private String phone;
@@ -17,8 +18,8 @@ public class PersonalDTO {
     public PersonalDTO() {}
 
     public PersonalDTO(String name, String email, String phone, LocalDate dateOfBirth, Gender gender, String address) {
-    // public PersonalDTO(String name, String email, String phone, LocalDate dateOfBirth, Gender gender, String address,
-    //         String image) {
+    // public PersonalDTO(String uid, String name, String email, String phone, LocalDate dateOfBirth, Gender gender, String address) {
+        // this.uid = uid;
         this.name = name;
         this.email = email;
         this.phone = phone;
