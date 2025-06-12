@@ -23,6 +23,12 @@ public class HomeController {
         return "account/register";
     }
     
+    @GetMapping("/forgotPassword")
+    public String forgotPassword(@RequestParam String param) {
+        return "account/forgotPassword";
+    }
+    
+
     @GetMapping("/employer")
     public String employerPage() {
         return "employer/home";

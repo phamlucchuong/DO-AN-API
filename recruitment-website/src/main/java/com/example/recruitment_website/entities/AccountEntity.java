@@ -18,6 +18,11 @@ public class AccountEntity {
     @NotNull
     @Size(max = 50)
     @Column(unique = true)
+    private String userName;
+
+    @NotNull
+    @Size(max = 50)
+    @Column(unique = true)
     private String email;
 
     @NotNull
@@ -43,6 +48,14 @@ public class AccountEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+     public void setuserName(String userName) {
+        this.userName = userName;
+    }
+
+  public String getuserName() {
+        return userName;
     }
 
     public String getRole() {

@@ -28,6 +28,8 @@ public class AuthRestController {
         try {
             String token = body.get("token");
             String role = body.get("role");
+            String userName =body.get("userName");     
+
             if (token == null || token.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Thiếu token");
             }
@@ -47,6 +49,7 @@ public class AuthRestController {
             if (!accountRepository.existsById(uid)) {
                 AccountEntity account = new AccountEntity();
                 account.setUid(uid);
+                account.setuserName(userName);
                 account.setEmail(email);
                 account.setRole(role);
                 account.setIsDeleted(false);

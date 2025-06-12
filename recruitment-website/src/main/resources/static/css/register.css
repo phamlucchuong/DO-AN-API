@@ -70,6 +70,7 @@
             font-size: 14px;
             color: #666;
             transition: all 0.3s ease;
+            
         }
 
         .social-btn:hover {
@@ -116,6 +117,7 @@
         .form-group.full-width {
             flex: none;
             width: 100%;
+            margin-bottom: 30px;
         }
 
         label {

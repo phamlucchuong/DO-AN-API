@@ -57,7 +57,6 @@
                 <i class="fas fa-bell"></i>
               </a>
               <a id="profileSection" class="nav-item login" href="/login"></a>
-
             </nav>
           </div>
         </div>
@@ -332,7 +331,59 @@
         </div>
       </div>
     </footer>
-
+    
+      
+    <!-- Chatbox -->
+    <div class="chatbox-container">
+      <div class="chatbox-window" id="chatboxWindow">
+        <div class="chatbox-header">
+          <div>
+            <h3>Hỗ trợ VietnamWorks</h3>
+            <div class="status">
+              <div class="status-dot"></div>
+              <span>Đang hoạt động</span>
+            </div>
+          </div>
+          <button class="chatbox-close" id="chatboxClose">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="chatbox-messages" id="chatboxMessages">
+          <div class="quick-actions">
+            <div class="quick-action" onclick="sendQuickMessage('Tôi muốn tìm việc làm')">Tìm việc làm</div>
+            <div class="quick-action" onclick="sendQuickMessage('Hướng dẫn tạo CV')">Tạo CV</div>
+            <div class="quick-action" onclick="sendQuickMessage('Liên hệ hỗ trợ')">Hỗ trợ</div>
+          </div>
+          
+          <div class="message">
+            <div class="message-avatar">VW</div>
+            <div class="message-content">
+              Xin chào! Tôi là trợ lý ảo của VietnamWorks. Tôi có thể giúp bạn tìm việc làm, tạo CV hoặc trả lời các câu hỏi về dịch vụ của chúng tôi. Bạn cần hỗ trợ gì?
+            </div>
+          </div>
+        </div>
+        
+        <div class="chatbox-input">
+          <div class="input-group">
+            <input 
+              type="text" 
+              class="chat-input" 
+              id="chatInput" 
+              placeholder="Nhập tin nhắn..."
+              onkeypress="handleKeyPress(event)"
+            />
+            <button class="send-button" onclick="sendMessage()">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <button class="chatbox-toggle" id="chatboxToggle">
+        <i class="fas fa-comments"></i>
+      </button>
+    </div>
     <script src="js/dashboard.js"></script>
   </body>
 </html>
