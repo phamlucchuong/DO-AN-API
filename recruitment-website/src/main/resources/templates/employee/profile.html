@@ -48,12 +48,12 @@
               alt="Profile Avatar"
             />
           </div>
-          <div class="profile-name" id="sidebarName">Vỹ Hà</div>
+          <div class="profile-name" id="sidebarName"></div>
           <div class="profile-role">CEO</div>
           <div class="profile-incomplete">
-            <p class="profile-incomplete-text">Cho phép tìm kiếm hồ sơ</p>
             <p class="profile-incomplete-text">
-              Hồ sơ chưa đủ điều kiện cho phép tìm kiếm
+              Tự tin với hồ sơ của bạn, hãy cập nhật đầy đủ thông tin để nhà
+              tuyển dụng có thể tìm thấy bạn dễ dàng hơn.
             </p>
           </div>
         </div>
@@ -372,65 +372,22 @@
         </form>
       </div>
     </div>
-    <!-- PDF Modal -->
-    <div class="modal" id="pdfUploadModal" style="display: none">
+    <!-- Delete Modal -->
+    <div id="deleteAccountModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h2><i class="fas fa-file-pdf"></i> Tải lên CV/Hồ sơ (PDF)</h2>
-          <button class="modal-close-btn" id="closePdfModal">
-            <i class="fas fa-times"></i>
-          </button>
+          <h2>Xác nhận xóa tài khoản</h2>
+          <button type="button" class="modal-close-btn">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="pdf-upload-area" id="pdfUploadArea">
-            <i class="fas fa-cloud-upload-alt pdf-upload-icon"></i>
-            <div class="pdf-upload-text">Kéo thả file PDF vào đây</div>
-            <div class="pdf-upload-subtext">hoặc</div>
-            <button class="pdf-browse-btn" id="pdfBrowseBtn">
-              <i class="fas fa-folder-open"></i> Chọn file
-            </button>
-            <input
-              type="file"
-              id="pdfFileInput"
-              class="pdf-file-input"
-              accept=".pdf"
-            />
-          </div>
-
-          <div class="pdf-file-info" id="pdfFileInfo">
-            <i class="fas fa-file-pdf pdf-file-icon"></i>
-            <div class="pdf-file-details">
-              <div class="pdf-file-name" id="pdfFileName"></div>
-              <div class="pdf-file-size" id="pdfFileSize"></div>
-            </div>
-            <button class="pdf-remove-btn" id="pdfRemoveBtn">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-
-          <div class="upload-progress" id="uploadProgress">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="progress-text" id="progressText">
-              Đang tải lên... 0%
-            </div>
-          </div>
-
-          <div class="error-message" id="errorMessage"></div>
-          <div class="success-message" id="successMessage"></div>
+          <p>
+            Bạn có chắc chắn muốn xóa tài khoản này? Hành động này không thể
+            hoàn tác.
+          </p>
         </div>
-        <div class="form-actions">
-          <button type="button" class="btn-primary" id="uploadPdfBtn" disabled>
-            <i class="fas fa-upload"></i> Tải lên
-          </button>
-          <button
-            type="button"
-            class="btn-link modal-cancel-btn"
-            id="cancelPdfUpload"
-          >
-            Hủy
-          </button>
+        <div class="modal-footer">
+          <button type="button" class="modal-cancel-btn">Hủy</button>
+          <button type="button" class="modal-confirm-delete-btn">Xóa</button>
         </div>
       </div>
     </div>

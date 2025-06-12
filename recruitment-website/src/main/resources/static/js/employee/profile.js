@@ -1,16 +1,33 @@
+// Khai báo profileData để tránh lỗi
+let profileData = {
+  personal: {
+    photo: "",
+    name: "",
+    email: "",
+    phone: "",
+    dateOfBirth: "",
+    gender: "",
+    address: "",
+  },
+  experiences: [],
+  education: [],
+  skills: [],
+  languages: [],
+  jobNotifications: [],
+};
+
+// Hàm chuyển đổi định dạng ngày
 function convertDateToISO(dateString) {
-  // dateString format: "25/12/2023"
   const [day, month, year] = dateString.split("/");
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 }
 
 function convertDateFromISO(isoString) {
-  // isoString format: "2023-12-25"
   const [year, month, day] = isoString.split("-");
   return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
 }
 
-// personal data
+// Personal data
 async function getPersonal(id) {
   try {
     const response = await fetch(`/api/employee/${id}/personal`, {
@@ -32,8 +49,7 @@ async function getPersonal(id) {
 }
 
 async function loadPersonal(id) {
-  const personalData = await getPersonal(id); // phải `await`
-
+  const personalData = await getPersonal(id);
   if (!personalData) {
     console.error("Không có dữ liệu personal.");
     return;
@@ -72,7 +88,7 @@ async function updatePersonal(id, method, data) {
   }
 }
 
-// career objective
+// Career objective
 async function loadCareerObjective(id) {
   try {
     const response = await fetch(`/api/employee/${id}/career-objective`, {
@@ -86,7 +102,6 @@ async function loadCareerObjective(id) {
       throw new Error("profile.js-loadCareerObjective: không lấy được data");
     }
 
-    // API trả về string text/plain, nên dùng response.text()
     const data = await response.text();
     document.getElementById("careerObjective").textContent =
       data || "Chưa có mục tiêu nghề nghiệp";
@@ -104,7 +119,7 @@ async function updateCareerObjective(id) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(careerObjective), // Đưa trực tiếp chuỗi theo controller
+      body: JSON.stringify(careerObjective),
     });
 
     if (!response.ok) {
@@ -121,7 +136,7 @@ async function updateCareerObjective(id) {
   }
 }
 
-// experience
+// Experience
 async function loadExperience(id) {
   try {
     const response = await fetch(`/api/employee/${id}/work-experience`, {
@@ -186,7 +201,7 @@ async function postExperience(id, formData) {
   }
 }
 
-// education
+// Education
 async function loadEducation(id) {
   try {
     const response = await fetch(`/api/employee/${id}/education`, {
@@ -248,7 +263,7 @@ async function postEducation(id, data) {
   }
 }
 
-// skill
+// Skill
 async function loadSkills(id) {
   try {
     const response = await fetch(`/api/employee/${id}/skill`, {
@@ -308,10 +323,11 @@ async function postSkill(id, data) {
     console.log("post skill thành công");
     loadSkills(id);
   } catch (error) {
-    console.error("Lỗi khi tải education:", error);
+    console.error("Lỗi khi tải skill:", error);
   }
 }
 
+// Languages
 async function loadLanguages(id) {
   try {
     const response = await fetch(`/api/employee/${id}/language`, {
@@ -366,7 +382,7 @@ async function postLanguage(id, data) {
     console.log("post language thành công");
     loadLanguages(id);
   } catch (error) {
-    console.error("Lỗi khi tải education:", error);
+    console.error("Lỗi khi tải language:", error);
   }
 }
 
@@ -375,13 +391,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const uid = localStorage.getItem("uid");
 
   // Initialize page data
-  initializeProfileData(uid);
+  initializeProfileData();
   // Event listeners
-  setupEventListeners(uid);
+  setupEventListeners();
 
   // Functions
   async function initializeProfileData() {
-    const uid = localStorage.getItem("uid");
+    if (!uid) {
+      console.error("UID không tồn tại trong localStorage");
+      showMessage("Vui lòng đăng nhập lại");
+      return;
+    }
 
     try {
       const response = await fetch(`/api/employee/${uid}/exists`, {
@@ -398,23 +418,17 @@ document.addEventListener("DOMContentLoaded", function () {
       const exists = await response.json();
 
       if (!exists) {
-        console.log("Employee chua duoc tao");
+        console.log("Employee chưa được tạo");
         localStorage.setItem("isUpdate", "false");
         return;
       }
 
       localStorage.setItem("isUpdate", "true");
-      // Load personal information
       loadPersonal(uid);
-      // Load career objective
       loadCareerObjective(uid);
-      // Load experience
       loadExperience(uid);
-      // Load education
       loadEducation(uid);
-      // Load skills
       loadSkills(uid);
-      // // Load languages
       loadLanguages(uid);
     } catch (error) {
       console.error("Lỗi khi kiểm tra uid:", error);
@@ -496,6 +510,79 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     };
 
+    // Delete account modal
+    const deleteAccountBtn = document.getElementById("deleteaccount");
+    const deleteAccountModal = document.getElementById("deleteAccountModal");
+    const deleteModalCloseBtn =
+      deleteAccountModal?.querySelector(".modal-close-btn");
+    const deleteModalCancelBtn =
+      deleteAccountModal?.querySelector(".modal-cancel-btn");
+    const deleteModalConfirmBtn = deleteAccountModal?.querySelector(
+      ".modal-confirm-delete-btn"
+    );
+
+    if (
+      deleteAccountBtn &&
+      deleteAccountModal &&
+      deleteModalCloseBtn &&
+      deleteModalCancelBtn &&
+      deleteModalConfirmBtn
+    ) {
+      // Hiển thị modal khi nhấn nút Xóa tài khoản
+      deleteAccountBtn.addEventListener("click", () => {
+        deleteAccountModal.style.display = "flex";
+      });
+
+      // Đóng modal khi nhấn nút Đóng hoặc Hủy
+      deleteModalCloseBtn.addEventListener("click", () => {
+        deleteAccountModal.style.display = "none";
+      });
+      deleteModalCancelBtn.addEventListener("click", () => {
+        deleteAccountModal.style.display = "none";
+      });
+
+      // Xử lý xóa tài khoản khi nhấn Xóa
+      deleteModalConfirmBtn.addEventListener("click", async () => {
+        try {
+          if (!uid) {
+            showMessage("Vui lòng đăng nhập lại");
+            deleteAccountModal.style.display = "none";
+            return;
+          }
+
+          const response = await fetch(`/api/employee/${uid}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Không thể xóa tài khoản");
+          }
+
+          localStorage.removeItem("uid");
+          localStorage.removeItem("isUpdate");
+          localStorage.removeItem("profileData");
+          localStorage.removeItem("careerObjective");
+
+          deleteAccountModal.style.display = "none";
+          showMessage("Tài khoản đã được xóa thành công");
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 2000);
+        } catch (error) {
+          console.error("Lỗi khi xóa tài khoản:", error);
+          deleteAccountModal.style.display = "none";
+          showMessage("Đã xảy ra lỗi khi xóa tài khoản");
+        }
+      });
+    } else {
+      console.error(
+        "Nút deleteaccount hoặc các thành phần modal không tồn tại trong DOM"
+      );
+    }
+
     // Photo upload
     const uploadPhotoBtn = document.querySelector(".upload-photo-btn");
     const uploadPhotoInput = document.getElementById("uploadPhotoInput");
@@ -532,17 +619,16 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("editAddress").value = personalData.address;
     });
 
-    // add personal event
+    // Add personal event
     modals.personal.saveBtn.addEventListener("click", () => {
       const formData = new FormData(modals.personal.form);
       const updatedData = {
         name: formData.get("fullName"),
         email: formData.get("email"),
         phone: formData.get("phone"),
-        dateOfBirth: convertDateToISO(formData.get("birthday")), // ← Thêm conversion
+        dateOfBirth: convertDateToISO(formData.get("birthday")),
         gender: formData.get("gender") === "Nam" ? "MALE" : "FEMALE",
         address: formData.get("address"),
-        // photo: profileData.personal.photo,
       };
       if (!validateEmail(updatedData.email)) {
         showMessage("Email không hợp lệ");
@@ -568,7 +654,7 @@ document.addEventListener("DOMContentLoaded", function () {
     modals.objective.btn.addEventListener("click", () => {
       modals.objective.modal.style.display = "flex";
       document.getElementById("editCareerObjective").value =
-        localStorage.getItem("careerObjective");
+        localStorage.getItem("careerObjective") || "";
     });
 
     modals.objective.saveBtn.addEventListener("click", () => {
@@ -581,10 +667,10 @@ document.addEventListener("DOMContentLoaded", function () {
     modals.experience.btn.addEventListener("click", () => {
       modals.experience.modal.style.display = "flex";
       const entriesContainer = document.getElementById("experienceEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.experiences.forEach((exp, index) => {
-      //   addExperienceEntry(exp, index);
-      // });
+      entriesContainer.innerHTML = "";
+      profileData.experiences.forEach((exp, index) => {
+        addExperienceEntry(exp, index);
+      });
     });
     modals.experience.addBtn.addEventListener("click", () => {
       addExperienceEntry(
@@ -619,10 +705,10 @@ document.addEventListener("DOMContentLoaded", function () {
     modals.education.btn.addEventListener("click", () => {
       modals.education.modal.style.display = "flex";
       const entriesContainer = document.getElementById("educationEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.education.forEach((edu, index) => {
-      //   addEducationEntry(edu, index);
-      // });
+      entriesContainer.innerHTML = "";
+      profileData.education.forEach((edu, index) => {
+        addEducationEntry(edu, index);
+      });
     });
     modals.education.addBtn.addEventListener("click", () => {
       addEducationEntry(
@@ -655,10 +741,10 @@ document.addEventListener("DOMContentLoaded", function () {
     modals.skills.btn.addEventListener("click", () => {
       modals.skills.modal.style.display = "flex";
       const entriesContainer = document.getElementById("skillsEntries");
-      //   entriesContainer.innerHTML = "";
-      //   profileData.skills.forEach((skill, index) => {
-      //     addSkillEntry(skill, index);
-      //   });
+      entriesContainer.innerHTML = "";
+      profileData.skills.forEach((skill, index) => {
+        addSkillEntry(skill, index);
+      });
     });
     modals.skills.addBtn.addEventListener("click", () => {
       addSkillEntry({ name: "", level: 50 }, profileData.skills.length);
@@ -686,10 +772,10 @@ document.addEventListener("DOMContentLoaded", function () {
     modals.languages.btn.addEventListener("click", () => {
       modals.languages.modal.style.display = "flex";
       const entriesContainer = document.getElementById("languagesEntries");
-      // entriesContainer.innerHTML = "";
-      // profileData.languages.forEach((lang, index) => {
-      //   addLanguageEntry(lang, index);
-      // });
+      entriesContainer.innerHTML = "";
+      profileData.languages.forEach((lang, index) => {
+        addLanguageEntry(lang, index);
+      });
     });
     modals.languages.addBtn.addEventListener("click", () => {
       addLanguageEntry({ name: "", level: "" }, profileData.languages.length);
@@ -701,7 +787,7 @@ document.addEventListener("DOMContentLoaded", function () {
       entries.forEach((entry) => {
         const name = entry.querySelector("[name='languageName']").value;
         const level = entry.querySelector("[name='languageLevel']").value;
-        var languageLevel;
+        let languageLevel;
         switch (level) {
           case "Bản ngữ":
             languageLevel = "NATIVE";
@@ -761,19 +847,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    // Create job notification button
-    document.getElementById("createJobBtn").addEventListener("click", () => {
-      const newJob = {
-        id: profileData.jobNotifications.length + 1,
-        title: `Việc làm mới ${profileData.jobNotifications.length + 1}`,
-        link: "#",
-      };
-      profileData.jobNotifications.push(newJob);
-      loadJobNotifications();
-      saveToLocalStorage("profileData", profileData);
-      showMessage("Thông báo việc làm đã được tạo");
-    });
-
     // Navigation links
     document.querySelectorAll(".nav-list-link").forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -791,165 +864,6 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         showMessage("Tính năng thiết lập hồ sơ sẽ được phát triển");
       });
-
-    //PDF appearance
-    // PDF Upload Modal
-    const pdfUploadModal = document.getElementById("pdfUploadModal");
-    const pdfBrowseBtn = document.getElementById("pdfBrowseBtn");
-    const pdfFileInput = document.getElementById("pdfFileInput");
-    const pdfUploadArea = document.getElementById("pdfUploadArea");
-    const pdfFileInfo = document.getElementById("pdfFileInfo");
-    const pdfFileName = document.getElementById("pdfFileName");
-    const pdfFileSize = document.getElementById("pdfFileSize");
-    const pdfRemoveBtn = document.getElementById("pdfRemoveBtn");
-    const uploadPdfBtn = document.getElementById("uploadPdfBtn");
-    const closePdfModal = document.getElementById("closePdfModal");
-    const cancelPdfUpload = document.getElementById("cancelPdfUpload");
-    const errorMessage = document.getElementById("errorMessage");
-    const successMessage = document.getElementById("successMessage");
-    const progressFill = document.getElementById("progressFill");
-    const progressText = document.getElementById("progressText");
-
-    let selectedFile = null;
-
-    // Open PDF Upload Modal when clicking editProfileBtn
-    document.getElementById("editProfileBtn").addEventListener("click", () => {
-      pdfUploadModal.style.display = "flex";
-      resetPdfModal();
-    });
-
-    // Reset modal state
-    function resetPdfModal() {
-      selectedFile = null;
-      pdfFileInput.value = "";
-      pdfFileInfo.style.display = "none";
-      pdfUploadArea.style.display = "flex";
-      uploadPdfBtn.disabled = true;
-      errorMessage.textContent = "";
-      successMessage.textContent = "";
-      progressFill.style.width = "0%";
-      progressText.textContent = "Đang tải lên... 0%";
-      pdfUploadArea.classList.remove("dragover");
-    }
-
-    // Handle file selection
-    function handleFileSelect(file) {
-      if (!file) return;
-
-      if (file.type !== "application/pdf") {
-        errorMessage.textContent = "Vui lòng chọn file PDF.";
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        // Limit 5MB
-        errorMessage.textContent = "File quá lớn (giới hạn 5MB).";
-        return;
-      }
-
-      selectedFile = file;
-      pdfFileName.textContent = file.name;
-      pdfFileSize.textContent = `${(file.size / 1024).toFixed(2)} KB`;
-      pdfFileInfo.style.display = "flex";
-      pdfUploadArea.style.display = "none";
-      uploadPdfBtn.disabled = false;
-      errorMessage.textContent = "";
-    }
-
-    // File input change event
-    pdfFileInput.addEventListener("change", (e) => {
-      handleFileSelect(e.target.files[0]);
-    });
-
-    // Browse button click
-    pdfBrowseBtn.addEventListener("click", () => {
-      pdfFileInput.click();
-    });
-
-    // Drag and drop events
-    pdfUploadArea.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      pdfUploadArea.classList.add("dragover");
-    });
-
-    pdfUploadArea.addEventListener("dragleave", () => {
-      pdfUploadArea.classList.remove("dragover");
-    });
-
-    pdfUploadArea.addEventListener("drop", (e) => {
-      e.preventDefault();
-      pdfUploadArea.classList.remove("dragover");
-      handleFileSelect(e.dataTransfer.files[0]);
-    });
-
-    // Remove selected file
-    pdfRemoveBtn.addEventListener("click", () => {
-      resetPdfModal();
-    });
-
-    // Upload file to server
-    uploadPdfBtn.addEventListener("click", async () => {
-      if (!selectedFile) return;
-
-      const formData = new FormData();
-      formData.append("cv", selectedFile);
-
-      try {
-        uploadPdfBtn.disabled = true;
-        errorMessage.textContent = "";
-        successMessage.textContent = "";
-        progressFill.style.width = "0%";
-        progressText.textContent = "Đang tải lên... 0%";
-
-        const response = await fetch(`/api/employee/${uid}/upload-cv`, {
-          method: "POST",
-          body: formData,
-        });
-
-        // Simulate progress (since fetch doesn't support progress natively)
-        let progress = 0;
-        const interval = setInterval(() => {
-          progress += 10;
-          if (progress <= 100) {
-            progressFill.style.width = `${progress}%`;
-            progressText.textContent = `Đang tải lên... ${progress}%`;
-          }
-        }, 200);
-
-        if (!response.ok) {
-          clearInterval(interval);
-          throw new Error("Không thể tải lên file PDF.");
-        }
-
-        clearInterval(interval);
-        progressFill.style.width = "100%";
-        progressText.textContent = "Tải lên hoàn tất!";
-        successMessage.textContent = "File PDF đã được tải lên thành công!";
-        uploadPdfBtn.disabled = true;
-
-        setTimeout(() => {
-          pdfUploadModal.style.display = "none";
-          resetPdfModal();
-          showMessage("Hồ sơ đã được nộp thành công!");
-        }, 2000);
-      } catch (error) {
-        errorMessage.textContent =
-          error.message || "Đã xảy ra lỗi khi tải lên.";
-        uploadPdfBtn.disabled = false;
-        console.error("Lỗi khi tải lên PDF:", error);
-      }
-    });
-
-    // Close modal
-    closePdfModal.addEventListener("click", () => {
-      pdfUploadModal.style.display = "none";
-      resetPdfModal();
-    });
-
-    cancelPdfUpload.addEventListener("click", () => {
-      pdfUploadModal.style.display = "none";
-      resetPdfModal();
-    });
   }
 
   function addExperienceEntry(exp, index) {
@@ -1156,7 +1070,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const savedData = loadFromLocalStorage("profileData");
   if (savedData) {
     profileData = savedData;
-    initializeProfileData();
   }
 
   // Export functions for global access if needed
