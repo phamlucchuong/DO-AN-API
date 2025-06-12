@@ -1,23 +1,4 @@
 
-// async function postCv(uid, cvData) {
-//   try {
-//     const response = await fetch(`/api/application/${uid}/post`,{
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(cvData)
-//     });
-
-//     if(!response.ok) {
-//       console.log('Lỗi khi upload Cv');
-//     }
-
-//   } catch (error) {
-//     console.error("Lỗi khi thêm cv", error);
-//   }
-// }
-
 async function postCv(uid, cvData, file) {
   try {
     const formData = new FormData();
@@ -63,9 +44,6 @@ async function getJobDetail(id) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Lấy ID công việc từ URL
-  // const urlParams = new URLSearchParams(window.location.search);
-  // const jobId = parseInt(urlParams.get("id"));
 
   const jobId = localStorage.getItem('jobID');
 
@@ -97,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Hiển thị kỹ năng
     const skill = document.getElementById("jobSkills");
-    skill.textContent = job.skill;
+    skill.textContent = job.requirements;
 
     // Xử lý nút ứng tuyển
     const applyButton = document.getElementById("applyButton");
@@ -107,7 +85,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cvUpload = document.getElementById("cvUpload");
 
     applyButton.addEventListener("click", () => {
-      applyModal.style.display = "block";
+      if(localStorage.getItem("isUpdate") === "true")
+        applyModal.style.display = "block";
+      else alert('Vui lòng điền đầy đủ thông tin tài khoản trước khi ứng tuyển!');
     });
 
     closeModal.addEventListener("click", () => {
@@ -120,22 +100,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    // submitCV.addEventListener("click", async () => {
-    //   const file = cvUpload.files[0];
-    //   if (file && file.type === "application/pdf") {
-    //     alert(`Đã gửi CV cho vị trí ${job.title} tại ${job.employer.companyName}.`);
-    //     applyModal.style.display = "none";
-    //     cvUpload.value = ""; // Reset input file
-    //     const cvData = {
-    //       cvLink: file,
-    //       employer_id: job.employer.uid,
-    //       employee_id: localStorage.getItem('uid'),
-    //     }
-    //     await postCv(jobId, cvData);
-    //   } else {
-    //     alert("Vui lòng tải lên file PDF hợp lệ!");
-    //   }
-    // });
 
     submitCV.addEventListener("click", async () => {
       const file = cvUpload.files[0];

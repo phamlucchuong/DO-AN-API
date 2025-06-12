@@ -17,6 +17,7 @@ async function fetchCompanies(page = 0) {
             const jobCountResponse = await fetch(`/api/employer/${company.uid}/jobs/count`);
             const jobCount = jobCountResponse.ok ? await jobCountResponse.json() : 0;
             return {
+                uid: company.uid,
                 logoUrl: company.companyLogo || 'https://placehold.co/100x50?text=Logo',
                 name: company.companyName,
                 industry: company.industry,
@@ -51,7 +52,7 @@ function renderCompanies() {
                 <h3>${company.name}</h3>
                 <p>Ngành: ${company.industry}</p>
                 <p>Vị trí: ${company.location}</p>
-                <a href="#" class="text-blue-600 hover:underline">Xem chi tiết</a>
+                    <a href="/company-detail?uid=${company.uid}" class="text-blue-600 hover:underline">Xem chi tiết</a>
             </div>
         `;
         companiesGrid.appendChild(card);
@@ -99,12 +100,14 @@ function performSearch() {
         const card = document.createElement('div');
         card.className = 'company-card';
         card.innerHTML = `
-            <img src="${company.logoUrl}" alt="Logo" class="company-logo-small">
-            <div class="company-details">
-                <h3>${company.name}</h3>
-                <p>Ngành: ${company.industry}</p>
-                <p>Vị trí: ${company.location}</p>
-                <a href="#" class="text-blue-600 hover:underline">Xem chi tiết</a>
+            <div>
+                <img src="${company.logoUrl}" alt="Logo" class="company-logo-small">
+                <div class="company-details">
+                    <h3>${company.name}</h3>
+                    <p>Ngành: ${company.industry}</p>
+                    <p>Vị trí: ${company.location}</p>
+                    <a href="/company-detail?uid=${company.uid}" class="text-blue-600 hover:underline">Xem chi tiết</a>
+                </div>
             </div>
         `;
         companiesGrid.appendChild(card);
