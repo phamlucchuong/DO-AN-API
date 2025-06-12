@@ -1,85 +1,148 @@
-const form = document.getElementById("job-form");
-const submitBtn = document.getElementById("submit-job-btn");
 
-submitBtn.addEventListener("click", function () {
-  const formData = new FormData(form);
-  const data = {};
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("job-form");
+  const submitBtn = document.querySelector("button[type='submit']");
+  const content = document.querySelector("content");
+  const token = localStorage.getItem("idToken");
+  console.log("Token lấy từ localStorage:", token);
 
-  // Lấy employerId từ localStorage hoặc sessionStorage
-  const employerId = localStorage.getItem("employerId") || sessionStorage.getItem("employerId");
-  data.employerId = employerId ? parseInt(employerId, 10) : null;
-
-  // Thu thập dữ liệu từ form
-  formData.forEach((value, key) => {
-    data[key] = value;
-  });
-
-  // Xử lý remoteOk (checkbox)
-  if (data.hasOwnProperty('_remoteOk')) {
-    delete data._remoteOk;
-  }
-  data.remoteOk = form.remoteOk.checked;
-
-  // Đặt status mặc định là "Open"
-  if (!data.status || data.status.trim() === "") {
-    data.status = "Open";
-  }
-
-  // Chuyển numberOfVacancies thành số nguyên
-  if (data.numberOfVacancies) {
-    data.numberOfVacancies = parseInt(data.numberOfVacancies, 10);
-    if (isNaN(data.numberOfVacancies)) {
-      data.numberOfVacancies = 0;
+  function parseJwt(token) {
+    if (!token) return null;
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error("Lỗi parse JWT:", error);
+      return null;
     }
   }
 
-  // Kiểm tra dữ liệu trước khi gửi
-  if (!data.employerId) {
-    alert("Không tìm thấy ID nhà tuyển dụng. Vui lòng đăng nhập lại.");
-    return;
-  }
-  if (!data.title || data.title.trim() === "") {
-    alert("Vui lòng nhập tiêu đề công việc.");
-    return;
-  }
-  if (!data.employmentType || data.employmentType.trim() === "") {
-    alert("Vui lòng chọn loại hình công việc.");
-    return;
-  }
-  if (!data.description || data.description.trim() === "") {
-    alert("Vui lòng nhập mô tả công việc.");
-    return;
-  }
-  if (!data.requirements || data.requirements.trim() === "") {
-    alert("Vui lòng nhập yêu cầu công việc.");
+  // Kiểm tra isApproved khi tải trang
+  if (!token) {
+    alert("Vui lòng đăng nhập để đăng bài tuyển dụng.");
+    window.location.href = "/employer/login";
     return;
   }
 
-  console.log("Job Data:", data);
+  const payload = parseJwt(token);
+  if (!payload || !payload
 
-  fetch("/employer/job/add", {
-    method: "POST",
+.user_id) {
+    alert("Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.");
+    window.location.href = "/employer/login";
+    return;
+  }
+
+  // Fetch thông tin employer để kiểm tra isApproved
+  fetch(`/api/employer/profile?uid=${payload.user_id}`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
     },
-    body: JSON.stringify(data),
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Lỗi mạng hoặc phản hồi không thành công");
+        throw new Error("Lỗi khi lấy thông tin nhà tuyển dụng");
       }
       return response.json();
     })
-    .then((result) => {
-      if (result.success) {
-        alert("Đăng công việc thành công!");
+    .then((data) => {
+      if (!data.isApproved) {
+        alert("Tài khoản của bạn chưa được duyệt. Vui lòng chờ duyệt để đăng bài tuyển dụng.");
+        submitBtn.disabled = true;
+        submitBtn.style.backgroundColor = "#cccccc";
+        submitBtn.style.cursor = "not-allowed";
+        document.getElementById("alert-container").innerHTML =
+          '<div class="error-message">Tài khoản của bạn chưa được duyệt. Vui lòng chờ duyệt để đăng bài tuyển dụng.</div>';
         window.location.href = "/employer/dashboard";
-      } else {
-        alert("Đăng công việc thất bại: " + (result.message || "Lỗi không xác định"));
       }
     })
     .catch((error) => {
-      console.error("Lỗi:", error);
-      alert("Đăng công việc thất bại: " + error.message);
+      console.error("Lỗi khi kiểm tra isApproved:", error);
+      document.getElementById("alert-container").innerHTML =
+        '<div class="error-message">Lỗi khi kiểm tra trạng thái tài khoản: ' + error.message + '</div>';
     });
+
+  submitBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (!token) {
+      alert("Vui lòng đăng nhập để đăng bài tuyển dụng.");
+      window. location.href = "/employer/login";
+      return;
+    }
+
+    const payload = parseJwt(token);
+    if (!payload || !payload.user_id) {
+      alert("Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.");
+      window.location.href = "/employer/login";
+      return;
+    }
+
+    const formData = new FormData(form);
+    formData.append("employerId", payload.user_id);
+    formData.append("status", "OPEN");
+
+    // Validate các field bắt buộc
+    if (!formData.get("title") || formData.get("title").trim() === "") {
+      alert("Vui lòng nhập tiêu đề công việc.");
+      return;
+    }
+    if (!formData.get("employmentType") || formData.get("employmentType").trim() === "") {
+      alert("Vui lòng chọn loại hình công việc.");
+      return;
+    }
+    if (!formData.get("jobLevel") || formData.get("jobLevel").trim() === "") {
+      alert("Vui lòng chọn cấp bậc công việc.");
+      return;
+    }
+    if (!formData.get("description") || formData.get("description").trim() === "") {
+      alert("Vui lòng nhập mô tả công việc.");
+      return;
+    }
+    if (!formData.get("requirements") || formData.get("requirements").trim() === "") {
+      alert("Vui lòng nhập yêu cầu công việc.");
+      return;
+    }
+
+    console.log("FormData (trước khi gửi):");
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+
+    // Gửi formData bằng fetch
+    fetch("/api/employer/job/add", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((err) => {
+            throw new Error(err.message || "Lỗi mạng hoặc phản hồi không thành công");
+          });
+        }
+        return response.json();
+      })
+      .then((result) => {
+        if (result.success === "true") {
+          alert("Đăng công việc thành công!");
+          window.location.href = "/employer/dashboard";
+        } else {
+          alert("Đăng công việc thất bại: " + (result.message || "Lỗi không xác định"));
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi:", error);
+        alert("Đăng công việc thất bại: " + error.message);
+      });
+  });
 });
+
