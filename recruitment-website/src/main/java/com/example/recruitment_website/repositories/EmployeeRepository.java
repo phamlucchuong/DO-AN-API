@@ -35,20 +35,20 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, String
 
 
     // 3. Lấy WorkExperienceDTO list
-    @Query("SELECT new com.example.recruitment_website.dtos.employee.WorkExperienceDTO(w.role, w.company, w.period, w.description) FROM WorkExperienceEntity w WHERE w.employee.uid = :uid")
+    @Query("SELECT new com.example.recruitment_website.dtos.employee.WorkExperienceDTO(w.uid, w.role, w.company, w.period, w.description) FROM WorkExperienceEntity w WHERE w.employee.uid = :uid")
     List<WorkExperienceDTO> findWorkExperienceByUid(@Param("uid") String uid);
 
     // 4. Lấy EducationDTO list
-    @Query("SELECT new com.example.recruitment_website.dtos.employee.EducationDTO(ed.school, ed.major, ed.period) FROM EducationEntity ed WHERE ed.employee.uid = :uid")
+    @Query("SELECT new com.example.recruitment_website.dtos.employee.EducationDTO(ed.uid, ed.school, ed.major, ed.period) FROM EducationEntity ed WHERE ed.employee.uid = :uid")
     List<EducationDTO> findEducationByUid(@Param("uid") String uid);
 
     // 5. Lấy skills (List<String>)
-    @Query("SELECT new com.example.recruitment_website.dtos.employee.SkillDTO(sk.name, sk.level) FROM SkillEntity sk WHERE sk.employee.uid = :uid")
+    @Query("SELECT new com.example.recruitment_website.dtos.employee.SkillDTO(sk.uid, sk.name, sk.level) FROM SkillEntity sk WHERE sk.employee.uid = :uid")
     List<SkillDTO> findSkillsByUid(@Param("uid") String uid);
 
     // 6. Lấy languages (List<String>)
     // @Query("SELECT l FROM EmployeeEntity e JOIN e.language l WHERE e.uid = :uid")
-    @Query("SELECT new com.example.recruitment_website.dtos.employee.LanguageDTO(l.name, l.level) FROM LanguageEntity l WHERE l.employee.uid = :uid")
+    @Query("SELECT new com.example.recruitment_website.dtos.employee.LanguageDTO(l.uid, l.name, l.level) FROM LanguageEntity l WHERE l.employee.uid = :uid")
     List<LanguageDTO> findLanguagesByUid(@Param("uid") String uid);
 
 
