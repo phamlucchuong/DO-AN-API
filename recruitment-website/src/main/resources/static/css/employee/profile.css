@@ -241,6 +241,7 @@ body {
 
 .create-job-btn {
   margin: 16px;
+  margin-top: -5px;
   background: var(--primary-orange);
   color: white;
   border: none;
