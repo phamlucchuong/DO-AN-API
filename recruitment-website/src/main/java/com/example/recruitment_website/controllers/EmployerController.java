@@ -69,4 +69,9 @@ public class EmployerController {
         return "employer/job-detail";
     }
 
+    @GetMapping("/detail")
+    public String employerDetailPage() {
+        return "details/company-detail";
+    }
+
 }

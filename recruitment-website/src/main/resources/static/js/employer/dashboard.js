@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (editDiv.style.display === 'none') {
-      fetch(`/api/employer/job/detail/${jobId}`, {
+      fetch(`/api/employer/job/${jobId}/detail`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

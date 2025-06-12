@@ -208,4 +208,8 @@ public class JobService {
         return jobRepository.countJobsByMonthAndYear(month, year);
     }
 
+    public List<JobEntity> getHotJobs(){
+        return jobRepository.findAll();
+    }
+
 }

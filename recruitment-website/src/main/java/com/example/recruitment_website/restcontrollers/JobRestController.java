@@ -1,4 +1,5 @@
 package com.example.recruitment_website.restcontrollers;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public class JobRestController {
     }
 
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}/detail")
     public ResponseEntity<?> getJobById(@PathVariable Integer id) {
         try {
             log.info("Fetching job detail for id: {}", id);
@@ -121,4 +122,9 @@ public class JobRestController {
         }
     }
 
+    @GetMapping("/getHotJobs")
+    public List<JobEntity> getHotJobs() {
+        return jobService.getHotJobs();
+    }
+    
 }
