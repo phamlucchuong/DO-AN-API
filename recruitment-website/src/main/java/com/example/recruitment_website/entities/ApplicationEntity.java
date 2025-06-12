@@ -1,12 +1,15 @@
 package com.example.recruitment_website.entities;
 
 import java.time.LocalDate;
-import java.util.UUID;
-
 import org.hibernate.annotations.GenericGenerator;
+
+import com.example.recruitment_website.enums.Status;
+import com.google.firebase.database.annotations.NotNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -38,14 +41,19 @@ public class ApplicationEntity {
     @JoinColumn(name = "job_id")
     private JobEntity job;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     public ApplicationEntity() {
     }
 
-    public ApplicationEntity(LocalDate createdDate, String cvLink, EmployeeEntity employee, JobEntity job) {
+    public ApplicationEntity(LocalDate createdDate, String cvLink, EmployeeEntity employee, JobEntity job, Status status) {
         this.createdDate = createdDate;
         this.cvLink = cvLink;
         this.employee = employee;
         this.job = job;
+        this.status = status;
     }
 
     public String getId() {
@@ -86,5 +94,13 @@ public class ApplicationEntity {
 
     public JobEntity getJob() {
         return job;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

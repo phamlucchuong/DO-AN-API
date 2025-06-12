@@ -54,6 +54,7 @@ public class EmployeeEntity {
     private String image;
 
     @Size(max = 100)
+    @Column(columnDefinition = "nvarchar(100)")
     private String title;
 
     @Enumerated(EnumType.STRING)
