@@ -75,6 +75,19 @@ function renderTopCompanies() {
 
 let hotJobsData = [];
 
+
+function viewJob(jobId) {
+  // const allJobs = hotJobsData;
+  // const job = allJobs.find((j) => j.id === jobId);
+  // if (job) {
+    window.location.href = `/jobs-profile?id=${jobId}`;
+  // } else {
+  //   console.error("Job not found:", jobId);
+  //   alert("Không tìm thấy công việc!");
+  // }
+}
+
+
 // Render Hot Jobs
 function renderHotJobs() {
   fetch("/api/employer/job/getHotJobs")
@@ -100,7 +113,7 @@ function renderHotJobs() {
           }
 
           return `
-            <div class="job-card" onclick="viewJob(${id})">
+            <div class="job-card" onclick="window.location.href = \`/job-detail?id=${id}\`;">
               <div class="job-header">
                 <img src="${employer.companyLogo}" alt="${employer.companyName}" class="company-logo-small">
                 <div class="job-info">
@@ -200,16 +213,6 @@ function viewCompany(companyId) {
   // }
 }
 
-function viewJob(jobId) {
-  const allJobs = [...hotJobsData, ...suggestedJobsData];
-  const job = allJobs.find((j) => j.id === jobId);
-  if (job) {
-    window.location.href = `/job-detail?id=${job.id}`;
-  } else {
-    console.error("Job not found:", jobId);
-    alert("Không tìm thấy công việc!");
-  }
-}
 
 function quickApply(jobId) {
   const allJobs = [...hotJobsData, ...suggestedJobsData];
@@ -285,7 +288,7 @@ async function loadLoginButton() {
       `;
       loginButton.setAttribute("href", "#");
       loginButton.onclick = function () {
-        window.location.href = "/employee-profile";
+        window.location.href = "/profile";
       };
     } catch (error) {
       console.error("Lỗi khi xác minh token:", error);

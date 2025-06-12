@@ -7,7 +7,6 @@ public class ApplicationDTO {
     private LocalDate createdDate;
     private String cvLink;
     private String employee_id;
-    private String employer_id;
     private Integer job_id;
 
 
@@ -16,13 +15,11 @@ public class ApplicationDTO {
 
     
 
-    public ApplicationDTO(String id, LocalDate createdDate, String cvLink, String employee_id, String employer_id,
-            Integer job_id) {
+    public ApplicationDTO(String id, LocalDate createdDate, String cvLink, String employee_id, Integer job_id) {
         this.id = id;
         this.createdDate = createdDate;
         this.cvLink = cvLink;
         this.employee_id = employee_id;
-        this.employer_id = employer_id;
         this.job_id = job_id;
     }
 
@@ -58,14 +55,6 @@ public class ApplicationDTO {
 
     public void setEmployee_id(String employee_id) {
         this.employee_id = employee_id;
-    }
-
-    public String getEmployer_id() {
-        return employer_id;
-    }
-
-    public void setEmployer_id(String employer_id) {
-        this.employer_id = employer_id;
     }
 
     public Integer getJob_id() {
