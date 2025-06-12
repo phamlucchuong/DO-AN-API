@@ -15,21 +15,21 @@
       <div class="header-main">
         <div class="container">
           <div class="header-content">
-            <a class="logo" href="employee-profile">
+            <a class="logo" href="/">
               <img
-                src="https://via.placeholder.com/120x36?text=Logo"
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='120'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%23FF512F;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23DD2476;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grad1)' rx='20' /%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif' font-size='48' font-weight='bold' fill='white' letter-spacing='5'%3EITLOR%3C/text%3E%3C/svg%3E"
                 alt="VietnamWorks Logo"
               />
             </a>
             <nav class="nav-menu">
-              <a href="#" class="nav-item"
+              <a href="/" class="nav-item"
                 ><i class="fas fa-home"></i> Trang chủ</a
               >
-              <a href="#" class="nav-item"
+              <a href="/employer" class="nav-item"
                 ><i class="fas fa-briefcase"></i> Nhà tuyển dụng</a
               >
               <a href="#" class="nav-item"><i class="fas fa-wallet"></i> Ví</a>
-              <a href="#" class="nav-item"
+              <a href="/login" class="nav-item"
                 ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
               >
             </nav>
@@ -48,54 +48,38 @@
               alt="Profile Avatar"
             />
           </div>
-          <div class="profile-name" id="sidebarName">Vỹ Hà</div>
+          <div class="profile-name" id="sidebarName"></div>
           <div class="profile-role">CEO</div>
           <div class="profile-incomplete">
-            <p class="profile-incomplete-text">Cho phép tìm kiếm hồ sơ</p>
             <p class="profile-incomplete-text">
-              Hồ sơ chưa đủ điều kiện cho phép tìm kiếm
+              Tự tin với hồ sơ của bạn, hãy cập nhật đầy đủ thông tin để nhà
+              tuyển dụng có thể tìm thấy bạn dễ dàng hơn.
             </p>
-            <a href="#" class="setup-profile-btn">Thiết Lập Hồ Sơ</a>
           </div>
         </div>
         <nav class="nav-list">
-          <a href="#" class="nav-list-link active"
+          <a href="/profile" class="nav-list-link active"
             ><i class="fas fa-user nav-list-icon"></i> Hồ Sơ Của Tôi</a
           >
-          <a href="#" class="nav-list-link"
+          <a href="/company-profile" class="nav-list-link"
             ><i class="fas fa-building nav-list-icon"></i> Công Ty Của Tôi</a
           >
-          <a href="#" class="nav-list-link"
+          <a href="/jobs-profile" class="nav-list-link"
             ><i class="fas fa-briefcase nav-list-icon"></i> Việc Làm Của Tôi</a
           >
-          <a href="#" class="nav-list-link"
-            ><i class="fas fa-bell nav-list-icon"></i> Thông Báo Việc Làm</a
-          >
-          <a href="#" class="nav-list-link"
-            ><i class="fas fa-file-invoice nav-list-icon"></i> Quản Lý Đơn
-            Hàng</a
-          >
-          <a href="#" class="nav-list-link"
-            ><i class="fas fa-cog nav-list-icon"></i> Quản Lý Tài Khoản</a
+          <a href="/application-profile" class="nav-list-link"
+            ><i class="fas fa-briefcase nav-list-icon"></i> Hồ Sơ Ứng Tuyển</a
           >
         </nav>
         <div class="job-notifications">
-          <h4>Thông Báo Việc Làm</h4>
-          <ul id="jobNotificationsList">
-            <!-- Job notifications will be populated by JavaScript -->
-          </ul>
+          <h4>Bạn có muốn xóa tài khoản này ?</h4>
         </div>
-        <button class="create-job-btn" id="createJobBtn">
-          <i class="fas fa-plus"></i> Tạo Thông Báo Việc Làm
-        </button>
+        <button class="create-job-btn" id="deleteaccount">Xóa tài khoản</button>
       </aside>
 
       <section class="main-content">
         <div class="content-header">
           <h1>Hồ Sơ Của Tôi</h1>
-          <button class="btn-primary" id="editProfileBtn">
-            <i class="fas fa-edit"></i> Chỉnh sửa hồ sơ
-          </button>
         </div>
 
         <div class="profile-sections">
@@ -128,27 +112,27 @@
               <div class="profile-details">
                 <div class="detail-row">
                   <label>Họ và tên:</label>
-                  <span id="fullName"></span>
+                  <span id="fullName">Chưa có thông tin</span>
                 </div>
                 <div class="detail-row">
                   <label>Email:</label>
-                  <span id="email"></span>
+                  <span id="email">Chưa có thông tin</span>
                 </div>
                 <div class="detail-row">
                   <label>Số điện thoại:</label>
-                  <span id="phone"></span>
+                  <span id="phone">Chưa có thông tin</span>
                 </div>
                 <div class="detail-row">
                   <label>Ngày sinh:</label>
-                  <span id="birthday"></span>
+                  <span id="birthday">Chưa có thông tin</span>
                 </div>
                 <div class="detail-row">
                   <label>Giới tính:</label>
-                  <span id="gender"></span>
+                  <span id="gender">Chưa có thông tin</span>
                 </div>
                 <div class="detail-row">
                   <label>Địa chỉ:</label>
-                  <span id="address"></span>
+                  <span id="address">Chưa có thông tin</span>
                 </div>
               </div>
             </div>
@@ -391,7 +375,26 @@
         </form>
       </div>
     </div>
-
+    <!-- Delete Modal -->
+    <div id="deleteAccountModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Xác nhận xóa tài khoản</h2>
+          <button type="button" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Bạn có chắc chắn muốn xóa tài khoản này? Hành động này không thể
+            hoàn tác.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="modal-cancel-btn">Hủy</button>
+          <button type="button" class="modal-confirm-delete-btn">Xóa</button>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
     <footer class="footer">
       <div class="container">
         <div class="footer-content">
