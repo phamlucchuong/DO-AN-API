@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Việc Làm Của Tôi - VietnamWorks</title>
-    <link rel="stylesheet" href="css/employee/jobs.css" />
+    <title>Hồ Sơ Ứng Tuyển - VietnamWorks</title>
+    <link rel="stylesheet" href="css/employee/application-profile.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -64,68 +64,33 @@
           <a href="/company-profile" class="nav-list-link"
             ><i class="fas fa-building nav-list-icon"></i> Công Ty Của Tôi</a
           >
-          <a href="/jobs-profile" class="nav-list-link active"
+          <a href="/jobs-profile" class="nav-list-link"
             ><i class="fas fa-briefcase nav-list-icon"></i> Việc Làm Của Tôi</a
           >
-          <a href="/application-profile" class="nav-list-link active1"
+          <a href="/application-profile" class="nav-list-link active"
             ><i class="fas fa-briefcase nav-list-icon"></i> Hồ Sơ Ứng Tuyển</a
           >
+        </nav>
       </aside>
 
       <section class="main-content">
         <div class="content-header">
-          <h1>Việc Làm Của Tôi</h1>
+          <h1>Hồ Sơ Ứng Tuyển</h1>
         </div>
 
-        <div class="jobs-sections">
-          <div class="jobs-section">
+        <div class="applications-sections">
+          <div class="applications-section">
             <div class="section-header">
-              <h2>Danh sách việc làm</h2>
+              <h2>Danh sách hồ sơ ứng tuyển</h2>
             </div>
-            <div class="section-content jobs-list" id="jobsList"></div>
+            <div
+              class="section-content applications-list"
+              id="applicationsList"
+            ></div>
           </div>
         </div>
       </section>
     </main>
-
-    <!-- Modal for adding/editing job -->
-    <div class="modal" id="editJobModal" style="display: none">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Chỉnh sửa việc làm</h2>
-          <button class="modal-close-btn"><i class="fas fa-times"></i></button>
-        </div>
-        <form id="editJobForm">
-          <div class="form-group">
-            <label for="editJobTitle">Tiêu đề:</label>
-            <input type="text" id="editJobTitle" name="jobTitle" required />
-          </div>
-          <div class="form-group">
-            <label for="editLocation">Địa điểm:</label>
-            <input type="text" id="editLocation" name="location" required />
-          </div>
-          <div class="form-group">
-            <label for="editSalary">Mức lương:</label>
-            <input type="text" id="editSalary" name="salary" required />
-          </div>
-          <div class="form-group">
-            <label for="editJobDescription">Mô tả công việc:</label>
-            <textarea
-              id="editJobDescription"
-              name="jobDescription"
-              rows="5"
-              required
-            ></textarea>
-          </div>
-          <div class="form-actions">
-            <button type="button" class="btn-primary modal-save-btn">
-              Lưu
-            </button>
-            <button type="button" class="btn-link modal-cancel-btn">Hủy</button>
-          </div>
-        </form>
-      </div>
-    </div>
 
     <footer class="footer">
       <div class="container">
@@ -173,6 +138,6 @@
       </div>
     </footer>
 
-    <script src="js/employee/jobs.js"></script>
+    <script src="js/employee/application-profile.js"></script>
   </body>
 </html>

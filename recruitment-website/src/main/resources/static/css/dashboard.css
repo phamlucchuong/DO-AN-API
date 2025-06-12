@@ -124,7 +124,6 @@ body {
 
 .logo img {
   height: 40px;
-  filter: brightness(0) invert(1);
 }
 
 .nav-menu {
@@ -374,7 +373,6 @@ body {
 .company-logo img {
   height: 50px;
   margin-bottom: 20px;
-  filter: brightness(0) invert(1);
 }
 
 .banner-text h2 {
@@ -1215,7 +1213,6 @@ body {
     font-size: 1.5rem;
   }
 }
-
 
 /* .nav-item.login {
   width: 30px;

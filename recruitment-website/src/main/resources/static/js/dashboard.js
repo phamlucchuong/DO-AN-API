@@ -286,6 +286,7 @@ async function loadLoginButton() {
       loginButton.setAttribute("href", "#");
       loginButton.onclick = function () {
         window.location.href = "/employee-profile";
+        window.location.href = "/profile";
       };
     } catch (error) {
       console.error("Lỗi khi xác minh token:", error);
