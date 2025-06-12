@@ -3,7 +3,6 @@ package com.example.recruitment_website.dtos.employee;
 import java.time.LocalDate;
 
 import com.example.recruitment_website.enums.Gender;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PersonalDTO {
     private String name;

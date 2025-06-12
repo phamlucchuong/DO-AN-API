@@ -11,8 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.recruitment_website.entities.EmployerEntity;
 
 @Repository
-public interface EmployerRepository extends JpaRepository<EmployerEntity, String> {
-
+public interface EmployerRepository extends JpaRepository<EmployerEntity, String> {    
     // Optional<EmployerEntity> findByAccountId(String accountId);
     long countByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
