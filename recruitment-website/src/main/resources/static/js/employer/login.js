@@ -41,11 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
       const token = await user.getIdToken();
 
-      if (isRememberMe) {
-        localStorage.setItem('token', token);
-      } else {
-        sessionStorage.setItem('token', token);
-      }
+      console.log(token);
+      localStorage.setItem('token', token);
       
       console.log('Đăng nhập thành công:');
       window.location.href = '/employer/dashboard';

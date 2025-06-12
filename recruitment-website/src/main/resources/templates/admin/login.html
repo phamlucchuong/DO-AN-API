@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login - Website Tuyển Dụng</title>
+  <link rel="stylesheet" th:href="@{/css/admin/login.css}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="login-container">
+    <h2>Đăng nhập Admin</h2>
+    <form id="loginForm">
+      <div class="input-group">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="email" placeholder="Email" required>
+      </div>
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="password" placeholder="Mật khẩu" required>
+      </div>
+      <button type="submit" class="btn-login">Đăng nhập</button>
+    </form>
+    <p class="note">Chỉ dành cho quản trị viên hệ thống</p>
+  </div>
+
+  <script type="module" th:src="@{/js/admin/login.js}"></script>
+</body>
+</html>

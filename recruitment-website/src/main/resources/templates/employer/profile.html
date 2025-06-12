@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentHub - Hồ sơ nhà tuyển dụng</title>
+    <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/employer/profile.css}">
+</head>
+
+<body>
+    <div class="container">
+        <div th:replace="~{employer/fragments/header :: header}"></div>
+        <div th:replace="~{employer/fragments/nav :: nav}"></div>
+
+        <!-- Nội dung hồ sơ -->
+        <div class="content">
+            <h2>Hồ sơ nhà tuyển dụng</h2>
+            <div class="profile-container">
+                <div id="error-message" class="error-message" style="display: none;"></div>
+                <div id="success-message" class="success-message" style="display: none;"></div>
+
+                <!-- Chế độ xem -->
+                <div id="profile-view" class="profile-details-container">
+                    <div class="profile-header">
+                        <img id="companyLogo"
+                            src="https://png.pngtree.com/png-vector/20210129/ourmid/pngtree-upload-avatar-by-default-png-image_2854358.jpg"
+                            alt="Logo công ty" class="profile-logo" />
+                        <div class="profile-title">
+                            <h3 id="companyName">Tên công ty</h3>
+                            <p id="industry">Ngành nghề</p>
+                        </div>
+                        <button id="edit-profile-btn" class="btn btn-primary">✏️ Chỉnh sửa</button>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <label>Địa chỉ:</label>
+                            <span id="companyAddress">Địa chỉ</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Thành phố:</label>
+                            <span id="city">Thành phố</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Mô tả:</label>
+                            <span id="companyDescription">Mô tả</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Website:</label>
+                            <a href="#" id="companyWebsite" target="_blank">Website</a>
+                        </div>
+                        <div class="detail-item">
+                            <label>Số điện thoại:</label>
+                            <span id="phoneNumber">Số điện thoại</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Quy mô công ty:</label>
+                            <span id="companySize">0 nhân viên</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Ngày thành lập:</label>
+                            <span id="foundedDate">Ngày</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Mã số thuế:</label>
+                            <span id="taxCode">Mã số thuế</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Trạng thái duyệt:</label>
+                            <span id="isApproved">Trạng thái</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Ngày tạo:</label>
+                            <span id="createdAt">Ngày</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Ngày cập nhật:</label>
+                            <span id="updatedAt">Ngày</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chế độ chỉnh sửa -->
+                <div id="profile-edit" class="profile-details-container" style="display: none;">
+                    <form id="profile-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="companyLogo">Logo công ty</label>
+                            <img id="profile-img-preview"
+                                src="https://png.pngtree.com/png-vector/20210129/ourmid/png-image_2854358.jpg"
+                                alt="Logo preview" class="profile-img-preview" style="margin-bottom: 10px;" />
+                            <input type="file" id="profile-img" name="companyLogo" accept="image/*"
+                                style="width: 100%; margin-bottom: 20px;" />
+                        </div>
+                        <div class="form-group">
+                            <label for="companyName">Tên công ty *</label>
+                            <input type="text" id="editCompanyName" name="companyName" required
+                                style="width: 100%; margin-bottom: 10px;" placeholder="VD: TalentHub Corp" />
+                        </div>
+                        <div class="form-group">
+                            <label for="industry">Ngành nghề</label>
+                            <select id="industryUpdate" name="industry" required>
+                                <option value="">Chọn ngành nghề</option>
+                                <option value="Công nghệ thông tin">Công nghệ thông tin</option>
+                                <option value="Tài chính">Tài chính</option>
+                                <option value="Giáo dục">Giáo dục</option>
+                                <option value="Sản xuất">Sản xuất</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyAddress">Địa chỉ</label>
+                            <input type="text" id="editCompanyAddress" name="companyAddress"
+                                style="width: 100%; margin-bottom: 10px;" placeholder="VD: 123 Lê Duẩn" />
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Thành phố</label>
+                            <select id="editCity" name="city" style="width: 100%; margin-bottom: 10px;">
+                                <option value="" disabled selected>Chọn thành phố</option>
+                                <option value="An Giang">An Giang</option>
+                                <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+                                <option value="Bắc Giang">Bắc Giang</option>
+                                <option value="Bắc Kạn">Bắc Kạn</option>
+                                <option value="Bạc Liêu">Bạc Liêu</option>
+                                <option value="Bắc Ninh">Bắc Ninh</option>
+                                <option value="Bến Tre">Bến Tre</option>
+                                <option value="Bình Định">Bình Định</option>
+                                <option value="Bình Dương">Bình Dương</option>
+                                <option value="Bình Phước">Bình Phước</option>
+                                <option value="Bình Thuận">Bình Thuận</option>
+                                <option value="Cà Mau">Cà Mau</option>
+                                <option value="Cần Thơ">Cần Thơ</option>
+                                <option value="Cao Bằng">Cao Bằng</option>
+                                <option value="Đà Nẵng">Đà Nẵng</option>
+                                <option value="Đắk Lắk">Đắk Lắk</option>
+                                <option value="Đắk Nông">Đắk Nông</option>
+                                <option value="Điện Biên">Điện Biên</option>
+                                <option value="Đồng Nai">Đồng Nai</option>
+                                <option value="Đồng Tháp">Đồng Tháp</option>
+                                <option value="Gia Lai">Gia Lai</option>
+                                <option value="Hà Giang">Hà Giang</option>
+                                <option value="Hà Nam">Hà Nam</option>
+                                <option value="Hà Nội">Hà Nội</option>
+                                <option value="Hà Tĩnh">Hà Tĩnh</option>
+                                <option value="Hải Dương">Hải Dương</option>
+                                <option value="Hải Phòng">Hải Phòng</option>
+                                <option value="Hậu Giang">Hậu Giang</option>
+                                <option value="Hòa Bình">Hòa Bình</option>
+                                <option value="Hưng Yên">Hưng Yên</option>
+                                <option value="Khánh Hòa">Khánh Hòa</option>
+                                <option value="Kiên Giang">Kiên Giang</option>
+                                <option value="Kon Tum">Kon Tum</option>
+                                <option value="Lai Châu">Lai Châu</option>
+                                <option value="Lâm Đồng">Lâm Đồng</option>
+                                <option value="Lạng Sơn">Lạng Sơn</option>
+                                <option value="Lào Cai">Lào Cai</option>
+                                <option value="Long An">Long An</option>
+                                <option value="Nam Định">Nam Định</option>
+                                <option value="Nghệ An">Nghệ An</option>
+                                <option value="Ninh Bình">Ninh Bình</option>
+                                <option value="Ninh Thuận">Ninh Thuận</option>
+                                <option value="Phú Thọ">Phú Thọ</option>
+                                <option value="Phú Yên">Phú Yên</option>
+                                <option value="Quảng Bình">Quảng Bình</option>
+                                <option value="Quảng Nam">Quảng Nam</option>
+                                <option value="Quảng Ngãi">Quảng Ngãi</option>
+                                <option value="Quảng Ninh">Quảng Ninh</option>
+                                <option value="Quảng Trị">Quảng Trị</option>
+                                <option value="Sóc Trăng">Sóc Trăng</option>
+                                <option value="Sơn La">Sơn La</option>
+                                <option value="Tây Ninh">Tây Ninh</option>
+                                <option value="Thái Bình">Thái Bình</option>
+                                <option value="Thái Nguyên">Thái Nguyên</option>
+                                <option value="Thanh Hóa">Thanh Hóa</option>
+                                <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+                                <option value="Tiền Giang">Tiền Giang</option>
+                                <option value="TP Hồ Chí Minh">TP Hồ Chí Minh</option>
+                                <option value="Trà Vinh">Trà Vinh</option>
+                                <option value="Tuyên Quang">Tuyên Quang</option>
+                                <option value="Vĩnh Long">Vĩnh Long</option>
+                                <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+                                <option value="Yên Bái">Yên Bái</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyDescription">Mô tả</label>
+                            <textarea id="editCompanyDescription" name="companyDescription"
+                                style="width: 100%; height: 100px; margin-bottom: 10px;"
+                                placeholder="Mô tả công ty của bạn"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyWebsite">Website</label>
+                            <input type="url" id="editCompanyWebsite" name="companyWebsite"
+                                style="width: 100%; margin-bottom: 10px;" placeholder="VD: https://www.talenthub.com" />
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Số điện thoại</label>
+                            <input type="tel" id="editPhoneNumber" name="phoneNumber"
+                                style="width: 100%; margin-bottom: 10px;" placeholder="VD: +84 123 456 789" />
+                        </div>
+                        <div class="form-group">
+                            <label for="companySize">Quy mô công ty</label>
+                            <select id="companySizeUpdate" name="companySize" required>
+                                <option value="">Chọn quy mô</option>
+                                <option value="1-10">1-10 nhân viên</option>
+                                <option value="11-50">11-50 nhân viên</option>
+                                <option value="51-200">51-200 nhân viên</option>
+                                <option value="201-500">201-500 nhân viên</option>
+                                <option value=">500">Trên 500 nhân viên</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="foundedDate">Ngày thành lập</label>
+                            <input type="date" id="editFoundedDate" name="foundedDate"
+                                style="width: 100%; margin-bottom: 10px;" />
+                        </div>
+                        <div class="form-group">
+                            <label for="taxCode">Mã số thuế</label>
+                            <input type="text" id="editTaxCode" name="taxCode" style="width: 100%; margin-bottom: 10px;"
+                                placeholder="VD: 1234567890" />
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                            <button type="button" id="cancel-btn" class="btn btn-secondary">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/employer/header.js}"></script>
+    <script th:src="@{/js/employer/profile.js}"></script>
+</body>
+
+</html>

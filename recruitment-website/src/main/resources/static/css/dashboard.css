@@ -427,10 +427,53 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
-.company-info {
+.company-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
+}
+
+.company-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--border-radius);
+  object-fit: cover;
+}
+
+.company-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.company-top {
+  display: flex;
+  gap: 10px;
+}
+
+.company-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin: 0;
+}
+
+.company-industry {
+  color: var(--gray-600);
+  font-size: 0.95rem;
+}
+
+.company-description {
+  color: var(--gray-700);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+
+.company-industry {
+  color: var(--gray-600);
+  font-size: 0.9rem;
 }
 
 .company-logo-small {
@@ -655,6 +698,7 @@ body {
 
 .company-location {
   color: var(--gray-600);
+  margin-left: 10px;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
@@ -1172,10 +1216,6 @@ body {
   }
 }
 
-
-
-
-
   .chatbox-container {
             position: fixed;
             bottom: 100px;
@@ -1530,3 +1570,304 @@ body {
         .scroll-to-bottom.show {
             display: flex;
         }
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  width: 800px;
+  margin: 200px auto;
+  border-radius: 10px; /* Bo tròn viền giống hình */
+  padding: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Thêm bóng nhẹ như hình */
+  position: relative;
+  font-family: Arial, sans-serif; /* Font giống giao diện web */
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px; /* Tăng kích thước nút close */
+  color: #999; /* Màu xám nhạt */
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  line-height: 1;
+}
+
+.close:hover {
+  color: #666; /* Màu khi hover */
+}
+
+.company-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.company-logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 4px; /* Bo tròn logo nhẹ */
+}
+
+.company-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1a73e8; /* Màu xanh dương giống logo */
+  margin: 0;
+}
+
+.job-title {
+  font-size: 14px;
+  color: #555; /* Màu xám đậm cho tiêu đề công việc */
+  margin: 0;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  color: #333; /* Màu đen nhạt cho label */
+  margin-bottom: 5px;
+  font-weight: 500; /* Đậm nhẹ giống hình */
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd; /* Viền xám nhạt */
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+  background-color: #f9f9f9; /* Nền input nhạt */
+}
+
+.form-group input[type="file"] {
+  padding: 6px 10px; /* Điều chỉnh padding cho file input */
+}
+
+.form-group .file-info {
+  font-size: 12px;
+  color: #777; /* Màu xám nhạt cho thông tin file */
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+.submit-btn {
+  background-color: #ff5722; /* Màu cam giống nút Ứng tuyển */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px; /* Bo tròn nút */
+  cursor: pointer;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #e64a19; /* Màu cam đậm khi hover */
+}
+
+.checkbox-group {
+  margin-top: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 8px; /* Khoảng cách checkbox và text */
+  margin-top: 2px; /* Căn chỉnh checkbox */
+}
+
+.checkbox-group label {
+  font-size: 12px;
+  color: #777; /* Màu xám nhạt */
+  line-height: 1.5;
+}
+
+/* Thêm style cho radio button và dropdown nếu cần */
+.form-group input[type="radio"] {
+  margin-right: 8px;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+
+
+
+
+.company-section {
+  margin: 60px 0;
+  padding: 0 20px;
+}
+
+.company-card {
+  /* background: linear-gradient(135deg, #ffffff 0%, #f8fafb 100%); */
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.company-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  /* background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); */
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.company-card:hover::before {
+  transform: scaleX(1);
+}
+
+.company-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+.company-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.company-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.company-card:hover .company-logo {
+  transform: scale(1.05);
+}
+
+.company-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.company-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.company-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  background-clip: text;
+}
+
+.company-industry {
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  /* color: white; */
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  /* box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); */
+}
+
+.company-description {
+  color: #4a5568;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.company-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 15px;
+  border-top: 1px solid #e2e8f0;
+  margin-top: auto;
+}
+
+.job-count {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+}
+
+.job-count::before {
+  content: '💼';
+  font-size: 0.85rem;
+}
+
+.company-location {
+  color: #718096;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.company-location::before {
+  content: '📍';
+  font-size: 0.85rem;
+}
