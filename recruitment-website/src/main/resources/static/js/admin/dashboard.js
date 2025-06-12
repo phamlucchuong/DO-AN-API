@@ -119,6 +119,7 @@ function loadJobTypeChart() {
   fetch("/api/admin/job-type-distribution")
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       const labels = Object.keys(data);
       const values = Object.values(data);
 

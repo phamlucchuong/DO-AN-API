@@ -2,10 +2,17 @@ package com.example.recruitment_website.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.recruitment_website.dtos.employee.EducationDTO;
+import com.example.recruitment_website.dtos.employee.LanguageDTO;
+import com.example.recruitment_website.dtos.employee.PersonalDTO;
+import com.example.recruitment_website.dtos.employee.SkillDTO;
 import com.example.recruitment_website.dtos.employee.WorkExperienceDTO;
 import com.example.recruitment_website.entities.AccountEntity;
 import com.example.recruitment_website.entities.EducationEntity;
@@ -13,10 +20,6 @@ import com.example.recruitment_website.entities.EmployeeEntity;
 import com.example.recruitment_website.entities.LanguageEntity;
 import com.example.recruitment_website.entities.SkillEntity;
 import com.example.recruitment_website.entities.WorkExperienceEntity;
-import com.example.recruitment_website.dtos.employee.EducationDTO;
-import com.example.recruitment_website.dtos.employee.LanguageDTO;
-import com.example.recruitment_website.dtos.employee.PersonalDTO;
-import com.example.recruitment_website.dtos.employee.SkillDTO;
 import com.example.recruitment_website.repositories.AccountRepository;
 import com.example.recruitment_website.repositories.EducationRepository;
 import com.example.recruitment_website.repositories.EmployeeRepository;
@@ -26,7 +29,6 @@ import com.example.recruitment_website.repositories.WorkExperienceRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.Optional;
 
 @Service
 public class EmployeeService {

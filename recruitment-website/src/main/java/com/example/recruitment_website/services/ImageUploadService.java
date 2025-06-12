@@ -31,4 +31,19 @@ public class ImageUploadService {
             throw new RuntimeException("Lỗi upload ảnh lên Cloudinary", e);
         }
     }
+
+    public String uploadPdfToCloudinary(MultipartFile file) {
+        if (file.isEmpty()) {
+            return null;
+        }
+
+        try {
+            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "resource_type", "raw" // phải là raw để Cloudinary xử lý PDF
+            ));
+            return (String) uploadResult.get("secure_url");
+        } catch (IOException e) {
+            throw new RuntimeException("Lỗi upload PDF lên Cloudinary", e);
+        }
+    }
 }

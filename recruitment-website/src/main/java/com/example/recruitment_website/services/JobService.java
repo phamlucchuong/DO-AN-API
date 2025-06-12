@@ -1,7 +1,6 @@
 package com.example.recruitment_website.services;
 
-// package com.example.recruitment_website.services;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +10,16 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.recruitment_website.dtos.JobDTO;
 import com.example.recruitment_website.entities.EmployerEntity;
 import com.example.recruitment_website.entities.JobEntity;
+import com.example.recruitment_website.enums.StatusJob;
 import com.example.recruitment_website.mappers.EmployerMapper;
 import com.example.recruitment_website.mappers.JobMapper;
 import com.example.recruitment_website.payloads.JobRequest;
@@ -51,7 +54,8 @@ public class JobService {
 
         // 2. Kiểm tra isApproved của employer
         if (!employer.getIsApproved()) {
-            logger.warn("Nhà tuyển dụng với ID: {} chưa được duyệt, không thể đăng bài tuyển dụng", jobRequest.getEmployerId());
+            logger.warn("Nhà tuyển dụng với ID: {} chưa được duyệt, không thể đăng bài tuyển dụng",
+                    jobRequest.getEmployerId());
             throw new RuntimeException("Tài khoản của bạn chưa được duyệt. Vui lòng chờ duyệt để đăng bài tuyển dụng.");
         }
 
@@ -102,7 +106,8 @@ public class JobService {
 
     public JobDTO getJobById(Integer jobId) {
         Optional<JobEntity> optionalJob = jobRepository.findById(jobId);
-        JobEntity jobEntity = optionalJob.orElseThrow(() -> new RuntimeException("Không tìm thấy công việc với id: " + jobId));
+        JobEntity jobEntity = optionalJob
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy công việc với id: " + jobId));
 
         return jobMapper.toDTO(jobEntity);
     }
@@ -136,7 +141,8 @@ public class JobService {
         // 3. Kiểm tra isApproved của employer
         if (!employer.getIsApproved()) {
             logger.warn("Nhà tuyển dụng với ID: {} chưa được duyệt, không thể cập nhật bài tuyển dụng", employerId);
-            throw new RuntimeException("Tài khoản của bạn chưa được duyệt. Vui lòng chờ duyệt để cập nhật bài tuyển dụng.");
+            throw new RuntimeException(
+                    "Tài khoản của bạn chưa được duyệt. Vui lòng chờ duyệt để cập nhật bài tuyển dụng.");
         }
 
         // 4. Kiểm tra quyền sở hữu
@@ -148,22 +154,30 @@ public class JobService {
         // 5. Cập nhật các trường từ jobRequest, giữ nguyên nếu null
         jobEntity.setTitle(jobRequest.getTitle() != null ? jobRequest.getTitle() : jobEntity.getTitle());
         jobEntity.setSalary(jobRequest.getSalary() != null ? jobRequest.getSalary() : jobEntity.getSalary());
-        jobEntity.setExperience(jobRequest.getExperience() != null ? jobRequest.getExperience() : jobEntity.getExperience());
-        jobEntity.setDescription(jobRequest.getDescription() != null ? jobRequest.getDescription() : jobEntity.getDescription());
-        jobEntity.setRequirements(jobRequest.getRequirements() != null ? jobRequest.getRequirements() : jobEntity.getRequirements());
+        jobEntity.setExperience(
+                jobRequest.getExperience() != null ? jobRequest.getExperience() : jobEntity.getExperience());
+        jobEntity.setDescription(
+                jobRequest.getDescription() != null ? jobRequest.getDescription() : jobEntity.getDescription());
+        jobEntity.setRequirements(
+                jobRequest.getRequirements() != null ? jobRequest.getRequirements() : jobEntity.getRequirements());
         jobEntity.setBenefits(jobRequest.getBenefits() != null ? jobRequest.getBenefits() : jobEntity.getBenefits());
         jobEntity.setDeadline(jobRequest.getDeadline() != null ? jobRequest.getDeadline() : jobEntity.getDeadline());
         jobEntity.setStatus(jobRequest.getStatus() != null ? jobRequest.getStatus() : jobEntity.getStatus());
-        jobEntity.setNumberOfVacancies(jobRequest.getNumberOfVacancies() != null ? jobRequest.getNumberOfVacancies() : jobEntity.getNumberOfVacancies());
+        jobEntity.setNumberOfVacancies(jobRequest.getNumberOfVacancies() != null ? jobRequest.getNumberOfVacancies()
+                : jobEntity.getNumberOfVacancies());
         jobEntity.setJobLevel(jobRequest.getJobLevel() != null ? jobRequest.getJobLevel() : jobEntity.getJobLevel());
-        jobEntity.setEmploymentType(jobRequest.getEmploymentType() != null ? jobRequest.getEmploymentType() : jobEntity.getEmploymentType());
+        jobEntity.setEmploymentType(jobRequest.getEmploymentType() != null ? jobRequest.getEmploymentType()
+                : jobEntity.getEmploymentType());
         jobEntity.setCity(jobRequest.getCity() != null ? jobRequest.getCity() : jobEntity.getCity());
         jobEntity.setAddress(jobRequest.getAddress() != null ? jobRequest.getAddress() : jobEntity.getAddress());
-        jobEntity.setWorkingHours(jobRequest.getWorkingHours() != null ? jobRequest.getWorkingHours() : jobEntity.getWorkingHours());
+        jobEntity.setWorkingHours(
+                jobRequest.getWorkingHours() != null ? jobRequest.getWorkingHours() : jobEntity.getWorkingHours());
 
         // 6. Không cập nhật isApproved và applicationCount
-        // jobEntity.setIsApproved(jobRequest.getIsApproved() != null ? jobRequest.getIsApproved() : jobEntity.getIsApproved());
-        // jobEntity.setApplicationCount(jobRequest.getApplicationCount() != null ? jobRequest.getApplicationCount() : jobEntity.getApplicationCount());
+        // jobEntity.setIsApproved(jobRequest.getIsApproved() != null ?
+        // jobRequest.getIsApproved() : jobEntity.getIsApproved());
+        // jobEntity.setApplicationCount(jobRequest.getApplicationCount() != null ?
+        // jobRequest.getApplicationCount() : jobEntity.getApplicationCount());
         // 7. Gán lại employer
         jobEntity.setEmployer(employer);
 
@@ -194,8 +208,7 @@ public class JobService {
 
         return Map.of(
                 "currentMonth", currentMonthJobs,
-                "lastMonth", lastMonthJobs
-        );
+                "lastMonth", lastMonthJobs);
     }
 
     public Integer getJobsCountByEmployerId(String id) {
@@ -208,8 +221,36 @@ public class JobService {
         return jobRepository.countJobsByMonthAndYear(month, year);
     }
 
-    public List<JobEntity> getHotJobs(){
+    public List<JobEntity> getHotJobs() {
         return jobRepository.findAll();
     }
 
+    public ResponseEntity<?> getJobsByEmployerIdWithoutPagination(String employerId) {
+        try {
+            logger.info("Fetching all jobs for employerId: {}", employerId);
+            List<JobEntity> jobs = jobRepository.findByEmployerUid(employerId);
+            return ResponseEntity.ok(Map.of(
+                    "jobs", jobs,
+                    "totalCount", jobs.size()
+            ));
+        } catch (Exception e) {
+            logger.error("Error fetching jobs: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void updateJobStatusesBasedOnDeadline() {
+        List<JobEntity> jobs = jobRepository.findAll();
+        LocalDate today = LocalDate.now();
+
+        for (JobEntity job : jobs) {
+            if (job.getDeadline() != null && job.getDeadline().isBefore(today)) {
+                job.setStatus(StatusJob.CLOSED);
+            }
+        }
+
+        jobRepository.saveAll(jobs);
+    }
 }

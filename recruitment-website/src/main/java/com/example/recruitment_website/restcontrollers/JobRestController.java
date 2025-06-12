@@ -135,5 +135,22 @@ public class JobRestController {
     public List<JobEntity> getHotJobs() {
         return jobService.getHotJobs();
     }
-    
+
+    @GetMapping("/getAllByEmployer")
+    public ResponseEntity<?> getJobsByEmployerIdWithoutPagination(@RequestParam("employerId") String employerId) {
+        try {
+            return jobService.getJobsByEmployerIdWithoutPagination(employerId);
+        } catch (Exception e) {
+            log.error("Error fetching jobs: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/update-job-statuses")
+    public ResponseEntity<String> updateJobStatuses() {
+        jobService.updateJobStatusesBasedOnDeadline();
+        return ResponseEntity.ok("Cập nhật trạng thái công việc thành công.");
+    }
+
 }

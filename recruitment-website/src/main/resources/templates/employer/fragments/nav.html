@@ -2,22 +2,22 @@
     <nav class="nav-tabs">
         <a th:href="@{/employer/dashboard}"
            th:classappend="${requestURI == '/employer/dashboard'} ? ' active' : ''"
-           class="nav-tab">📊 Dashboard</a>
+           class="nav-tab">📊 Bảng điều khiển</a>
 
         <a th:href="@{/employer/post-job}"
            th:classappend="${requestURI == '/employer/post-job'} ? ' active' : ''"
-           class="nav-tab">📝 Post Job</a>
+           class="nav-tab">📝 Đăng tin</a>
 
         <!-- <a th:href="@{/employer/manage-jobs}"
            th:classappend="${requestURI == '/employer/manage-jobs'} ? ' active' : ''"
-           class="nav-tab">💼 Manage Jobs</a> -->
+           class="nav-tab">💼 Quản lý tin tuyển dụng</a> -->
 
         <a th:href="@{/employer/candidates}"
            th:classappend="${requestURI == '/employer/candidates'} ? ' active' : ''"
-           class="nav-tab">👥 Candidates</a>
+           class="nav-tab">👥 Ứng viên</a>
 
         <a th:href="@{/employer/statistics}"
            th:classappend="${requestURI == '/employer/statistics'} ? ' active' : ''"
-           class="nav-tab">📈 Statistics</a>
+           class="nav-tab">📈 Thống kê</a>
     </nav>
 </div>

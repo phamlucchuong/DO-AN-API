@@ -12,7 +12,7 @@
     <header class="header">
         <div class="container header-content">
             <div class="header-left">
-                <img th:src="${logoUrl}" alt="VietnamWorks" class="logo">
+                <img src="https://employer.vietnamworks.com/v2/img/logo/logo-vnw-white.svg?v=1749722218" class="logo">
                 <nav class="nav hidden md:flex">
                     <div class="dropdown">
                         <button class="dropdown-toggle">Dịch Vụ <i class="fas fa-chevron-down"></i></button>
@@ -38,14 +38,14 @@
                         </div>
                     </div>
                     <button class="btn btn-outline">
-                        <a th:href="@{/employer/login}">Đăng nhập</a>
+                        <a href="/employer/login">Đăng nhập</a>
                     </button>
                 </div>
-                <button id="mobile-menu-button" class="md:hidden"><i class="fas fa-bars"></i></button>
+              
             </div>
         </div>
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu hidden">
+        <!-- <div id="mobile-menu" class="mobile-menu hidden">
             <button id="close-mobile-menu"><i class="fas fa-times"></i></button>
             <nav class="mobile-nav">
                 <button class="mobile-nav-link">Dịch Vụ</button>
@@ -56,9 +56,11 @@
                 <div class="mobile-nav-divider"></div>
                 <button class="mobile-nav-link">English</button>
                 <button class="mobile-nav-link">Tiếng Việt</button>
-                <button class="btn btn-primary mobile-login">Đăng nhập</button>
+                <button class="btn btn-primary mobile-login">
+                    <a th:href="@{/employer/login}">Đăng nhập</a>
+                </button>
             </nav>
-        </div>
+        </div> -->
     </header>
 
     <!-- Hero Section -->
@@ -75,7 +77,9 @@
                 </div>
             </div>
             <div class="hero-image hidden lg:block">
-                <img th:src="${heroImageUrl}" alt="Professional man with laptop" class="hero-img">
+           <img src="https://images.careerviet.vn/content/talent_community/hunting%20job.png" 
+            alt="Professional job interview" 
+            class="hero-img">
             </div>
         </div>
     </section>
@@ -168,10 +172,10 @@
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                     </div>
-                    <p class="testimonial-text" th:text="${testimonial1Text}">
+                    <p class="testimonial-text" text="testimonial1Text  ">
                         "VietnamWorks tư vấn nhiệt tình, hỗ trợ tận tâm, đồng hành cùng doanh nghiệp."
                     </p>
-                    <p class="testimonial-author" th:text="${testimonial1Author}">
+                    <p class="testimonial-author" text="estimonial1Author">
                         Công ty TNHH Nước Giải Khát Suntory Pepsico Việt Nam
                     </p>
                 </div>
@@ -183,10 +187,10 @@
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                     </div>
-                    <p class="testimonial-text" th:text="${testimonial2Text}">
+                    <p class="testimonial-text" th:text="testimonial2Text">
                         "Nhân viên tư vấn VietnamWorks hỗ trợ tốt, bất kể yêu cầu qua mail hay qua call đều được hỗ trợ nhanh chóng."
                     </p>
-                    <p class="testimonial-author" th:text="${testimonial2Author}">
+                    <p class="testimonial-author" th:text="testimonial2Author">
                         Công ty TNHH BHNT Prudential Việt Nam
                     </p>
                 </div>
@@ -198,10 +202,10 @@
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                     </div>
-                    <p class="testimonial-text" th:text="${testimonial3Text}">
+                    <p class="testimonial-text" th:text="testimonial3Text">
                         "Rất ấn tượng về sự tận tâm và phục vụ khách hàng của VietnamWorks, chúng tôi đã thu hút được rất nhiều nhân tài từ đây!"
                     </p>
-                    <p class="testimonial-author" th:text="${testimonial3Author}">
+                    <p class="testimonial-author" th:text="testimonial3Author">
                         Ngân hàng TMCP Kỹ thương Việt Nam
                     </p>
                 </div>
@@ -210,17 +214,25 @@
     </section>
 
     <!-- Company Logos Section -->
-    <section class="company-logos">
-        <div class="container">
-            <h3 class="section-title">Các Doanh Nghiệp Hàng Đầu Lựa Chọn VietnamWorks</h3>
-            <div class="logos">
-                <img th:src="${companyLogo1}" alt="Company 1" class="logo">
-                <img th:src="${companyLogo2}" alt="Company 2" class="logo">
-                <img th:src="${companyLogo3}" alt="Company 3" class="logo">
-                <img th:src="${companyLogo4}" alt="Company 4" class="logo">
-            </div>
-        </div>
-    </section>
+<section class="company-logos">
+  <div class="container">
+    <h3 class="section-title">Các Doanh Nghiệp Hàng Đầu Lựa Chọn VietnamWorks</h3>
+    <div class="logos">
+      <img src="/images/2.svg"  alt="Tesla" class="logo">
+      <img src="/images/4.svg"  alt="Apple" class="logo">
+      <img src="/images/9.svg"  alt="Microsoft" class="logo">
+      <img src="/images/3.svg"  alt="Google" class="logo">
+      <img src="/images/1.svg" alt="Vinamilk" class="logo">
+      <img src="/images/6.svg"  alt="Apple" class="logo">
+      <img src="/images/7.svg"  alt="Microsoft" class="logo">
+      <img src="/images/8.svg"  alt="Google" class="logo">
+      <img src="/images/10.svg" alt="Vinamilk" class="logo">
+    </div>
+  </div>
+</section>
+
+
+
 
     <!-- CTA Section -->
     <section class="cta">
@@ -236,9 +248,18 @@
             <div class="footer-column">
                 <h4 class="footer-title">Thông tin liên hệ</h4>
                 <div class="footer-links">
-                    <div class="footer-link"><i class="fas fa-phone"></i><span th:text="${contactHCM}">(84 28) 3925 8456</span></div>
-                    <div class="footer-link"><i class="fas fa-phone"></i><span th:text="${contactHanoi}">(84 24) 3944 0568</span></div>
-                    <div class="footer-link"><i class="fas fa-envelope"></i><span th:text="${contactEmail}">Jobsupport@vietnamworks.com</span></div>
+                    <div class="footer-link">
+                        <i class="fas fa-phone"></i>
+                        <span>(84 28) 3925 8456</span>
+                    </div>
+                    <div class="footer-link">
+                        <i class="fas fa-phone"></i>
+                        <span>(84 24) 3944 0568</span>
+                    </div>
+                    <div class="footer-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>hoa25102020@gmail.com</span>
+                    </div>
                 </div>
             </div>
             <div class="footer-column">
@@ -254,8 +275,13 @@
             <div class="footer-column">
                 <h4 class="footer-title">Ứng dụng di động</h4>
                 <div class="footer-links">
-                    <img th:src="${appStoreUrl}" alt="App Store" class="app-logo">
-                    <img th:src="${googlePlayUrl}" alt="Google Play" class="app-logo">
+                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                    alt="App Store" class="app-logo">
+
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                    alt="Get it on Google Play"
+                    class="app-logo"/>
                 </div>
             </div>
             <div class="footer-column">
