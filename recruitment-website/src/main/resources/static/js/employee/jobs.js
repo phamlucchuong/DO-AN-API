@@ -60,7 +60,6 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="job-salary">${job.salary}</div>
             <div class="job-description">${job.description}</div>
             <div class="job-actions">
-              <button class="job-action-btn delete-job-btn" data-job-id="${job.id}"><i class="fas fa-trash"></i> Xóa</button>
             </div>
           </div>
         `;
