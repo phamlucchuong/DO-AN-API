@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 
 import com.example.recruitment_website.enums.EmploymentType;
 import com.example.recruitment_website.enums.JobLevel;
+import com.example.recruitment_website.enums.StatusJob;
+import com.example.recruitment_website.enums.WorkingHours;
 
 import jakarta.validation.constraints.PositiveOrZero;
 
 public class JobDTO {
-    private String id;
-    private String employerId;
+    private Integer id;
+    private EmployerDTO employer;
     private String title;
     private String salary; // Mức lương (có thể là khoảng lương hoặc mức lương cụ thể)
     private String experience; // Kinh nghiệm làm việc
@@ -20,26 +22,25 @@ public class JobDTO {
     private LocalDate deadline; // Ngày hết hạn ứng tuyển
     private LocalDateTime createdAt; // Thêm trường createdAt để lưu thời gian tạo
     private LocalDateTime updatedAt; // Thêm trường updatedAt để lưu thời gian cập nhật
-    private String status; // Mặc định trạng thái là "Open"
+    private StatusJob status; // Mặc định trạng thái là "Open"
     @PositiveOrZero(message = "Number of vacancies must be non-negative")
     private Integer numberOfVacancies; // Mặc định là 1 vị trí
     private JobLevel jobLevel; // Cấp độ công việc (Entry, Mid, Senior, v.v.)
     private EmploymentType  employmentType; // Loại hình công việc (toàn thời gian, bán thời gian, thực tập, v.v.)
     private String city; // Thành phố làm việc 
-    private String country; // Quốc gia làm việc (thêm mới)
     private String address; // Địa chỉ chi tiết
-    private String workingHours; // Thời gian làm việc
+    private WorkingHours workingHours; // Thời gian làm việc
     private Boolean isApproved; // Trạng thái phê duyệt (thêm mới)
     private Integer applicationCount; // Số lượt ứng tuyển (thêm mới)
 
     public JobDTO() {}
 
-    public JobDTO(String id, String employerId, String title, String salary, String experience,
+    public JobDTO(Integer id, EmployerDTO employer, String title, String salary, String experience,
                   String description, String requirements, String benefits, LocalDate deadline,
-                  JobLevel jobLevel, EmploymentType employmentType, String city, String country,
-                  String address, String workingHours) {
+                  JobLevel jobLevel, EmploymentType employmentType, String city,
+                  String address, WorkingHours workingHours) {
         this.id = id;
-        this.employerId = employerId;
+        this.employer = employer;
         this.title = title;
         this.salary = salary;
         this.experience = experience;
@@ -50,25 +51,24 @@ public class JobDTO {
         this.jobLevel = jobLevel;
         this.employmentType = employmentType;
         this.city = city;
-        this.country = country;
         this.address = address;
         this.workingHours = workingHours;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getEmployerId() {
-        return employerId;
+    public EmployerDTO getEmployer() {
+        return employer;
     }
 
-    public void setEmployerId(String employerId) {
-        this.employerId = employerId;
+    public void setEmployer(EmployerDTO employer) {
+        this.employer = employer;
     }
 
     public String getTitle() {
@@ -143,11 +143,11 @@ public class JobDTO {
         this.updatedAt = updatedAt;
     }
 
-    public String getStatus() {
+    public StatusJob getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusJob status) {
         this.status = status;
     }
 
@@ -183,14 +183,6 @@ public class JobDTO {
         this.city = city;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -199,11 +191,11 @@ public class JobDTO {
         this.address = address;
     }
 
-    public String getWorkingHours() {
+    public WorkingHours getWorkingHours() {
         return workingHours;
     }
 
-    public void setWorkingHours(String workingHours) {
+    public void setWorkingHours(WorkingHours workingHours) {
         this.workingHours = workingHours;
     }
 

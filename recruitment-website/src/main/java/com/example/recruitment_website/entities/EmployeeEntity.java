@@ -1,6 +1,5 @@
 package com.example.recruitment_website.entities;
 
-import com.example.recruitment_website.dtos.employee.PersonalDTO;
 import com.example.recruitment_website.enums.Degree;
 import com.example.recruitment_website.enums.Gender;
 import com.example.recruitment_website.enums.JobLevel;
@@ -15,6 +14,7 @@ import java.util.List;
 public class EmployeeEntity {
 
     @Id
+    @Column(name = "uid") // hoặc tên thật trong DB
     private String uid;
 
     @OneToOne

@@ -18,13 +18,30 @@ import com.example.recruitment_website.dtos.employee.LanguageDTO;
 import com.example.recruitment_website.dtos.employee.PersonalDTO;
 import com.example.recruitment_website.dtos.employee.SkillDTO;
 import com.example.recruitment_website.repositories.AccountRepository;
+import com.example.recruitment_website.repositories.EducationRepository;
 import com.example.recruitment_website.repositories.EmployeeRepository;
+import com.example.recruitment_website.repositories.LanguageRepository;
+import com.example.recruitment_website.repositories.SkillRepository;
+import com.example.recruitment_website.repositories.WorkExperienceRepository;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.Optional;
 
 @Service
 public class EmployeeService {
+
+    @Autowired
+    private LanguageRepository languageRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
+
+    @Autowired
+    private EducationRepository educationRepository;
+
+    @Autowired
+    private WorkExperienceRepository workExperienceRepository;
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -156,8 +173,11 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
 
         WorkExperienceEntity experience = new WorkExperienceEntity(dto);
-        experience.setEmployee(employee);
         
+        if(workExperienceRepository.existsByRole(dto.getRole())) return;
+
+        experience.setEmployee(employee);
+
         if (employee.getWorkExperience() == null) {
             employee.setWorkExperience(new ArrayList<>());
         }
@@ -165,6 +185,20 @@ public class EmployeeService {
 
         employeeRepository.save(employee);
     }
+
+    public void deleteWorkExperience(String id, String expID) {
+        EmployeeEntity employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
+
+        WorkExperienceEntity workExperience = workExperienceRepository.findById(expID)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy exp với ID: " + expID));
+
+        employee.getWorkExperience().remove(workExperience);
+
+        employeeRepository.save(employee);
+    }
+
+    
 
     // endregion
 
@@ -181,12 +215,26 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
 
         EducationEntity education = new EducationEntity(dto);
+        if(educationRepository.existsByMajor(dto.getMajor())) return;
+
         education.setEmployee(employee);
-        
+
         if (employee.getEducation() == null) {
             employee.setEducation(new ArrayList<>());
         }
         employee.getEducation().add(education);
+
+        employeeRepository.save(employee);
+    }
+
+    public void deleteEducation(String id, String eduID) {
+        EmployeeEntity employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
+
+        EducationEntity education = educationRepository.findById(eduID)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy edu với ID: " + eduID));
+
+        employee.getEducation().remove(education);
 
         employeeRepository.save(employee);
     }
@@ -204,12 +252,30 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
 
         SkillEntity skill = new SkillEntity(dto);
+
+        if (skillRepository.existsByName(skill.getName())) {
+            return;
+        }
+
         skill.setEmployee(employee);
-        
+
         if (employee.getSkills() == null) {
             employee.setSkills(new ArrayList<>());
         }
         employee.getSkills().add(skill);
+
+        employeeRepository.save(employee);
+    }
+
+    @Transactional
+    public void deleteSkill(String id, String skillID) {
+        EmployeeEntity employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
+
+        SkillEntity skill = skillRepository.findById(skillID)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy skill với ID: " + skillID));
+
+        employee.getSkills().remove(skill);
 
         employeeRepository.save(employee);
     }
@@ -224,11 +290,17 @@ public class EmployeeService {
         }
 
         EmployeeEntity employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: "
+                        + id));
 
         LanguageEntity language = new LanguageEntity(dto);
+
+        if (languageRepository.existsByName(language.getName())) {
+            return;
+        }
+
         language.setEmployee(employee);
-        
+
         if (employee.getLanguages() == null) {
             employee.setLanguages(new ArrayList<>());
         }
@@ -237,7 +309,37 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
+    @Transactional
+    public void deleteLanguages(String id, String languageID) {
+        EmployeeEntity employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
+
+        LanguageEntity language = languageRepository.findById(languageID)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy ngôn ngữ với ID: " + languageID));
+
+        employee.getLanguages().remove(language);
+
+        employeeRepository.save(employee);
+    }
+
     
+
+    // @Transactional
+    // public void postLanguages(String id, LanguageDTO dto) {
+    // EmployeeEntity employee = employeeRepository.findById(id)
+    // .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: "
+    // + id));
+
+    // // Xóa hết các ngôn ngữ cũ của employee
+    // languageRepository.deleteByEmployeeUid(id);
+
+    // // Tạo ngôn ngữ mới và gán employee
+    // LanguageEntity language = new LanguageEntity(dto);
+    // language.setEmployee(employee);
+
+    // // Lưu ngôn ngữ mới
+    // languageRepository.save(language);
+    // }
 
     // public String getCvLink(String uid) {
     // return employeeRepository.findCvLinkByUid(uid);
