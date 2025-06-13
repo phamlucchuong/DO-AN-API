@@ -1,12 +1,16 @@
 package com.example.recruitment_website.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.recruitment_website.dtos.ApplicationDTO;
 import com.example.recruitment_website.entities.ApplicationEntity;
+import com.example.recruitment_website.enums.Status;
+import com.example.recruitment_website.mappers.ApplicationMapper;
 import com.example.recruitment_website.repositories.ApplicationRepository;
 import com.example.recruitment_website.repositories.EmployeeRepository;
 import com.example.recruitment_website.repositories.JobRepository;
@@ -26,10 +30,12 @@ public class ApplicationService {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private ApplicationMapper applicationMapper;
+
     // public void createNewApply(Integer job_id, ApplicationDTO dto, MultipartFile file) {
     //     JobEntity job = jobRepository.findById(job_id)
     //             .orElseThrow(() -> new RuntimeException("Không tìm thấy job có ID: " + job_id));
-
     //     EmployeeEntity employee = employeeRepository.findById(dto.getEmployee())
     //             .orElseThrow(() -> new RuntimeException(
     //             "Không tìm thấy employee có ID: " + dto.getEmployee()));
@@ -40,45 +46,40 @@ public class ApplicationService {
     //             if (applicationRepository.findByEmployeeAndJob(employee, job).isPresent()) {
     //                     throw new IllegalStateException("You have already applied for this job.");
     //             }
-
     //             // ✅ Upload file lên Cloudinary
     //             String uploadedCvLink = imageUploadService.uploadPdfToCloudinary(file);
-
     //             ApplicationEntity application = new ApplicationEntity();
     //             application.setEmployee(employee);
-
     //             if(!employee.getApplications().contains(application))
     //             employee.getApplications().add(application);
     //             application.setJob(job);
-
     //             application.setCvLink(uploadedCvLink); // dùng link từ Cloudinary
     //             application.setCreatedDate(LocalDate.now());
     //             application.setStatus(Status.PENDING);
-
     //             applicationRepository.save(application);
     //     }
-
     //     // ✅ Upload file lên Cloudinary
     //     String uploadedCvLink = imageUploadService.uploadPdfToCloudinary(file);
-
     //     ApplicationEntity application = new ApplicationEntity();
     //     application.setEmployee(employee);
     //     application.setJob(job);
-
     //     application.setCvLink(uploadedCvLink); // dùng link từ Cloudinary
     //     application.setCreatedDate(LocalDate.now());
     //     application.setStatus(Status.PENDING);
-
     //     applicationRepository.save(application);
     // }
-
     public Integer getTotalCountCandidateByEmployerId(String employerId) {
         return applicationRepository.countByEmployerId(employerId);
     }
 
-    public List<ApplicationEntity> getCandidatesByEmployerId(String employerId) {
-        List<ApplicationEntity> applications = applicationRepository.findByEmployer_Id(employerId);
-        return applications;
+    public List<ApplicationDTO> getCandidatesByEmployerId(String employerId) {
+        List<ApplicationEntity> applications = applicationRepository.findByJob_Employer_Uid(employerId);
+
+        List<ApplicationDTO> dtos = applications.stream()
+                .map(applicationMapper::toDTO)
+                .collect(Collectors.toList());
+
+        return dtos;
     }
 
     public List<ApplicationEntity> getCandidatesByEmployerIdAndJobId(String employerId, Integer jobId) {
@@ -89,10 +90,8 @@ public class ApplicationService {
     //     if (!employeeRepository.existsByAccountId(uid)) {
     //         throw new RuntimeException("khong tim thay employee co ID: " + uid);
     //     }
-
     //     // return applicationRepository.findByEmployeeUid(uid);
     // }
-
     public void putApplies(String uid, MultipartFile file) {
         ApplicationEntity application = applicationRepository.findById(uid)
                 .orElseThrow(() -> new RuntimeException("khong tim thay apply"));
@@ -110,5 +109,21 @@ public class ApplicationService {
                 .orElseThrow(() -> new RuntimeException("khong tim thay apply"));
 
         applicationRepository.delete(application);
+    }
+
+    public void updateApplicationStatus(String applicationId, String statusValue) {
+        ApplicationEntity application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy ứng tuyển với id: " + applicationId));
+
+        // Kiểm tra nếu statusValue không hợp lệ
+        Status newStatus;
+        try {
+            newStatus = Status.valueOf(statusValue);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Status không hợp lệ: " + statusValue);
+        }
+
+        application.setStatus(newStatus);
+        applicationRepository.save(application);
     }
 }

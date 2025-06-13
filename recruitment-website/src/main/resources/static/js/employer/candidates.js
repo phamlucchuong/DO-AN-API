@@ -16,10 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        candidates = data; 
-        console.log(candidates);
-        console.log(candidates.job);
-        console.log(data.jobId);
+        candidates = data;
         renderCandidates();
       })
       .catch((error) => {
@@ -39,42 +36,69 @@ document.addEventListener("DOMContentLoaded", function () {
       row.setAttribute("data-candidate-id", candidate.id);
 
       row.innerHTML = `
-                <div class="table-cell font-semibold text-gray-700">${
-                  candidate.employee.name
-                }</div>
+                <div class="table-cell font-semibold text-gray-700">${candidate.employee.name}</div>
                 <div class="table-cell">
-                    <a href="mailto:${
-                      candidate.email
-                    }" class="text-primary-blue hover:text-light-blue">${
-        candidate.employee.email
-      }</a>
+                    <a href="mailto:${candidate.email}" class="text-primary-blue hover:text-light-blue">${candidate.employee.email}</a>
                 </div>
                 <div class="table-cell">
-                    <a href="${
-                      candidate.cvLink
-                    }" class="cv-link text-primary-blue hover:text-light-blue underline" target="_blank">Xem CV</a>
+                    <a href="${candidate.cvLink}" class="cv-link text-primary-blue hover:text-light-blue underline" target="_blank">Xem CV</a>
                 </div>
-                <div class="table-cell text-gray-700">${
-                  candidate.job.title
-                }</div>
+                <div class="table-cell text-gray-700">${candidate.job.title}</div>
                 <div class="table-cell">
-                    <select class="status-select" data-candidate-id="${
-                      candidate.id
-                    }">
+                      ${candidate.status}
                 </div>
                 <div class="table-cell">
-                    <a href="mailto:${
-                      candidate.email
-                    }" class="action-button contact-button inline-block px-4 py-2 text-sm text-primary-blue border border-primary-blue rounded-lg hover:bg-primary-blue hover:text-white transition">Liên Hệ</a>
+                <button class="approve-btn px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600 transition" data-id="${candidate.id}">
+                    Duyệt
+                  </button>
                 </div>
             `;
 
       candidatesTable.appendChild(row);
+
+      const approveButton = row.querySelector(".approve-btn");
+      approveButton.addEventListener("click", () => {
+        approveCandidate(candidate.id, candidate.employee.uid);
+      });
     });
 
     bindStatusChangeEvents();
     filterCandidates();
   }
+
+function approveCandidate(applicationId, employeeId) {
+  const employerId = localStorage.getItem("uid");
+
+  // Gọi API add ApplicationApproval
+  fetch(
+    `/api/application/approval/add?applicationId=${applicationId}&employerId=${employerId}&employeeId=${employeeId}`,
+    {
+      method: "POST",
+    }
+  )
+    .then((response) => {
+      if (!response.ok) throw new Error("Duyệt thất bại");
+      
+      // Nếu duyệt thành công → tiếp tục set status
+      return fetch(`/api/application/${applicationId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: "APPROVED" }),
+      });
+    })
+    .then((response) => {
+      if (!response.ok) throw new Error("Cập nhật trạng thái thất bại");
+      alert("Duyệt ứng viên thành công!");
+      loadCandidates();
+    })
+    .catch((error) => {
+      console.error("Lỗi duyệt ứng viên:", error);
+      alert("Có lỗi khi duyệt ứng viên!");
+    });
+}
+
 
   // Lọc ứng viên
   function filterCandidates() {
@@ -86,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     tableRows.forEach((row) => {
       const name = row.children[0].textContent.toLowerCase();
       const position = row.children[3].textContent.toLowerCase();
-      const status = row.children[4].querySelector("select").value;
+      const status = row.children[4].textContent.trim();
 
       const matchesSearch =
         name.includes(searchTerm) || position.includes(searchTerm);
