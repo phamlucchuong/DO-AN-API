@@ -1,4 +1,5 @@
 package com.example.recruitment_website.restcontrollers;
+
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +64,7 @@ public class JobRestController {
                     "jobs", jobPage.getContent(),
                     "totalCount", jobPage.getTotalElements(),
                     "totalPages", jobPage.getTotalPages(),
-                    "currentPage", page
-            );
+                    "currentPage", page);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error fetching jobs: {}", e.getMessage());
@@ -73,17 +73,26 @@ public class JobRestController {
     }
 
     @GetMapping("/getAllJobs")
-    public ResponseEntity<?> getAllJobs() {
+    public ResponseEntity<?> getAllJobs(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
         try {
-            log.info("Fetching all jobs");
-            return ResponseEntity.ok(jobService.getJobs());
+            log.info("Fetching all jobs, page: {}, size: {}", page, size);
+            Pageable pageable = PageRequest.of(page, size);
+            Page<JobEntity> jobPage = jobRepository.findAll(pageable);
+            Map<String, Object> response = Map.of(
+                    "content", jobPage.getContent(),
+                    "totalElements", jobPage.getTotalElements(),
+                    "totalPages", jobPage.getTotalPages(),
+                    "currentPage", page
+            );
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error fetching all jobs: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", e.getMessage()));
         }
     }
-
 
     @GetMapping("/{id}/detail")
     public ResponseEntity<?> getJobById(@PathVariable Integer id) {
@@ -123,8 +132,29 @@ public class JobRestController {
     }
 
     @GetMapping("/getHotJobs")
-    public List<JobEntity> getHotJobs() {
-        return jobService.getHotJobs();
+    public ResponseEntity<?> getHotJobs() {
+        List<JobDTO> hotJobs = jobService.getHotJobs();
+        if (!hotJobs.isEmpty()) {
+            return ResponseEntity.ok(hotJobs); 
+        }else {
+            return ResponseEntity.badRequest().body("Không lấy được hot job");
+        }
     }
-    
+
+    @GetMapping("/getAllByEmployer")
+    public ResponseEntity<?> getJobsByEmployerIdWithoutPagination(@RequestParam("employerId") String employerId) {
+        try {
+            return jobService.getJobsByEmployerIdWithoutPagination(employerId);
+        } catch (Exception e) {
+            log.error("Error fetching jobs: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/update-job-statuses")
+    public ResponseEntity<String> updateJobStatuses() {
+        jobService.updateJobStatusesBasedOnDeadline();
+        return ResponseEntity.ok("Cập nhật trạng thái công việc thành công.");
+    }
 }

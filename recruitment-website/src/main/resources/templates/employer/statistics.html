@@ -1,33 +1,66 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Thống kê - VietnamWorks</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentHub - Thống kê Nhà tuyển dụng</title>  
     <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
     <link rel="stylesheet" th:href="@{/css/employer/statistics.css}">
-
 </head>
-
 <body>
     <div class="container">
-    <div th:replace="employer/fragments/header :: header"></div>
-    <div th:replace="employer/fragments/nav :: nav"></div>
+        <div th:replace="~{employer/fragments/header :: header}"></div>
+        <div th:replace="~{employer/fragments/nav :: nav}"></div>
 
-        <!-- Statistics Content -->
+        <!-- Content (giống dashboard) -->
         <div class="content">
-            <h2>📈 Thống kê tổng quan</h2>
-            <!-- Charts -->
-            <div class="charts-grid">
+            <!-- Page Title -->
+            <div class="page-title">
+                <h1>📊 Thống kê tổng quan</h1>
+                <p>Theo dõi hiệu suất tuyển dụng và phân tích dữ liệu</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="total-jobs">0</h3>
+                    <p>Tổng tin tuyển dụng</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="open-jobs">0</h3>
+                    <p>Đang tuyển</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="closed-jobs">0</h3>
+                    <p>Đã đóng</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="total-candidates">0</h3>
+                    <p>Tổng ứng viên</p>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <h3 class="chart-title">📈 Trạng thái tin tuyển dụng</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="jobStatusChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">🎯 Phân bố ứng viên theo tin</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="candidateChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Chart.js CDN -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script th:src="@{/js/employer/statistics.js}"></script>
+    <script th:src="@{/js/employer/header.js}"></script>
 </body>
-
 </html>

@@ -1,30 +1,79 @@
+let jobsData = [];
+let currentPage = 0;
+const pageSize = 10;
+let totalPages = 0;
+
 document.addEventListener("DOMContentLoaded", () => {
   fetchJobs();
 
-  // Gán sự kiện cho nút Lọc
-  document.querySelector(".action-button").addEventListener("click", () => {
-    filterJobsByDate();
-  });
+  // Filter button
+  const filterButton = document.getElementById("filterButton");
+  if (filterButton) {
+    filterButton.addEventListener("click", () => {
+      applyFilters();
+    });
+  }
 
-  const searchInput = document.querySelector(".search-bar");
-  searchInput.addEventListener("keyup", () => {
-    filterJobsByTitle(searchInput.value);
-  });
+  // Real-time search
+  const searchInput = document.getElementById("jobSearch");
+  if (searchInput) {
+    searchInput.addEventListener("keyup", () => {
+      applyFilters();
+    });
+  }
+
+  // Pagination buttons
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  if (prevBtn) prevBtn.addEventListener("click", prevPage);
+  if (nextBtn) nextBtn.addEventListener("click", nextPage);
 });
 
-async function fetchJobs() {
+async function fetchJobs(page = 0) {
   try {
-    const response = await fetch("/api/employer/job/getAllJobs");
+    const response = await fetch(`/api/employer/job/getAllJobs?page=${page}&size=${pageSize}`);
     if (!response.ok) {
       throw new Error("Lỗi khi tải dữ liệu jobs!");
     }
 
-    const jobs = await response.json();
-    console.log(jobs);
-    renderJobs(jobs);
+    const data = await response.json();
+    jobsData = data.content;
+    totalPages = data.totalPages;
+    currentPage = data.currentPage;
+
+    console.log(data);
+    renderJobs(jobsData);
+    updatePaginationControls();
   } catch (error) {
     console.error("Lỗi khi fetch jobs:", error);
   }
+}
+
+function nextPage() {
+  if (currentPage < totalPages - 1) {
+    fetchJobs(currentPage + 1);
+  }
+}
+
+function prevPage() {
+  if (currentPage > 0) {
+    fetchJobs(currentPage - 1);
+  }
+}
+
+function updatePaginationControls() {
+  const currentPageElement = document.getElementById("currentPage");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  if (!currentPageElement || !prevBtn || !nextBtn) {
+    console.error("One or more pagination elements (currentPage, prevBtn, nextBtn) not found in the DOM.");
+    return;
+  }
+
+  currentPageElement.textContent = `Trang ${currentPage + 1} / ${totalPages}`;
+  prevBtn.disabled = currentPage === 0;
+  nextBtn.disabled = currentPage >= totalPages - 1;
 }
 
 function renderJobs(jobs) {
@@ -39,7 +88,6 @@ function renderJobs(jobs) {
 
   jobs.forEach((job) => {
     const row = document.createElement("tr");
-
     const createdAt = formatDate(job.createdAt);
 
     let statusText = "";
@@ -67,82 +115,42 @@ function renderJobs(jobs) {
       <td><span class="${statusClass}">${statusText}</span></td>
       <td>${createdAt}</td>
     `;
-    jobTableBody.appendChild(row);
+    jobTableBody.appendChild(row);  
   });
 }
 
 function formatDate(isoString) {
+  if (!isoString) return "N/A";
   const date = new Date(isoString);
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
+  return `${day}/${month}/${year}`;
 }
 
-function filterJobsByTitle(keyword) {
-  const rows = document.querySelectorAll("#jobTableBody tr");
-  const lowerKeyword = keyword.toLowerCase();
-
-  rows.forEach((row) => {
-    const titleCell = row.cells[1];
-    if (titleCell) {
-      const titleText = titleCell.textContent.toLowerCase();
-      if (titleText.includes(lowerKeyword)) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
-    }
-  });
-}
-
-function filterJobsByDate() {
+function applyFilters() {
+  const keyword = document.getElementById("jobSearch").value.toLowerCase();
   const startDateValue = document.querySelector("input[name='startDate']").value;
   const endDateValue = document.querySelector("input[name='endDate']").value;
 
-  const startDate = startDateValue ? new Date(startDateValue) : null;
-  const endDate = endDateValue ? new Date(endDateValue) : null;
+  const filteredJobs = jobsData.filter((job) => {
+    const titleMatch = job.title.toLowerCase().includes(keyword);
+    const createdDate = new Date(job.createdAt);
+    let dateInRange = true;
 
-  const rows = document.querySelectorAll("#jobTableBody tr");
-
-  let visibleCount = 0;
-
-  rows.forEach((row) => {
-    const dateCell = row.cells[4];
-    if (dateCell) {
-      const dateText = dateCell.textContent.split(" ")[0]; // Lấy phần ngày: "dd/MM/yyyy"
-      const [day, month, year] = dateText.split("/");
-      const jobDate = new Date(`${year}-${month}-${day}`);
-
-      let isInRange = true;
-
-      if (startDate && jobDate < startDate) isInRange = false;
-      if (endDate && jobDate > endDate) isInRange = false;
-
-      if (isInRange) {
-        row.style.display = "";
-        visibleCount++;
-      } else {
-        row.style.display = "none";
-      }
+    if (startDateValue) {
+      const startDate = new Date(startDateValue);
+      if (createdDate < startDate) dateInRange = false;
     }
+
+    if (endDateValue) {
+      const endDate = new Date(endDateValue);
+      endDate.setDate(endDate.getDate() + 1);
+      if (createdDate >= endDate) dateInRange = false;
+    }
+
+    return titleMatch && dateInRange;
   });
 
-  // Nếu không còn job nào hiển thị thì thêm dòng thông báo
-  const noJobRow = document.getElementById("noJobRow");
-  if (visibleCount === 0) {
-    if (!noJobRow) {
-      const tr = document.createElement("tr");
-      tr.id = "noJobRow";
-      tr.innerHTML = `<td colspan="6">Không có công việc nào.</td>`;
-      document.getElementById("jobTableBody").appendChild(tr);
-    }
-  } else {
-    if (noJobRow) noJobRow.remove();
-  }
+  renderJobs(filteredJobs);
 }
-
-

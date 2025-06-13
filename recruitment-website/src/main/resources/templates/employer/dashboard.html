@@ -1,88 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalentHub - Recruiter Dashboard</title>
+    <title>TalentHub - Bảng điều khiển Nhà tuyển dụng</title>
     <link rel="stylesheet" th:href="@{/css/employer/styles.css}">
 </head>
 <body>
     <div class="container">
         <div th:replace="~{employer/fragments/header :: header}"></div>
         <div th:replace="~{employer/fragments/nav :: nav}"></div>
-
-        <!-- Dashboard Content -->
+<!-- Dashboard Content -->
         <div class="content">
-            <h2>Dashboard Overview</h2>
+            <h2>Tổng quan</h2>
             <!-- Stats Grid -->
-            <div class="stat-card">
-                <h3 id="totalJobs" th:text="${totalJobs}">0</h3>
-                <p>Total Jobs Posted</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="totalCandidates" th:text="${totalCandidates}">0</h3>
-                <p>Total Candidates</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="activeJobs" th:text="${activeJobs}">0</h3>
-                <p>Active Jobs</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="totalJobs">0</h3>
+                    <p>Tổng số việc làm đã đăng</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalCandidates">0</h3>
+                    <p>Tổng số ứng viên</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="activeJobs">0</h3>
+                    <p>Việc làm đang hoạt động</p>
+                </div>
             </div>
             
             <!-- Recent Jobs Section -->
-            <h3>Recent Job Postings</h3>
+            <h3>Tin tuyển dụng gần đây</h3>
             <div id="recent-jobs">
-                <div th:if="${recentJobs == null or recentJobs.isEmpty()}">
+                <div>
                     <p>Chưa có tin tuyển dụng nào.</p>
                 </div>
-                <div class="job-card" th:each="job : ${recentJobs}">
-                    <h3 th:text="${job.title}">Job Title</h3>
+                <div class="job-card">
+                    <h3>Tiêu đề công việc</h3>
                     <div class="job-meta">
-                        <span th:text="'🏢 ' + ${job.employer.companyName}">Company</span>
-                        <span th:text="'📍 ' + ${job.address}">Location</span>
-                        <span th:text="'💼 ' + ${job.employmentType}">Type</span>
-                        <span th:text="'💰 ' + ${job.salary}">Salary</span>
-                        <span th:if="${job.status == 'URGENT'}" style="background: #f59e0b; color: white;">⚡ Khá gấp</span>
+                        <span>🏢 Công ty</span>
+                        <span>📍 Địa điểm</span>
+                        <span>💼 Loại hình công việc</span>
+                        <span>💰 Lương</span>
+                        <span style="background: #f59e0b; color: white;">⚡ Khá gấp</span>
                     </div>
-                    <div class="candidate-count" th:text="${job.applicationCount} + ' candidates applied'">0 candidates applied</div>
+                    <div class="candidate-count">0 ứng viên đã ứng tuyển</div>
                     <div class="job-actions">
-                        <a th:href="@{'/job-details/' + ${job.id}}" class="btn btn-secondary">👥 View Details</a>
-                        <a th:href="@{'/edit-job/' + ${job.id}}" class="btn">✏️ Edit</a>
+                        <a href="/job-details/1" class="btn btn-secondary">👥 Xem chi tiết</a>
+                        <a href="/edit-job/1" class="btn">✏️ Chỉnh sửa</a>
                     </div>
                 </div>
             </div>
 
             <!-- Pagination Controls -->
             <div id="pagination"></div>
-
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <h3>Quick Actions</h3>
-                <div class="actions-grid">
-                    <a th:href="@{/post-job}" class="action-card">
-                        <div class="action-icon">📝</div>
-                        <h4>Post New Job</h4>
-                        <p>Create a new job posting</p>
-                    </a>
-                    <a th:href="@{/post-job-vn}" class="action-card">
-                        <div class="action-icon">🇻🇳</div>
-                        <h4>Đăng tuyển VN</h4>
-                        <p>Tạo tin tuyển dụng tiếng Việt</p>
-                    </a>
-                    <a th:href="@{/candidates}" class="action-card">
-                        <div class="action-icon">👥</div>
-                        <h4>View All Candidates</h4>
-                        <p>Browse candidate profiles</p>
-                    </a>
-                    <a th:href="@{/statistics}" class="action-card">
-                        <div class="action-icon">📈</div>
-                        <h4>View Statistics</h4>
-                        <p>Analyze recruitment data</p>
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
-    <script th:src="@{/js/employer/dashboard.js}"></script>
-    <script th:src="@{/js/employer/header.js}"></script>
+    <script src="/js/employer/dashboard.js"></script>
+    <script src="/js/employer/header.js"></script>
 </body>
 </html>

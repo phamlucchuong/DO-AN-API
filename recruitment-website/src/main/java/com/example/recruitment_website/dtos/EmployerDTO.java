@@ -3,7 +3,6 @@ package com.example.recruitment_website.dtos;
 import java.time.LocalDate;
 import java.util.Date;
 
-import com.example.recruitment_website.entities.EmployeeEntity;
 import com.example.recruitment_website.entities.EmployerEntity;
 
 public class EmployerDTO {

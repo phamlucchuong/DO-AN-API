@@ -1,44 +1,98 @@
-let employersData = []; // Biến lưu toàn bộ dữ liệu
+let employersData = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchEmployers();
 
-  // Nút "Lọc"
-  document.querySelector(".action-button").addEventListener("click", () => {
-    applyFilters();
-  });
+  // Filter button
+  const filterButton = document.getElementById("filterButton");
+  if (filterButton) {
+    filterButton.addEventListener("click", () => {
+      applyFilters();
+    });
+  }
 
-  // Tìm kiếm tên realtime
-  const searchInput = document.querySelector(".search-bar");
-  searchInput.addEventListener("keyup", () => {
-    applyFilters();
-  });
+  // Real-time search
+  const searchInput = document.getElementById("employerSearch");
+  if (searchInput) {
+    searchInput.addEventListener("keyup", () => {
+      applyFilters();
+    });
+  }
+
+  // Status filter
+  const statusFilter = document.getElementById("statusFilter");
+  if (statusFilter) {
+    statusFilter.addEventListener("change", () => {
+      applyFilters();
+    });
+  }
+
+  // Pagination buttons
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  if (prevBtn) prevBtn.addEventListener("click", prevPage);
+  if (nextBtn) nextBtn.addEventListener("click", nextPage);
 });
 
-async function fetchEmployers() {
+let currentPage = 0;
+const pageSize = 10;
+let totalPages = 0;
+
+async function fetchEmployers(page = 0) {
   try {
-    const response = await fetch("/api/employer/get");
+    const response = await fetch(`/api/employer/get?page=${page}&size=${pageSize}`);
     if (!response.ok) {
       throw new Error("Lỗi khi tải dữ liệu employers!");
     }
 
-    const employers = await response.json();
+    const data = await response.json();
+    const employers = data.content;
+    console.log(data);
 
-    // Sắp xếp employers:
+    // Sort employers
     employers.sort((a, b) => {
-      // Nếu cả 2 cùng trạng thái
       if (a.isApproved === b.isApproved) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       }
-      // isApproved true lên trước
       return a.isApproved ? 1 : -1;
     });
 
-    employersData = employers; // Lưu lại vào biến toàn cục
-    renderEmployers(employersData);
+    employersData = employers;
+    totalPages = data.totalPages;
+    currentPage = data.currentPage;
+
+    renderEmployers(employers);
+    updatePaginationControls();
   } catch (error) {
     console.error("Lỗi khi fetch employers:", error);
   }
+}
+
+function nextPage() {
+  if (currentPage < totalPages - 1) {
+    fetchEmployers(currentPage + 1);
+  }
+}
+
+function prevPage() {
+  if (currentPage > 0) {
+    fetchEmployers(currentPage - 1);
+  }
+}
+
+function updatePaginationControls() {
+  const currentPageElement = document.getElementById("currentPage");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  if (!currentPageElement || !prevBtn || !nextBtn) {
+    console.error("One or more pagination elements (currentPage, prevBtn, nextBtn) not found in the DOM.");
+    return;
+  }
+
+  currentPageElement.textContent = `Trang ${currentPage + 1} / ${totalPages}`;
+  prevBtn.disabled = currentPage === 0;
+  nextBtn.disabled = currentPage >= totalPages - 1;
 }
 
 function renderEmployers(employers) {
@@ -91,6 +145,9 @@ function renderEmployers(employers) {
                 <i class="fas fa-check-circle"></i>
               </button>`
         }
+        <button class="action-icon delete-btn" data-id="${employer.uid}">
+          <i class="fas fa-trash"></i>
+        </button>
       </td>
     `;
 
@@ -106,7 +163,7 @@ function renderEmployers(employers) {
       });
   });
 
-  // Gán sự kiện cho nút duyệt
+  // Approve button event listeners
   document.querySelectorAll(".approve-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.getAttribute("data-id");
@@ -129,12 +186,11 @@ function renderEmployers(employers) {
     });
   });
 
-  // Gán sự kiện cho nút xem chi tiết
+  // Detail button event listeners
   document.querySelectorAll(".detail-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const id = btn.getAttribute("data-id");
 
-      // Gọi API lấy thông tin employer
       fetch(`/api/employer/profile?uid=${id}`)
         .then((response) => {
           if (!response.ok) {
@@ -144,7 +200,6 @@ function renderEmployers(employers) {
         })
         .then((data) => {
           console.log(data);
-          // Đổ dữ liệu vào các phần tử trong overlay
           document.getElementById("profile-companyName").innerText = data.companyName || "N/A";
           document.getElementById("profile-email").innerText = data.account?.email || "N/A";
           document.getElementById("profile-companyAddress").innerText = data.companyAddress || "N/A";
@@ -154,14 +209,19 @@ function renderEmployers(employers) {
           document.getElementById("profile-industry").innerText = data.industry || "N/A";
           document.getElementById("profile-companySize").innerText = data.companySize || "N/A";
           document.getElementById("profile-taxCode").innerText = data.taxCode || "N/A";
-          document.getElementById("profile-foundedDate").innerText = data.foundedDate ? formatDate(new Date(data.foundedDate)) : "N/A";
+          document.getElementById("profile-foundedDate").innerText = data.foundedDate
+            ? formatDate(new Date(data.foundedDate))
+            : "N/A";
           document.getElementById("profile-status").innerText = data.status || "N/A";
-          document.getElementById("profile-createdAt").innerText = data.createdAt ? formatDateTime(new Date(data.createdAt)) : "N/A";
-          document.getElementById("profile-updatedAt").innerText = data.updatedAt ? formatDateTime(new Date(data.updatedAt)) : "N/A";
+          document.getElementById("profile-createdAt").innerText = data.createdAt
+            ? formatDateTime(new Date(data.createdAt))
+            : "N/A";
+          document.getElementById("profile-updatedAt").innerText = data.updatedAt
+            ? formatDateTime(new Date(data.updatedAt))
+            : "N/A";
           document.getElementById("profile-companyDescription").innerText = data.companyDescription || "N/A";
 
-          // Xử lý logo công ty
-          const logoImg = document.querySelector("#employer-profile-overlay img");
+          const logoImg = document.getElementById("profile-companyLogo");
           if (data.companyLogo && logoImg) {
             logoImg.src = data.companyLogo;
             logoImg.style.display = "block";
@@ -169,7 +229,6 @@ function renderEmployers(employers) {
             logoImg.style.display = "none";
           }
 
-          // Hiển thị overlay
           document.getElementById("employer-profile-overlay").style.display = "flex";
         })
         .catch((error) => {
@@ -178,65 +237,87 @@ function renderEmployers(employers) {
         });
     });
   });
+
+  // Delete button event listeners
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-id");
+      if (confirm("Bạn có chắc muốn xóa nhà tuyển dụng này? Hành động này không thể hoàn tác.")) {
+        try {
+          const response = await fetch(`/api/employer/delete/${id}`, {
+            method: "DELETE",
+          });
+          const result = await response.json();
+
+          if (result.success) {
+            alert("Xóa thành công!");
+            fetchEmployers(currentPage); // Refresh the current page
+          } else {
+            alert("Có lỗi: " + result.message);
+          }
+        } catch (err) {
+          console.error("Lỗi xóa employer:", err);
+          alert("Có lỗi xảy ra khi xóa.");
+        }
+      }
+    });
+  });
 }
 
-// Hàm định dạng ngày (giả định đã có, nhưng đảm bảo định dạng dd/MM/yyyy)
 function formatDate(date) {
   if (!date) return "N/A";
   const d = new Date(date);
   return `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()}`;
 }
 
-// Hàm định dạng ngày giờ (dd/MM/yyyy HH:mm)
 function formatDateTime(date) {
   if (!date) return "N/A";
   const d = new Date(date);
   return `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
 }
 
-// Sự kiện đóng overlay
-document.getElementById("close-profile").addEventListener("click", () => {
-  document.getElementById("employer-profile-overlay").style.display = "none";
-});
-
-
-function formatDate(isoString) {
-  const date = new Date(isoString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
+const closeProfileBtn = document.getElementById("close-profile");
+if (closeProfileBtn) {
+  closeProfileBtn.addEventListener("click", () => {
+    document.getElementById("employer-profile-overlay").style.display = "none";
+  });
 }
 
-// Hàm lọc theo cả tên và ngày (client-side)
 function applyFilters() {
-  const keyword = document.querySelector(".search-bar").value.toLowerCase();
-  const startDateValue = document.querySelector(
-    "input[name='startDate']"
-  ).value;
+  const keyword = document.getElementById("employerSearch").value.toLowerCase();
+  const statusFilter = document.getElementById("statusFilter").value;
+  const startDateValue = document.querySelector("input[name='startDate']").value;
   const endDateValue = document.querySelector("input[name='endDate']").value;
 
   const filteredEmployers = employersData.filter((employer) => {
-    const nameMatch = employer.companyName.toLowerCase().includes(keyword);
+    const nameMatch = (employer.companyName || "").toLowerCase().includes(keyword);
+
+    let statusMatch = true;
+    if (statusFilter === "approved") {
+      statusMatch = employer.isApproved === true;
+    } else if (statusFilter === "not-approved") {
+      statusMatch = employer.isApproved === false;
+    }
 
     const createdDate = new Date(employer.createdAt);
     let dateInRange = true;
 
     if (startDateValue) {
       const startDate = new Date(startDateValue);
-      if (createdDate < startDate) dateInRange = false;
+      if (createdDate < startDate) {
+        dateInRange = false;
+      }
     }
 
     if (endDateValue) {
       const endDate = new Date(endDateValue);
       endDate.setDate(endDate.getDate() + 1);
-      if (createdDate >= endDate) dateInRange = false;
+      if (createdDate >= endDate) {
+        dateInRange = false;
+      }
     }
 
-    return nameMatch && dateInRange;
+    return nameMatch && statusMatch && dateInRange;
   });
 
   renderEmployers(filteredEmployers);

@@ -69,7 +69,7 @@ document.getElementById('reset-pwd').addEventListener('click', () => {
     }
 
     try {
-        forgotPassword(email);
+        forgotPassword(email);  
         alert('Đã gửi email đặt lại mật khẩu!');
         backToLogin();
     } catch (error) {

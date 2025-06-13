@@ -8,6 +8,28 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/admin/jobsManagement.css}">
+    <style>
+        .pagination-controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pagination-controls button {
+            padding: 8px 16px;
+            margin: 0 10px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .pagination-controls button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .pagination-controls span {
+            font-size: 16px;
+            margin: 0 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,15 +58,9 @@
                 <div class="management-header">
                     <h3>Danh sách công việc</h3>
                     <div class="management-actions">
-                        <input type="text" placeholder="Tìm kiếm công việc..." class="search-bar">
-                        <!-- <a href="/admin/jobs-management/new" class="action-button">
-                            <i class="fas fa-plus"></i> Thêm Job Mới
-                        </a> -->
-                        <input type="date" name="startDate" th:value="${startDate}" class="date-filter">
-
-                        <!-- Đến ngày -->
-                        <input type="date" name="endDate" th:value="${endDate}" class="date-filter">
-
+                        <input type="text" placeholder="Tìm kiếm công việc..." class="search-bar" id="jobSearch">
+                        <input type="date" name="startDate" class="date-filter">
+                        <input type="date" name="endDate" class="date-filter">
                         <button id="filterButton" type="button" class="action-button">
                             <i class="fas fa-filter"></i> Lọc
                         </button>
@@ -64,27 +80,14 @@
                             </tr>
                         </thead>
                         <tbody id="jobTableBody">
-                            <tr th:each="job : ${jobs}">
-                                <td th:text="${job.id}">1</td>
-                                <td th:text="${job.title}">Frontend Developer</td>
-                                <td th:text="${job.employer.name}">Tech Company ABC</td>
-                                <td>
-                                    <span th:class="${job.status == 'ACTIVE'} ? 'status active' : 'status inactive'"
-                                        th:text="${job.status == 'ACTIVE'} ? 'Đang mở' : 'Đã đóng'">Đang mở</span>
-                                </td>
-                                <td th:text="${#dates.format(job.createdDate, 'dd/MM/yyyy')}">02/06/2025</td>
-                                <td>
-                                    <a th:href="@{'/admin/jobs-management/edit/' + ${job.id}}" class="action-icon">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a th:href="@{'/admin/jobs-management/delete/' + ${job.id}}"
-                                        class="action-icon delete">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            <!-- Populated by JavaScript -->
                         </tbody>
                     </table>
+                    <div class="pagination-controls">
+                        <button id="prevBtn" disabled>Trang trước</button>
+                        <span id="currentPage">Trang 1 / 1</span>
+                        <button id="nextBtn">Trang sau</button>
+                    </div>
                 </div>
             </div>
         </main>

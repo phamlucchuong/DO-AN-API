@@ -36,8 +36,8 @@ body {
 
 /* Header */
 .header {
-  background: var(--gray-800);
-  color: white;
+  background: #2d78e2;
+  color: #2d78e2;
   padding: 0;
   position: sticky;
   top: 0;
@@ -46,7 +46,7 @@ body {
 }
 
 .header-main {
-  background: var(--gray-800);
+  background: #2d78e2;
 }
 
 .container {

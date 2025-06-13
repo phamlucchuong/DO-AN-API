@@ -1,8 +1,8 @@
 package com.example.recruitment_website.services;
 
-// package com.example.recruitment_website.services;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,12 +11,16 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.recruitment_website.dtos.JobDTO;
 import com.example.recruitment_website.entities.EmployerEntity;
 import com.example.recruitment_website.entities.JobEntity;
+import com.example.recruitment_website.enums.StatusJob;
 import com.example.recruitment_website.mappers.EmployerMapper;
 import com.example.recruitment_website.mappers.JobMapper;
 import com.example.recruitment_website.payloads.JobRequest;
@@ -218,8 +222,45 @@ public class JobService {
         return jobRepository.countJobsByMonthAndYear(month, year);
     }
 
-    public List<JobEntity> getHotJobs() {
-        return jobRepository.findAll();
+    public List<JobDTO> getHotJobs() {
+        List<JobEntity> hotJobs = jobRepository.findTopJobs();
+        List<JobDTO> hotJobsDTO = new ArrayList<>();
+
+        for (JobEntity job : hotJobs) {
+            JobDTO jobDTO = jobMapper.toDTO(job);
+            hotJobsDTO.add(jobDTO);
+        }
+
+        return hotJobsDTO;
     }
 
+
+    public ResponseEntity<?> getJobsByEmployerIdWithoutPagination(String employerId) {
+        try {
+            logger.info("Fetching all jobs for employerId: {}", employerId);
+            List<JobEntity> jobs = jobRepository.findByEmployerUid(employerId);
+            return ResponseEntity.ok(Map.of(
+                    "jobs", jobs,
+                    "totalCount", jobs.size()
+            ));
+        } catch (Exception e) {
+            logger.error("Error fetching jobs: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void updateJobStatusesBasedOnDeadline() {
+        List<JobEntity> jobs = jobRepository.findAll();
+        LocalDate today = LocalDate.now();
+
+        for (JobEntity job : jobs) {
+            if (job.getDeadline() != null && job.getDeadline().isBefore(today)) {
+                job.setStatus(StatusJob.CLOSED);
+            }
+        }
+
+        jobRepository.saveAll(jobs);
+    }
 }

@@ -1,4 +1,3 @@
-
 async function postCv(uid, cvData, file) {
   try {
     const formData = new FormData();
@@ -137,3 +136,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `${Math.floor(diffDays / 30)} tháng trước`;
   }
 });
+
+

@@ -50,26 +50,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Hàm hiển thị thông báo trạng thái (sửa để hỗ trợ cả success và error)
-    function displayStatus(message, isError = false) {
-        if (isError) {
-            const errorElement = document.getElementById("error-message");
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.style.display = "block";
-                setTimeout(() => {
-                    errorElement.style.display = "none";
-                }, 3000); // Ẩn sau 3 giây
-            }
-        } else {
-            const successElement = document.getElementById("success-message");
-            if (successElement) {
-                successElement.textContent = message;
-                successElement.style.display = "block";
-                setTimeout(() => {
-                    successElement.style.display = "none";
-                }, 3000); // Ẩn sau 3 giây
-            }
+    // Hàm hiển thị thông báo trạng thái (chỉ cho success)
+    function displayStatus(message) {
+        const successElement = document.getElementById("success-message");
+        if (successElement) {
+            successElement.textContent = message;
+            successElement.style.display = "block";
+            setTimeout(() => {
+                successElement.style.display = "none";
+            }, 3000); // Ẩn sau 3 giây
         }
     }
 
@@ -89,6 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
             companyLogo: 'companyLogo-error'
         };
 
+        // Xóa tất cả thông báo lỗi trước đó
         Object.values(fieldErrorMap).forEach(id => {
             const element = document.getElementById(id);
             if (element) {
@@ -97,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
+        // Hiển thị lỗi mới cho các trường
         Object.keys(errors).forEach(field => {
             const errorElement = document.getElementById(fieldErrorMap[field]);
             if (errorElement) {
@@ -263,6 +254,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const formData = new FormData(form);
             formData.append("uid", uid);
 
+            // Xóa thông báo trước đó
             document.getElementById("error-message").style.display = "none";
             document.getElementById("success-message").style.display = "none";
             displayFieldErrors({});
@@ -278,22 +270,35 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (!response.ok) {
                     return response.json().then(data => {
                         if (data.errors) {
+                            // Hiển thị lỗi cho từng trường
                             displayFieldErrors(data.errors);
+                        } else if (data.message && data.message.includes('Violation of UNIQUE KEY constraint')) {
+                            // Xử lý lỗi trùng taxCode
+                            displayFieldErrors({ taxCode: 'Sai mã số thuế' });
+                        } else {
+                            // Hiển thị lỗi chung nếu không có lỗi cụ thể
+                            throw new Error(data.message || `Lỗi HTTP: ${response.status}`);
                         }
-                        throw new Error(data.message || `Lỗi HTTP: ${response.status}`);
                     });
                 }
                 return response.json();
             })
             .then(data => {
                 console.log("Cập nhật hồ sơ thành công:", data);
-                displayStatus("Cập nhật hồ sơ thành công!", false);
-                updateProfileView(data.data);
-                setTimeout(switchToViewMode, 2000);
+                // Kiểm tra xem data có thuộc tính data không
+                if (data && data.data) {
+                    displayStatus("Cập nhật hồ sơ thành công!");
+                    updateProfileView(data.data);
+                    setTimeout(switchToViewMode, 2000);
+                } else {
+                    console.error("Dữ liệu trả về không đúng định dạng:", data);
+                    throw new Error("Dữ liệu trả về không đúng định dạng");
+                }
             })
             .catch(error => {
                 console.error("Lỗi khi cập nhật:", error);
-                displayStatus(`Lỗi: ${error.message}`, true);
+                // Hiển thị lỗi chung
+                displayError(`Lỗi: ${error.message}`);
             });
         });
     }

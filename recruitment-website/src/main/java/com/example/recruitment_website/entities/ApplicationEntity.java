@@ -1,9 +1,11 @@
 package com.example.recruitment_website.entities;
 
 import java.time.LocalDate;
+
 import org.hibernate.annotations.GenericGenerator;
 
 import com.example.recruitment_website.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.firebase.database.annotations.NotNull;
 
 import jakarta.persistence.Column;
@@ -15,12 +17,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-    name = "application",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"employee_uid", "job_id"})
+    name = "application"
 )
 public class ApplicationEntity {
     @Id
@@ -33,17 +33,34 @@ public class ApplicationEntity {
 
     private String cvLink;
 
-    @ManyToOne // ✅ sửa lại từ OneToOne -> ManyToOne
+    @ManyToOne 
     @JoinColumn(name = "employee_uid", nullable = false)
+    @JsonIgnoreProperties({"applications", "employee"})
     private EmployeeEntity employee;
 
-    @ManyToOne // ✅ sửa lại từ OneToOne -> ManyToOne
+    @ManyToOne 
     @JoinColumn(name = "job_id", nullable = false)
+    @JsonIgnoreProperties({"applications", "job"})
     private JobEntity job;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private Status status;
+
+
+
+    public ApplicationEntity() {
+    }
+
+    public ApplicationEntity(String id, LocalDate createdDate, String cvLink, EmployeeEntity employee, JobEntity job,
+            Status status) {
+        this.id = id;
+        this.createdDate = createdDate;
+        this.cvLink = cvLink;
+        this.employee = employee;
+        this.job = job;
+        this.status = status;
+    }
 
     public String getId() {
         return id;
