@@ -122,6 +122,37 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  function getTotalJobsByEmployerId(employerId) {
+      const token = localStorage.getItem("idToken");
+
+      if (!token || !employerId) {
+          console.error("Thiếu token hoặc employerId");
+          return Promise.resolve(0);
+      }
+
+      return fetch(`/api/employer/job/getAllByEmployer?employerId=${employerId}`, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+          }
+      })
+          .then((response) => {
+              if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+          })
+          .then((data) => {
+              const totalJobs = data.jobs ? data.jobs.length : 0;
+              console.log(`Tổng số job cho employerId ${employerId}: ${totalJobs}`);
+              return totalJobs;
+          })
+          .catch((error) => {
+              console.error("Lỗi khi lấy tổng số job:", error);
+              return 0;
+          });
+  }
+
   function loadJobs(page) {
     fetch(
       `/api/employer/job/get?employerId=${payload.user_id}&page=${page}&limit=${limit}`,
@@ -148,8 +179,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!data || typeof data !== "object") {
           throw new Error("Dữ liệu API không hợp lệ");
         }
-
+          
         totalJobElement.textContent = data.totalCount || 0;
+        console.log(totalJobElement);
         const activeJobs = data.jobs
           ? data.jobs.filter((job) => normalizeStatus(job.status) === "open")
               .length

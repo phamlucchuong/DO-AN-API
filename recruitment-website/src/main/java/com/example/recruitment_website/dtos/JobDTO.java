@@ -3,6 +3,7 @@ package com.example.recruitment_website.dtos;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.recruitment_website.entities.JobEntity;
 import com.example.recruitment_website.enums.EmploymentType;
 import com.example.recruitment_website.enums.JobLevel;
 import com.example.recruitment_website.enums.StatusJob;
@@ -53,6 +54,23 @@ public class JobDTO {
         this.city = city;
         this.address = address;
         this.workingHours = workingHours;
+    }
+
+    public JobDTO(JobEntity job) {
+        this.id = job.getId();
+        this.employer = new EmployerDTO(job.getEmployer());
+        this.title = job.getTitle();
+        this.salary = job.getSalary();
+        this.experience = job.getExperience();
+        this.description = job.getDescription();
+        this.requirements = job.getRequirements();
+        this.benefits = job.getBenefits();
+        this.deadline = job.getDeadline();
+        this.jobLevel = job.getJobLevel();
+        this.employmentType = job.getEmploymentType();
+        this.city = job.getCity();
+        this.address = job.getAddress();
+        this.workingHours = job.getWorkingHours();
     }
 
     public Integer getId() {

@@ -4,8 +4,13 @@ import java.time.LocalDate;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.example.recruitment_website.enums.Status;
+import com.google.firebase.database.annotations.NotNull;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -27,23 +32,17 @@ public class ApplicationEntity {
 
     private String cvLink;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_uid")
+    @ManyToOne // ✅ sửa lại từ OneToOne -> ManyToOne
+    @JoinColumn(name = "employee_uid", nullable = false)
     private EmployeeEntity employee;
 
-    @ManyToOne
-    @JoinColumn(name = "job_id")
+    @ManyToOne // ✅ sửa lại từ OneToOne -> ManyToOne
+    @JoinColumn(name = "job_id", nullable = false)
     private JobEntity job;
 
-    public ApplicationEntity() {
-    }
-
-    public ApplicationEntity(LocalDate createdDate, String cvLink, EmployeeEntity employee, JobEntity job) {
-        this.createdDate = createdDate;
-        this.cvLink = cvLink;
-        this.employee = employee;
-        this.job = job;
-    }
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public String getId() {
         return id;
@@ -77,11 +76,23 @@ public class ApplicationEntity {
         this.employee = employee;
     }
 
+    public JobEntity getJob() {
+        return job;
+    }
+
     public void setJob(JobEntity job) {
         this.job = job;
     }
 
-    public JobEntity getJob() {
-        return job;
+    public Status getStatus() {
+        return status;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    // constructor, getter, setter không đổi
+
+    
 }

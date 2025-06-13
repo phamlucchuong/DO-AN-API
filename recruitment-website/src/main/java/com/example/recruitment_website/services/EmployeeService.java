@@ -21,6 +21,7 @@ import com.example.recruitment_website.entities.LanguageEntity;
 import com.example.recruitment_website.entities.SkillEntity;
 import com.example.recruitment_website.entities.WorkExperienceEntity;
 import com.example.recruitment_website.repositories.AccountRepository;
+import com.example.recruitment_website.repositories.ApplicationRepository;
 import com.example.recruitment_website.repositories.EducationRepository;
 import com.example.recruitment_website.repositories.EmployeeRepository;
 import com.example.recruitment_website.repositories.LanguageRepository;
@@ -32,6 +33,9 @@ import jakarta.persistence.PersistenceContext;
 
 @Service
 public class EmployeeService {
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @Autowired
     private LanguageRepository languageRepository;
@@ -175,8 +179,9 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
 
         WorkExperienceEntity experience = new WorkExperienceEntity(dto);
-        
-        if(workExperienceRepository.existsByRole(dto.getRole())) return;
+
+        if (workExperienceRepository.existsByRole(dto.getRole()))
+            return;
 
         experience.setEmployee(employee);
 
@@ -200,8 +205,6 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
-    
-
     // endregion
 
     public List<EducationDTO> getEducations(String uid) {
@@ -217,7 +220,8 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
 
         EducationEntity education = new EducationEntity(dto);
-        if(educationRepository.existsByMajor(dto.getMajor())) return;
+        if (educationRepository.existsByMajor(dto.getMajor()))
+            return;
 
         education.setEmployee(employee);
 
@@ -324,7 +328,22 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
-    
+    @Transactional
+    public void deleteEmployee(String id) {
+        EmployeeEntity employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
+
+        // Xoá tất cả đơn ứng tuyển liên quan
+        applicationRepository.deleteByEmployee(employee);
+
+        employeeRepository.delete(employee);
+    }
+
+    // public EmployerDTO getEmployer(String id) {
+    //     EmployeeEntity employee = employeeRepository.findById(id)
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'getEmployer'");
+    // }
 
     // @Transactional
     // public void postLanguages(String id, LanguageDTO dto) {

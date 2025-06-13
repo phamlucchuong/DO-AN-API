@@ -11,9 +11,8 @@ import com.example.recruitment_website.services.EmployeeService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
@@ -97,7 +96,7 @@ public class EmployeeRestController {
         employeeService.deleteWorkExperience(id, expID);
         return ResponseEntity.ok("Xoas kỹ năng thành công");
     }
-    
+
     @GetMapping("/{id}/education")
     public ResponseEntity<?> getEducation(@PathVariable String id) {
         try {
@@ -107,7 +106,7 @@ public class EmployeeRestController {
             return ResponseEntity.badRequest().body("Lỗi khi lấy thông tin học vấn");
         }
     }
-    
+
     @PostMapping("/{id}/education")
     public ResponseEntity<?> postEducation(@PathVariable String id, @RequestBody EducationDTO dto) {
         employeeService.postEducation(id, dto);
@@ -157,14 +156,24 @@ public class EmployeeRestController {
         employeeService.postLanguages(id, dto);
         return ResponseEntity.ok("Cập nhật ngôn ngữ thành công");
     }
-    
+
     @DeleteMapping("/{id}/language")
     public ResponseEntity<?> deleteLanguages(@PathVariable String id, @RequestParam String languageID) {
         employeeService.deleteLanguages(id, languageID);
         return ResponseEntity.ok("Xoas ngôn ngữ thành công");
     }
 
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<?> deleteEmployee(@PathVariable String id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.ok("Xoas employee thành công");
+    }
 
+    // @GetMapping("/{id}/employer")
+    // public ResponseEntity<?> getEmployer(@PathVariable String id) {
+    //     return employeeService.getEmployer(id);
+    // }
+    
     // Dưới đây là các method có thể dùng sau này (chưa mở):
     /*
      * @GetMapping("/{id}/certifications")
