@@ -1,15 +1,15 @@
 package com.example.recruitment_website.dtos;
-import java.io.ObjectInputFilter.Status;
 import java.time.LocalDate;
 
 import com.example.recruitment_website.entities.JobEntity;
+import com.example.recruitment_website.enums.Status;
 
 public class ApplicationDTO {
 
     private String id;
     private LocalDate createdDate;
     private String cvLink;
-    private String employee_id;
+    private EmployeeDTO employee;
     private JobDTO job;
     private Status status;
 
@@ -19,11 +19,11 @@ public class ApplicationDTO {
 
     
 
-    public ApplicationDTO(String id, LocalDate createdDate, String cvLink, String employee_id, JobEntity job, Status status) {
+    public ApplicationDTO(String id, LocalDate createdDate, String cvLink, EmployeeDTO employee, JobEntity job, Status status) {
         this.id = id;
         this.createdDate = createdDate;
         this.cvLink = cvLink;
-        this.employee_id = employee_id;
+        this.employee = employee;
         this.job = new JobDTO(job);
         this.status = status;
     }
@@ -54,12 +54,12 @@ public class ApplicationDTO {
         this.cvLink = cvLink;
     }
 
-    public String getEmployee() {
-        return employee_id;
+    public EmployeeDTO getEmployee() {
+        return employee;
     }
 
-    public void setEmployee(String employee_id) {
-        this.employee_id = employee_id;
+    public void setEmployee(EmployeeDTO employee) {
+        this.employee = employee;
     }
 
     public JobDTO getJob() {
@@ -70,12 +70,12 @@ public class ApplicationDTO {
         this.job = job;
     }
 
-    public String getEmployee_id() {
-        return employee_id;
+    public EmployeeDTO getEmployee_id() {
+        return employee;
     }
 
-    public void setEmployee_id(String employee_id) {
-        this.employee_id = employee_id;
+    public void setEmployee_id(EmployeeDTO employee) {
+        this.employee = employee;
     }
 
     public Status getStatus() {

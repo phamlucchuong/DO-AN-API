@@ -334,7 +334,7 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên với UID: " + id));
 
         // Xoá tất cả đơn ứng tuyển liên quan
-        applicationRepository.deleteByEmployee(employee);
+        // applicationRepository.deleteByEmployee(employee);
 
         employeeRepository.delete(employee);
     }

@@ -1,3 +1,5 @@
+let applications = [];
+
 
 async function getApplies(uid) {
   try {
@@ -61,7 +63,8 @@ async function renderApplications() {
   const applicationsList = document.getElementById("applicationsList");
   applicationsList.innerHTML = "";
 
-  const applications = await getApplies(localStorage.getItem('uid'));
+  applications = await getApplies(localStorage.getItem('uid'));
+  console.log(localStorage.getItem('uid'));
 
   applications.forEach((app) => {
     const applicationItem = document.createElement("div");
@@ -150,13 +153,13 @@ function formatDate(dateString) {
 }
 
 // Initialize page
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   // Set profile name (replace with actual user data)
   const sidebarName = document.getElementById("sidebarName");
   sidebarName.textContent = "Nguyễn Văn A";
 
   // Render applications
-  renderApplications();
+  await renderApplications();
 
   // Modal elements
   const editCVModal = document.getElementById("editCVModal");

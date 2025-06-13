@@ -1,4 +1,5 @@
 package com.example.recruitment_website.restcontrollers;
+
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +64,7 @@ public class JobRestController {
                     "jobs", jobPage.getContent(),
                     "totalCount", jobPage.getTotalElements(),
                     "totalPages", jobPage.getTotalPages(),
-                    "currentPage", page
-            );
+                    "currentPage", page);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error fetching jobs: {}", e.getMessage());
@@ -132,8 +132,13 @@ public class JobRestController {
     }
 
     @GetMapping("/getHotJobs")
-    public List<JobEntity> getHotJobs() {
-        return jobService.getHotJobs();
+    public ResponseEntity<?> getHotJobs() {
+        List<JobDTO> hotJobs = jobService.getHotJobs();
+        if (!hotJobs.isEmpty()) {
+            return ResponseEntity.ok(hotJobs); 
+        }else {
+            return ResponseEntity.badRequest().body("Không lấy được hot job");
+        }
     }
 
     @GetMapping("/getAllByEmployer")
@@ -152,5 +157,4 @@ public class JobRestController {
         jobService.updateJobStatusesBasedOnDeadline();
         return ResponseEntity.ok("Cập nhật trạng thái công việc thành công.");
     }
-
 }

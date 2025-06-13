@@ -2,6 +2,7 @@ package com.example.recruitment_website.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -221,9 +222,18 @@ public class JobService {
         return jobRepository.countJobsByMonthAndYear(month, year);
     }
 
-    public List<JobEntity> getHotJobs() {
-        return jobRepository.findAll();
+    public List<JobDTO> getHotJobs() {
+        List<JobEntity> hotJobs = jobRepository.findTopJobs();
+        List<JobDTO> hotJobsDTO = new ArrayList<>();
+
+        for (JobEntity job : hotJobs) {
+            JobDTO jobDTO = jobMapper.toDTO(job);
+            hotJobsDTO.add(jobDTO);
+        }
+
+        return hotJobsDTO;
     }
+
 
     public ResponseEntity<?> getJobsByEmployerIdWithoutPagination(String employerId) {
         try {

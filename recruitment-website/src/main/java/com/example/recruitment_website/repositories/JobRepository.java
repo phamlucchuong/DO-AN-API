@@ -30,4 +30,8 @@ public interface JobRepository extends JpaRepository<JobEntity, Integer> {
 
     @Query("SELECT COUNT(j) FROM JobEntity j WHERE j.employmentType = :type")
     int countJobsByEmploymentType(@Param("type") EmploymentType type);
+
+    @Query(value = "SELECT TOP 6 * FROM job ORDER BY created_at DESC", nativeQuery = true)
+    List<JobEntity> findTopJobs();
+
 }

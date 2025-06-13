@@ -34,9 +34,21 @@ public interface ApplicationRepository extends JpaRepository<ApplicationEntity, 
     @Query("SELECT a FROM ApplicationEntity a JOIN FETCH a.job j JOIN FETCH a.employee e WHERE j.employer.id = :employerId AND j.id = :jobId")
     List<ApplicationEntity> findByEmployerIdAndJobId(@Param("employerId") String employerId, @Param("jobId") Integer jobId);
 
-    void deleteByEmployee(EmployeeEntity employee);
+    // void deleteByEmployee(EmployeeEntity employee);
 
     // @Query("SELECT new com.example.recruitment_website.dtos.ApplicationDTO(a.id,  a.createdDate, a.cvLink, a.employee, a.job) FROM ApplicationEntity a WHERE a.employee.uid = :uid")
     // List<ApplicationDTO> findAllById(@Param("uid") String uid);
-    List<ApplicationEntity> findByEmployeeUid(String uid);
+    // List<ApplicationEntity> findByEmployeeUid(String uid);
+
+    // void deleteByEmployee(EmployeeEntity employee);
+
+    // @Query("SELECT a FROM ApplicationEntity a WHERE a.employee.uid = :uid")
+    // @Query("SELECT new com.example.recruitment_website.dtos.ApplicationEntity(a.id, a.createdDate, a.cvLink, a.employee, a.job, a.status) FROM ApplicationEntity a WHERE a.employee.uid = :uid")
+    // List<ApplicationEntity> findByEmployeeUid(@Param("uid") String uid);
+
+    // List<ApplicationEntity> findByEmployeeUid(String uid);
+
+    // @Query("SELECT a FROM ApplicationEntity a JOIN FETCH a.job WHERE a.employee.uid = :uid")
+    // List<ApplicationEntity> findWithJobByEmployeeUid(@Param("uid") String uid);
+
 }
