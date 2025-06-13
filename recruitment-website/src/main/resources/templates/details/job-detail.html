@@ -81,6 +81,18 @@
   <footer class="footer">
     <!-- ... giữ nguyên phần footer ... -->
   </footer>
+  <script>
+     // Lấy tham số id từ URLAdd commentMore actions
+    function getJobIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    // Truyền vào biến toàn cục hoặc xử lý trực tiếp
+    const jobID = getJobIdFromUrl();
+    console.log("Employee ID:", jobID);
+    localStorage.setItem('jobID', jobID);
+  </script>
   <script src="js/details/job-detail.js"></script>
 </body>
 

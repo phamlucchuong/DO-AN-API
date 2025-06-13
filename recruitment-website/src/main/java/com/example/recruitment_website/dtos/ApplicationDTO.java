@@ -9,7 +9,7 @@ public class ApplicationDTO {
     private String id;
     private LocalDate createdDate;
     private String cvLink;
-    private EmployeeDTO employee;
+    private String employee_id;
     private JobDTO job;
     private Status status;
 
@@ -19,11 +19,11 @@ public class ApplicationDTO {
 
     
 
-    public ApplicationDTO(String id, LocalDate createdDate, String cvLink, EmployeeDTO employee, JobEntity job, Status status) {
+    public ApplicationDTO(String id, LocalDate createdDate, String cvLink, String employee_id, JobEntity job, Status status) {
         this.id = id;
         this.createdDate = createdDate;
         this.cvLink = cvLink;
-        this.employee = employee;
+        this.employee_id = employee_id;
         this.job = new JobDTO(job);
         this.status = status;
     }
@@ -54,12 +54,12 @@ public class ApplicationDTO {
         this.cvLink = cvLink;
     }
 
-    public EmployeeDTO getEmployee() {
-        return employee;
+    public String getEmployee_id() {
+        return employee_id;
     }
 
-    public void setEmployee(EmployeeDTO employee) {
-        this.employee = employee;
+    public void setEmployee_uid(String employee_id) {
+        this.employee_id = employee_id;
     }
 
     public JobDTO getJob() {
@@ -68,14 +68,6 @@ public class ApplicationDTO {
 
     public void setJob(JobDTO job) {
         this.job = job;
-    }
-
-    public EmployeeDTO getEmployee_id() {
-        return employee;
-    }
-
-    public void setEmployee_id(EmployeeDTO employee) {
-        this.employee = employee;
     }
 
     public Status getStatus() {
