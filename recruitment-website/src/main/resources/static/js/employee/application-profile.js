@@ -22,39 +22,42 @@ async function getApplies(uid) {
 
 async function putApplies(uid, cvLink) {
   try {
-    const response = await fetch(`/api/application/${uid}/list`, {
+    const formData = new FormData();
+    formData.append("cvLink", cvLink); // file pdf
+
+    const response = await fetch(`/api/application/${uid}/update-cv`, {
       method: 'PUT',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(cvLink),
+      body: formData,
     });
 
     if (!response.ok) {
-      console.log("loi khi lay apply");
+      console.log("loi khi cap nhat cv");
       return;
     }
-
+    console.log("cap nhat cv thanh cong");
 
   } catch (error) {
-    console.error("loi khi lay apply", error);
+    console.error("loi khi cap nhat cv", error);
   }
 }
 
-async function deleteApplies(uid) {
+// ✅ Fixed: Changed to use application ID instead of user ID
+async function deleteApplies(applicationId) {
   try {
-    const response = await fetch(`/api/application/${uid}/list`, {
+    const response = await fetch(`/api/application/${applicationId}/delete`, {
       method: 'DELETE',
     });
 
     if (!response.ok) {
       console.log("loi khi xoa apply");
-      return;
+      return false;
     }
 
+    return true;
 
   } catch (error) {
     console.error("loi khi xoa apply", error);
+    return false;
   }
 }
 
@@ -66,7 +69,7 @@ async function renderApplications() {
   applications = await getApplies(localStorage.getItem('uid'));
   console.log(localStorage.getItem('uid'));
 
-  applications.forEach((app) => {
+  applications.forEach(app => {
     const applicationItem = document.createElement("div");
     applicationItem.className = "application-item";
 
@@ -93,7 +96,7 @@ async function renderApplications() {
       case 'CANCEL':
         color = 'Yellow';
         break;
-      case 'REFUSE':
+      case 'REFUSED':
         color = 'Red';
         break;
       case 'PENDING':
@@ -123,10 +126,38 @@ async function renderApplications() {
       deleteButton.innerHTML = '<i class="fas fa-trash"></i> Xóa CV';
       deleteButton.dataset.appId = app.id;
 
+      // ✅ Debug: Add console log to check if buttons are created
+      console.log("Created buttons for app ID:", app.id);
+
+      // ✅ Add event listeners directly when creating buttons
+      editButton.addEventListener("click", (e) => {
+        console.log("Edit button clicked for app:", app.id);
+        window.currentAppId = app.id;
+        const editCVModal = document.getElementById("editCVModal");
+        if (editCVModal) {
+          editCVModal.style.display = "flex";
+        }
+      });
+
+      deleteButton.addEventListener("click", (e) => {
+        console.log("Delete button clicked for app:", app.id);
+        window.currentAppId = app.id;
+        const deleteCVModal = document.getElementById("deleteCVModal");
+        const deleteJobTitle = document.getElementById("deleteJobTitle");
+        const deleteCompany = document.getElementById("deleteCompany");
+
+        if (deleteCVModal && deleteJobTitle && deleteCompany) {
+          deleteJobTitle.textContent = app.job.title;
+          deleteCompany.textContent = app.job.employer.companyName;
+          deleteCVModal.style.display = "flex";
+        } else {
+          console.error("Modal elements not found!");
+        }
+      });
+
       actions.appendChild(editButton);
       actions.appendChild(deleteButton);
     }
-
 
     applicationInfo.appendChild(title);
     applicationInfo.appendChild(company);
@@ -171,35 +202,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const closeDeleteModal = document.getElementById("closeDeleteModal");
   const cancelDeleteCV = document.getElementById("cancelDeleteCV");
   const confirmDeleteCV = document.getElementById("confirmDeleteCV");
-  const deleteJobTitle = document.getElementById("deleteJobTitle");
-  const deleteCompany = document.getElementById("deleteCompany");
 
-  let currentAppId = null;
-
-  // Handle Edit CV button clicks
-  document
-    .querySelectorAll(".application-action-btn:not(.delete)")
-    .forEach((button) => {
-      button.addEventListener("click", () => {
-        currentAppId = parseInt(button.dataset.appId);
-        editCVModal.style.display = "flex";
-      });
-    });
-
-  // Handle Delete CV button clicks
-  document
-    .querySelectorAll(".application-action-btn.delete")
-    .forEach((button) => {
-      button.addEventListener("click", () => {
-        currentAppId = parseInt(button.dataset.appId);
-        const app = applications.find((a) => a.id === currentAppId);
-        if (app) {
-          deleteJobTitle.textContent = app.title;
-          deleteCompany.textContent = app.company;
-          deleteCVModal.style.display = "flex";
-        }
-      });
-    });
+  // ✅ Use window.currentAppId to make it globally accessible
+  window.currentAppId = null;
 
   // Close modals
   closeEditModal.addEventListener("click", () => {
@@ -232,29 +237,68 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Handle Save Edit CV
-  saveEditCV.addEventListener("click", () => {
+  saveEditCV.addEventListener("click", async () => {
     const file = editCVUpload.files[0];
     if (file && file.type === "application/pdf") {
-      const app = applications.find((a) => a.id === currentAppId);
+      const app = applications.find((a) => a.id === window.currentAppId);
       if (app) {
-        alert(`Đã cập nhật CV cho vị trí ${app.title} tại ${app.company}.`);
-        editCVModal.style.display = "none";
-        editCVUpload.value = "";
+        try {
+          const result = await putApplies(app.id, file);
+          if (result) {
+            alert(`Đã cập nhật CV cho vị trí ${app.job.title} tại ${app.job.employer.companyName}.`);
+            await renderApplications(); // Re-render the list
+            editCVModal.style.display = "none";
+            editCVUpload.value = "";
+          }
+
+        } catch (error) {
+
+        }
+
       }
     } else {
       alert("Vui lòng tải lên file PDF hợp lệ!");
     }
   });
 
-  // Handle Confirm Delete CV
-  confirmDeleteCV.addEventListener("click", () => {
-    const appIndex = applications.findIndex((a) => a.id === currentAppId);
-    if (appIndex !== -1) {
-      const app = applications[appIndex];
-      alert(`Đã xóa CV cho vị trí ${app.title} tại ${app.company}.`);
-      applications.splice(appIndex, 1);
-      renderApplications();
-      deleteCVModal.style.display = "none";
+  // ✅ Fixed: Handle Confirm Delete CV
+  confirmDeleteCV.addEventListener("click", async () => {
+    console.log("Confirm delete clicked for app ID:", window.currentAppId);
+    const app = applications.find((a) => a.id === window.currentAppId);
+    if (app) {
+      // Show loading state
+      confirmDeleteCV.disabled = true;
+      confirmDeleteCV.textContent = "Đang xóa...";
+
+      try {
+        // Call delete API with application ID
+        console.log("Calling deleteApplies with ID:", app.id);
+        const success = await deleteApplies(app.id);
+
+        if (success) {
+          // Remove from local array and update UI
+          const appIndex = applications.findIndex((a) => a.id === window.currentAppId);
+          if (appIndex !== -1) {
+            applications.splice(appIndex, 1);
+          }
+
+          alert(`Đã xóa CV cho vị trí ${app.job.title} tại ${app.job.employer.companyName}.`);
+          await renderApplications(); // Re-render the list
+          deleteCVModal.style.display = "none";
+        } else {
+          alert("Có lỗi xảy ra khi xóa CV. Vui lòng thử lại!");
+        }
+      } catch (error) {
+        console.error("Error deleting application:", error);
+        alert("Có lỗi xảy ra khi xóa CV. Vui lòng thử lại!");
+      } finally {
+        // Reset button state
+        confirmDeleteCV.disabled = false;
+        confirmDeleteCV.textContent = "Xác nhận";
+      }
+    } else {
+      console.error("App not found for ID:", window.currentAppId);
     }
   });
+
 });
