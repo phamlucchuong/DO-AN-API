@@ -6,16 +6,16 @@ import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 
 import com.example.recruitment_website.dtos.ApplicationApprovalDTO;
-import com.example.recruitment_website.entities.ApplicationApproval;
+import com.example.recruitment_website.entities.ApplicationApprovalEntity;
 import com.example.recruitment_website.entities.LanguageEntity;
 import com.example.recruitment_website.entities.SkillEntity;
 
 @Mapper(componentModel = "spring")
 public interface ApplicationApprovalMapper {
 
-    ApplicationApprovalDTO toDTO(ApplicationApproval entity);
+    ApplicationApprovalDTO toDTO(ApplicationApprovalEntity entity);
 
-    ApplicationApproval toEntity(ApplicationApprovalDTO dto);
+    ApplicationApprovalEntity toEntity(ApplicationApprovalDTO dto);
 
     default List<String> skillEntitiesToStrings(List<SkillEntity> skills) {
         if (skills == null) return null;

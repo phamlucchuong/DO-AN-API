@@ -16,9 +16,9 @@ import com.example.recruitment_website.entities.EmployeeEntity;
 import com.example.recruitment_website.entities.EmployerEntity;
 import com.example.recruitment_website.entities.JobEntity;
 import com.example.recruitment_website.enums.Status;
-import com.example.recruitment_website.entities.ApplicationEntity;
-import com.example.recruitment_website.enums.Status;
 import com.example.recruitment_website.mappers.ApplicationMapper;
+import com.example.recruitment_website.mappers.ApplicationResponseMapper;
+import com.example.recruitment_website.payloads.ApplicationRespone;
 import com.example.recruitment_website.repositories.ApplicationRepository;
 import com.example.recruitment_website.repositories.EmployeeRepository;
 import com.example.recruitment_website.repositories.JobRepository;
@@ -42,6 +42,9 @@ public class ApplicationService {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private ApplicationResponseMapper applicationResponseMapper;
 
     @Transactional
     public void createNewApply(Integer job_id, ApplicationDTO dto, MultipartFile file) {
@@ -75,14 +78,14 @@ public class ApplicationService {
         return applicationRepository.countByEmployerId(employerId);
     }
 
-    public List<ApplicationDTO> getCandidatesByEmployerId(String employerId) {
+    public List<ApplicationRespone> getCandidatesByEmployerId(String employerId) {
         List<ApplicationEntity> applications = applicationRepository.findByJob_Employer_Uid(employerId);
 
-        List<ApplicationDTO> dtos = applications.stream()
-                .map(applicationMapper::toDTO)
+        List<ApplicationRespone> responses = applications.stream()
+                .map(applicationResponseMapper::toResponse)
                 .collect(Collectors.toList());
 
-        return dtos;
+        return responses;
     }
 
     public List<ApplicationEntity> getCandidatesByEmployerIdAndJobId(String employerId, Integer jobId) {

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.recruitment_website.entities.ApplicationApproval;
+import com.example.recruitment_website.entities.ApplicationApprovalEntity;
 import com.example.recruitment_website.entities.ApplicationEntity;
 import com.example.recruitment_website.entities.EmployeeEntity;
 import com.example.recruitment_website.entities.EmployerEntity;
@@ -29,7 +29,7 @@ public class ApplicationApprovalService {
     @Autowired
     private EmployerRepository employerRepository;
 
-    public ApplicationApproval addApproval(String applicationId, String employerId, String employeeId, LocalDateTime approvedDate) {
+    public ApplicationApprovalEntity addApproval(String applicationId, String employerId, String employeeId, LocalDateTime approvedDate) {
         // Tìm application
         ApplicationEntity application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy Application với id: " + applicationId));
@@ -43,7 +43,7 @@ public class ApplicationApprovalService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy Employer với id: " + employerId));
 
         // Tạo mới bản ghi ApplicationApproval
-        ApplicationApproval approval = new ApplicationApproval();
+        ApplicationApprovalEntity approval = new ApplicationApprovalEntity();
         approval.setApprovedDate(approvedDate != null ? approvedDate : LocalDateTime.now());
         approval.setApplication(application);
         approval.setEmployee(employee);

@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "application_approval")
-public class ApplicationApproval {
+public class ApplicationApprovalEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,10 +36,10 @@ public class ApplicationApproval {
     @JoinColumn(name = "application_id", nullable = false)
     private ApplicationEntity application;
 
-    public ApplicationApproval() {
+    public ApplicationApprovalEntity() {
     }
 
-    public ApplicationApproval(LocalDateTime approvedDate, EmployeeEntity employee, EmployerEntity employer, ApplicationEntity application) {
+    public ApplicationApprovalEntity(LocalDateTime approvedDate, EmployeeEntity employee, EmployerEntity employer, ApplicationEntity application) {
         this.approvedDate = approvedDate;
         this.employee = employee;
         this.employer = employer;

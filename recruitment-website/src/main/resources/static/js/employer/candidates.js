@@ -36,29 +36,55 @@ document.addEventListener("DOMContentLoaded", function () {
       row.setAttribute("data-candidate-id", candidate.id);
 
       row.innerHTML = `
-                <div class="table-cell font-semibold text-gray-700">${candidate.employee.name}</div>
-                <div class="table-cell">
-                    <a href="mailto:${candidate.email}" class="text-primary-blue hover:text-light-blue">${candidate.employee.email}</a>
-                </div>
-                <div class="table-cell">
-                    <a href="${candidate.cvLink}" class="cv-link text-primary-blue hover:text-light-blue underline" target="_blank">Xem CV</a>
-                </div>
-                <div class="table-cell text-gray-700">${candidate.job.title}</div>
-                <div class="table-cell">
-                      ${candidate.status}
-                </div>
-                <div class="table-cell">
-                <button class="approve-btn px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600 transition" data-id="${candidate.id}">
-                    Duyệt
-                  </button>
-                </div>
-            `;
+  <div class="table-cell font-semibold text-gray-700">${
+    candidate.employee.name
+  }</div>
+  <div class="table-cell">
+    <a href="mailto:${
+      candidate.email
+    }" class="text-primary-blue hover:text-light-blue">${
+        candidate.employee.email
+      }</a>
+  </div>
+  <div class="table-cell">
+    <a href="${
+      candidate.cvLink
+    }" class="cv-link text-primary-blue hover:text-light-blue underline" target="_blank">Xem CV</a>
+  </div>
+  <div class="table-cell text-gray-700">${candidate.job.title}</div>
+  <div class="table-cell">${candidate.status}</div>
+  <div class="table-cell flex gap-2 flex-wrap">
+    ${
+      candidate.status === "PENDING"
+        ? `
+          <button class="approve-btn px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600 transition" data-id="${candidate.id}">Duyệt</button>
+          <button class="refuse-btn px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600 transition" data-id="${candidate.id}">Từ chối</button>
+        `
+        : candidate.status === "APPROVED"
+        ? "" // nếu APPROVED thì không hiện gì
+        : candidate.status === "REFUSED"
+        ? "" // nếu REFUSED hoặc CANCEL cũng không hiện gì
+        : ""
+    }
+  </div>
+`;
 
       candidatesTable.appendChild(row);
 
+      // Gán sự kiện Duyệt nếu có nút
       const approveButton = row.querySelector(".approve-btn");
-      approveButton.addEventListener("click", () => {
-        approveCandidate(candidate.id, candidate.employee.uid);
+      if (approveButton) {
+        approveButton.addEventListener("click", () => {
+          approveCandidate(candidate.id, candidate.employee.uid);
+        });
+      }
+
+      // Gán sự kiện Xóa
+      const refuseButton = row.querySelector(".refuse-btn");
+      refuseButton.addEventListener("click", () => {
+        if (confirm("Bạn chắc chắn muốn  ứng viên này?")) {
+          refuseCandidate(candidate.id);
+        }
       });
     });
 
@@ -66,39 +92,57 @@ document.addEventListener("DOMContentLoaded", function () {
     filterCandidates();
   }
 
-function approveCandidate(applicationId, employeeId) {
-  const employerId = localStorage.getItem("uid");
-
-  // Gọi API add ApplicationApproval
-  fetch(
-    `/api/application/approval/add?applicationId=${applicationId}&employerId=${employerId}&employeeId=${employeeId}`,
-    {
-      method: "POST",
-    }
-  )
-    .then((response) => {
-      if (!response.ok) throw new Error("Duyệt thất bại");
-      
-      // Nếu duyệt thành công → tiếp tục set status
-      return fetch(`/api/application/${applicationId}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "APPROVED" }),
+  function refuseCandidate(applicationId) {
+    fetch(`/api/application/${applicationId}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: "REFUSED" })
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Từ chối ứng viên thất bại");
+        alert("Đã từ chối ứng viên!");
+        loadCandidates();
+      })
+      .catch((error) => {
+        console.error("Lỗi khi từ chối ứng viên:", error);
+        alert("Có lỗi khi từ chối ứng viên!");
       });
-    })
-    .then((response) => {
-      if (!response.ok) throw new Error("Cập nhật trạng thái thất bại");
-      alert("Duyệt ứng viên thành công!");
-      loadCandidates();
-    })
-    .catch((error) => {
-      console.error("Lỗi duyệt ứng viên:", error);
-      alert("Có lỗi khi duyệt ứng viên!");
-    });
-}
+  }
 
+  function approveCandidate(applicationId, employeeId) {
+    const employerId = localStorage.getItem("uid");
+
+    // Gọi API add ApplicationApproval
+    fetch(
+      `/api/application/approval/add?applicationId=${applicationId}&employerId=${employerId}&employeeId=${employeeId}`,
+      {
+        method: "POST",
+      }
+    )
+      .then((response) => {
+        if (!response.ok) throw new Error("Duyệt thất bại");
+
+        // Nếu duyệt thành công → tiếp tục set status
+        return fetch(`/api/application/${applicationId}/status`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: "APPROVED" }),
+        });
+      })
+      .then((response) => {
+        if (!response.ok) throw new Error("Cập nhật trạng thái thất bại");
+        alert("Duyệt ứng viên thành công!");
+        loadCandidates();
+      })
+      .catch((error) => {
+        console.error("Lỗi duyệt ứng viên:", error);
+        alert("Có lỗi khi duyệt ứng viên!");
+      });
+  }
 
   // Lọc ứng viên
   function filterCandidates() {

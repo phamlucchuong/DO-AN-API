@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.recruitment_website.dtos.ApplicationDTO;
 import com.example.recruitment_website.entities.ApplicationEntity;
+import com.example.recruitment_website.payloads.ApplicationRespone;
 import com.example.recruitment_website.services.ApplicationService;
 
 @RestController
@@ -41,14 +43,14 @@ public class ApplicationRestController {
         Integer total = applicationService.getTotalCountCandidateByEmployerId(employerId);
         return ResponseEntity.ok(total);
     }
-    
+
     @GetMapping("/employer/{employer_id}/get")
     public ResponseEntity<?> getCandidateByEmployerId(@PathVariable("employer_id") String employerId) {
         try {
-            List<ApplicationDTO> result = applicationService.getCandidatesByEmployerId(employerId);
+            List<ApplicationRespone> result = applicationService.getCandidatesByEmployerId(employerId);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            e.printStackTrace(); // log ra console (hoặc logger nếu có)
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Đã xảy ra lỗi khi lấy danh sách ứng viên: " + e.getMessage());
         }

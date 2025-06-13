@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.recruitment_website.entities.ApplicationApproval;
+import com.example.recruitment_website.entities.ApplicationApprovalEntity;
 import com.example.recruitment_website.services.ApplicationApprovalService;
 
 @RestController
@@ -28,7 +28,7 @@ public class ApplicationApprovalRestController {
             @RequestParam(required = false) LocalDateTime approvedDate) {
 
         try {
-            ApplicationApproval approval = approvalService.addApproval(applicationId, employerId, employeeId, approvedDate);
+            ApplicationApprovalEntity approval = approvalService.addApproval(applicationId, employerId, employeeId, approvedDate);
             return ResponseEntity.ok(approval);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
