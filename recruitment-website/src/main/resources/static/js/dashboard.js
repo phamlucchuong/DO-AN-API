@@ -321,8 +321,6 @@ window.VietnamWorksData = {
 };
 
 
-console.log('dashboard.js loaded');
-
 let chatboxOpen = false;
 
 // Get DOM elements
@@ -332,87 +330,175 @@ const chatboxWindow = document.getElementById('chatboxWindow');
 const chatboxMessages = document.getElementById('chatboxMessages');
 const chatInput = document.getElementById('chatInput');
 const sendButton = document.getElementById('sendButton');
-const quickActions = document.querySelector('.quick-actions');
-
-if (!sendButton) console.error('sendButton not found');
+const scrollToBottom = document.getElementById('scrollToBottom');
+const notification = document.querySelector('.chat-notification');
+const quickActions = document.getElementById('quickActions');
 
 // Toggle chatbox open/close
 function toggleChatbox() {
     chatboxOpen = !chatboxOpen;
+    
     if (chatboxOpen) {
         chatboxWindow.classList.add('show');
+        if (notification) notification.style.display = 'none';
+        // Auto-focus on input when chatbox opens
         setTimeout(() => chatInput.focus(), 100);
     } else {
         chatboxWindow.classList.remove('show');
     }
 }
 
+// Add event listeners
+if (chatToggle) {
+    chatToggle.addEventListener('click', toggleChatbox);
+}
+
+if (chatboxClose) {
+    chatboxClose.addEventListener('click', toggleChatbox);
+}
+
 // Display message in chatbox
 function appendMessage(sender, message, isUser = false) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user-message' : ''}`;
-    messageDiv.innerHTML = `
-        <div class="message-avatar ${isUser ? 'user-avatar' : ''}">${sender}</div>
-        <div class="message-content ${isUser ? 'user-content' : ''}">
-            ${message}
-        </div>
-    `;
+    
+    if (isUser) {
+        // User message: Avatar on left, then message content on right
+        messageDiv.innerHTML = `
+            <div class="message-avatar user-avatar">Bạn</div>
+            <div class="message-content user-content">
+                ${message}
+            </div>
+        `;
+    } else {
+        // Bot message: Avatar on left, then message content on right
+        messageDiv.innerHTML = `
+            <div class="message-avatar">VW</div>
+            <div class="message-content">
+                ${message}
+            </div>
+        `;
+    }
+    
     chatboxMessages.appendChild(messageDiv);
-    chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+    // Scroll to bottom smoothly
+    setTimeout(() => {
+        chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+    }, 100);
 }
 
 // Send message to webhook
 async function sendMessage() {
-    console.log('sendMessage called');
     const message = chatInput.value.trim();
     if (!message) return;
-
-    if (quickActions) quickActions.style.display = 'none';
+    
+    // Hide quick actions after first user message
+    if (quickActions) {
+        quickActions.style.display = 'none';
+    }
+    
+    // Display user message
     appendMessage('Bạn', message, true);
     chatInput.value = '';
+    
+    // Show typing indicator
     showTypingIndicator();
-
+    
     try {
         const response = await fetch('https://c6fd-2405-4803-c786-ef80-e87b-3be8-3d79-c151.ngrok-free.app/webhook/chat_bot', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({ message })
         });
-        console.log('Response status:', response.status);
-
+        
         const contentType = response.headers.get('content-type') || '';
-        let text = contentType.includes('application/json') ? await response.json() : await response.text();
-        if (typeof text === 'object') text = text.output || text.reply || text.text || JSON.stringify(text);
-
+        let text = '';
+        
+        if (contentType.includes('application/json')) {
+            const data = await response.json();
+            if (typeof data === 'object' && data !== null) {
+                if (data.output) {
+                    text = data.output;
+                } else if (data.reply) {
+                    text = data.reply;
+                } else if (data.text) {
+                    text = data.text;
+                } else if (Array.isArray(data)) {
+                    text = data[0]?.output || data[0]?.reply || data[0]?.text || JSON.stringify(data[0]);
+                } else {
+                    text = JSON.stringify(data);
+                }
+            } else {
+                text = String(data);
+            }
+        } else {
+            text = await response.text();
+        }
+        
+        // Hide typing indicator and show bot response
         hideTypingIndicator();
         appendMessage('VietnamWorks', text.trim() || 'Không có phản hồi từ hệ thống');
+        
     } catch (error) {
         hideTypingIndicator();
-        appendMessage('VietnamWorks', 'Xin lỗi, hệ thống gặp sự cố. Vui lòng thử lại sau.');
+        appendMessage('VietnamWorks', 'Xin lỗi, hiện tại hệ thống đang gặp sự cố. Vui lòng thử lại sau hoặc liên hệ hotline 1900-1512 để được hỗ trợ.');
         console.error('Fetch error:', error);
     }
 }
 
 // Send quick message
 function sendQuickMessage(message) {
-    if (quickActions) quickActions.style.display = 'none';
+    // Hide quick actions
+    if (quickActions) {
+        quickActions.style.display = 'none';
+    }
+    
+    // Display user message
     appendMessage('Bạn', message, true);
+    
+    // Show typing indicator
     showTypingIndicator();
-
-    fetch('https://6515-2405-4803-c786-ef80-58d1-35c8-a4cb-e263.ngrok-free.app/webhook/chat_bot', {
+    
+    // Send to webhook
+    fetch('https://41c0-2405-4803-c786-ef80-d0c3-bac0-9687-b4fe.ngrok-free.app/webhook/chat_bot', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ message })
     })
-    .then(response => response.json())
+    .then(response => {
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+            return response.json();
+        } else {
+            return response.text();
+        }
+    })
     .then(data => {
-        let text = data.output || data.reply || data.text || JSON.stringify(data);
+        let text = '';
+        if (typeof data === 'object' && data !== null) {
+            if (data.output) {
+                text = data.output;
+            } else if (data.reply) {
+                text = data.reply;
+            } else if (data.text) {
+                text = data.text;
+            } else {
+                text = JSON.stringify(data);
+            }
+        } else {
+            text = String(data);
+        }
+        
         hideTypingIndicator();
         appendMessage('VietnamWorks', text.trim() || 'Không có phản hồi từ hệ thống');
     })
     .catch(error => {
         hideTypingIndicator();
-        appendMessage('VietnamWorks', 'Xin lỗi, hệ thống gặp sự cố. Vui lòng thử lại sau.');
+        appendMessage('VietnamWorks', 'Xin lỗi, hiện tại hệ thống đang gặp sự cố. Vui lòng thử lại sau.');
         console.error('Fetch error:', error);
     });
 }
@@ -422,6 +508,27 @@ function handleKeyPress(event) {
     if (event.key === 'Enter') {
         sendMessage();
     }
+}
+
+// Add event listeners
+if (chatInput) {
+    chatInput.addEventListener('keydown', handleKeyPress);
+}
+
+if (sendButton) {
+    sendButton.addEventListener('click', sendMessage);
+}
+
+// Quick actions event listeners
+if (quickActions) {
+    quickActions.addEventListener('click', function(e) {
+        if (e.target.classList.contains('quick-action')) {
+            const message = e.target.getAttribute('data-message');
+            if (message) {
+                sendQuickMessage(message);
+            }
+        }
+    });
 }
 
 // Show typing indicator
@@ -439,18 +546,38 @@ function showTypingIndicator() {
             </div>
         </div>
     `;
+    
     chatboxMessages.appendChild(typingDiv);
-    chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+    // Scroll to bottom smoothly
+    setTimeout(() => {
+        chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+    }, 100);
 }
 
 // Hide typing indicator
 function hideTypingIndicator() {
     const typingIndicator = document.getElementById('typingIndicator');
-    if (typingIndicator) typingIndicator.remove();
+    if (typingIndicator) {
+        typingIndicator.remove();
+    }
 }
 
-// Add event listeners
-if (chatToggle) chatToggle.addEventListener('click', toggleChatbox);
-if (chatboxClose) chatboxClose.addEventListener('click', toggleChatbox);
-if (chatInput) chatInput.addEventListener('keydown', handleKeyPress);
-if (sendButton) sendButton.addEventListener('click', sendMessage);
+// Scroll to bottom functionality
+if (scrollToBottom) {
+    scrollToBottom.addEventListener('click', function() {
+        chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+    });
+}
+
+// Show/hide scroll button based on scroll position
+if (chatboxMessages && scrollToBottom) {
+    chatboxMessages.addEventListener('scroll', function() {
+        const isNearBottom = chatboxMessages.scrollTop + chatboxMessages.clientHeight >= chatboxMessages.scrollHeight - 50;
+        if (isNearBottom) {
+            scrollToBottom.classList.remove('show');
+        } else {
+            scrollToBottom.classList.add('show');
+        }
+    });
+}
+
