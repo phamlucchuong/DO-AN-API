@@ -1,4 +1,5 @@
 package com.example.recruitment_website.restcontrollers;
+
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +64,7 @@ public class JobRestController {
                     "jobs", jobPage.getContent(),
                     "totalCount", jobPage.getTotalElements(),
                     "totalPages", jobPage.getTotalPages(),
-                    "currentPage", page
-            );
+                    "currentPage", page);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error fetching jobs: {}", e.getMessage());
@@ -83,7 +83,6 @@ public class JobRestController {
                     .body(Map.of("message", e.getMessage()));
         }
     }
-
 
     @GetMapping("/{id}/detail")
     public ResponseEntity<?> getJobById(@PathVariable Integer id) {
@@ -123,8 +122,12 @@ public class JobRestController {
     }
 
     @GetMapping("/getHotJobs")
-    public List<JobEntity> getHotJobs() {
-        return jobService.getHotJobs();
+    public ResponseEntity<?> getHotJobs() {
+        List<JobEntity> l = jobService.getHotJobs();
+        if (!l.isEmpty())
+            return ResponseEntity.ok(l);
+        else
+            return ResponseEntity.badRequest().body("khong lay duoc got job");
     }
-    
+
 }

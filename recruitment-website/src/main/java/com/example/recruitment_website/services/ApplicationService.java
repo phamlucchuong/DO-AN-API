@@ -48,7 +48,10 @@ public class ApplicationService {
                 String uploadedCvLink = imageUploadService.uploadPdfToCloudinary(file);
 
                 ApplicationEntity application = new ApplicationEntity();
-                application.setEmployee(employee);
+                // application.setEmployee(employee);
+
+                // if(!employee.getApplications().contains(application))
+                employee.getApplications().add(application);
                 application.setJob(job);
 
                 application.setCvLink(uploadedCvLink); // dùng link từ Cloudinary

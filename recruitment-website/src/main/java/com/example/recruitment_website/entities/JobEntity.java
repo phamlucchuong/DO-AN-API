@@ -9,6 +9,7 @@ import com.example.recruitment_website.enums.EmploymentType;
 import com.example.recruitment_website.enums.JobLevel;
 import com.example.recruitment_website.enums.StatusJob;
 import com.example.recruitment_website.enums.WorkingHours;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

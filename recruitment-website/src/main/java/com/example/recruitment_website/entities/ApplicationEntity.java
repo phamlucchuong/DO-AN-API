@@ -45,6 +45,21 @@ public class ApplicationEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+
+
+    public ApplicationEntity() {
+    }
+
+    public ApplicationEntity(String id, LocalDate createdDate, String cvLink, EmployeeEntity employee, JobEntity job,
+            Status status) {
+        this.id = id;
+        this.createdDate = createdDate;
+        this.cvLink = cvLink;
+        this.employee = employee;
+        this.job = job;
+        this.status = status;
+    }
+
     public String getId() {
         return id;
     }
