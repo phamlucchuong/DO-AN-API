@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         // Giả sử bạn có 1 element HTML với id là totalCandidatesElementGlobal
         console.log(data);
-        totalCandidatesElement.textContent = data || 0;
+        totalCandidatesElement.textContent = data;
       })
       .catch((error) => {
         console.error("Lỗi khi lấy tổng candidate:", error);
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ${urgentTag}
               </div>
               <div class="candidate-count">${
-                job.applicationCount || 0
+                loadTotalCandidates() || 0
               } candidates applied</div>
               <div class="job-actions">
                 <button class="btn btn-secondary" data-job-id="${
@@ -371,9 +371,6 @@ document.addEventListener("DOMContentLoaded", function () {
             )}</p>
             <p><strong>Số lượng tuyển:</strong> ${
               job.numberOfVacancies || 1
-            }</p>
-            <p><strong>Số lượt ứng tuyển:</strong> ${
-              job.applicationCount || 0
             }</p>
             <p><strong>Ngày hết hạn:</strong> ${
               job.deadline || "Không xác định"

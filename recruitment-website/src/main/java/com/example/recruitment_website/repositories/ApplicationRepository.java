@@ -25,8 +25,11 @@ public interface ApplicationRepository extends JpaRepository<ApplicationEntity, 
     @Query("SELECT COUNT(a) FROM ApplicationEntity  a WHERE a.job.employer.uid = :employerId")
     Integer countByEmployerId(@Param("employerId") String employerId);
 
-    @Query("SELECT a FROM ApplicationEntity a WHERE a.job.employer.id = :employerId")
-    List<ApplicationEntity> findByEmployer_Id(@Param("employerId") String employerId);
+    // @Query("SELECT a FROM ApplicationEntity a WHERE a.job.employer.uid = :employerId")
+    // List<ApplicationEntity> findByEmployer_Id(@Param("employerId") String employerId);
+
+    List<ApplicationEntity> findByJob_Employer_Uid(String employerId);
+
 
     @Query("SELECT a FROM ApplicationEntity a JOIN FETCH a.job j JOIN FETCH a.employee e WHERE j.employer.id = :employerId AND j.id = :jobId")
     List<ApplicationEntity> findByEmployeeAndJob(@Param("employeeId") String employeeId, @Param("jobId") Integer jobId);

@@ -51,7 +51,7 @@ public class JobRestController {
         }
     }
 
-    @GetMapping("/get")
+   @GetMapping("/get")
     public ResponseEntity<?> getJobsByEmployerId(
             @RequestParam("employerId") String employerId,
             @RequestParam(name = "page", defaultValue = "1") int page,
@@ -59,19 +59,22 @@ public class JobRestController {
         try {
             log.info("Fetching jobs for employerId: {}, page: {}, limit: {}", employerId, page, limit);
             Pageable pageable = PageRequest.of(page - 1, limit);
-            Page<JobEntity> jobPage = jobRepository.findByEmployerUid(employerId, pageable);
+            Page<JobDTO> jobPage = jobService.getJobsByEmployer(employerId, pageable);
+
             Map<String, Object> response = Map.of(
                     "jobs", jobPage.getContent(),
                     "totalCount", jobPage.getTotalElements(),
                     "totalPages", jobPage.getTotalPages(),
-                    "currentPage", page);
+                    "currentPage", page
+            );
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error fetching jobs: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
         }
     }
-
+    
     @GetMapping("/getAllJobs")
     public ResponseEntity<?> getAllJobs(
             @RequestParam(name = "page", defaultValue = "0") int page,

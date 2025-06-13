@@ -16,6 +16,9 @@ import com.example.recruitment_website.entities.EmployeeEntity;
 import com.example.recruitment_website.entities.EmployerEntity;
 import com.example.recruitment_website.entities.JobEntity;
 import com.example.recruitment_website.enums.Status;
+import com.example.recruitment_website.entities.ApplicationEntity;
+import com.example.recruitment_website.enums.Status;
+import com.example.recruitment_website.mappers.ApplicationMapper;
 import com.example.recruitment_website.repositories.ApplicationRepository;
 import com.example.recruitment_website.repositories.EmployeeRepository;
 import com.example.recruitment_website.repositories.JobRepository;
@@ -24,6 +27,9 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ApplicationService {
+  
+    @Autowired
+    private ApplicationMapper applicationMapper;
 
     @Autowired
     private JobRepository jobRepository;
@@ -44,12 +50,6 @@ public class ApplicationService {
 
         EmployeeEntity employee = employeeRepository.findById(dto.getEmployee_id())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy employee có ID: " + dto.getEmployee_id()));
-
-        // ⚠ Check nếu đã apply job này
-        // if (applicationRepository.findByEmployeeAndJob(employee, job).isPresent()) {
-        // // throw new IllegalStateException("You have already applied for this job.");
-        // return;
-        // }
 
         // ✅ Upload file lên Cloudinary
         String uploadedCvLink = imageUploadService.uploadPdfToCloudinary(file);
@@ -75,21 +75,19 @@ public class ApplicationService {
         return applicationRepository.countByEmployerId(employerId);
     }
 
-    public List<ApplicationEntity> getCandidatesByEmployerId(String employerId) {
-        List<ApplicationEntity> applications = applicationRepository.findByEmployer_Id(employerId);
-        return applications;
+    public List<ApplicationDTO> getCandidatesByEmployerId(String employerId) {
+        List<ApplicationEntity> applications = applicationRepository.findByJob_Employer_Uid(employerId);
+
+        List<ApplicationDTO> dtos = applications.stream()
+                .map(applicationMapper::toDTO)
+                .collect(Collectors.toList());
+
+        return dtos;
     }
 
     public List<ApplicationEntity> getCandidatesByEmployerIdAndJobId(String employerId, Integer jobId) {
         return applicationRepository.findByEmployeeAndJob(employerId, jobId);
     }
-
-    // public List<ApplicationEntity> getApplies(String uid) {
-    // if (!employeeRepository.existsByAccountId(uid)) {
-    // throw new RuntimeException("khong tim thay employee co ID: " + uid);
-    // }
-    // return applicationRepository.findByEmployee_Uid(uid);
-    // }
 
     public List<ApplicationDTO> getApplies(String uid) {
         if (!employeeRepository.existsByAccountId(uid)) {
@@ -141,5 +139,21 @@ public class ApplicationService {
                 .orElseThrow(() -> new RuntimeException("khong tim thay apply"));
 
         applicationRepository.delete(application);
+    }
+
+    public void updateApplicationStatus(String applicationId, String statusValue) {
+        ApplicationEntity application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy ứng tuyển với id: " + applicationId));
+
+        // Kiểm tra nếu statusValue không hợp lệ
+        Status newStatus;
+        try {
+            newStatus = Status.valueOf(statusValue);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Status không hợp lệ: " + statusValue);
+        }
+
+        application.setStatus(newStatus);
+        applicationRepository.save(application);
     }
 }
