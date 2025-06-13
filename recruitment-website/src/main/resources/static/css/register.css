@@ -111,11 +111,13 @@
 
         .form-group {
             flex: 1;
+            
         }
 
         .form-group.full-width {
             flex: none;
             width: 100%;
+          margin-bottom: 20px;
         }
 
         label {
