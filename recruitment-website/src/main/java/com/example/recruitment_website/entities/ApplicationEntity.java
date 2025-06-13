@@ -1,9 +1,11 @@
 package com.example.recruitment_website.entities;
 
 import java.time.LocalDate;
+
 import org.hibernate.annotations.GenericGenerator;
 
 import com.example.recruitment_website.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.firebase.database.annotations.NotNull;
 
 import jakarta.persistence.Column;
@@ -35,10 +37,12 @@ public class ApplicationEntity {
 
     @ManyToOne // ✅ sửa lại từ OneToOne -> ManyToOne
     @JoinColumn(name = "employee_uid", nullable = false)
+    @JsonIgnoreProperties({"applications", "employee"})
     private EmployeeEntity employee;
 
     @ManyToOne // ✅ sửa lại từ OneToOne -> ManyToOne
     @JoinColumn(name = "job_id", nullable = false)
+    @JsonIgnoreProperties({"applications", "job"})
     private JobEntity job;
 
     @NotNull

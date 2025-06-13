@@ -76,130 +76,89 @@ function renderTopCompanies() {
 let hotJobsData = [];
 
 
-// Render Hot Jobs
+async function fetchHotJobs() {
+  // Simulate API call
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(hotJobsData);
+    }, 1000);
+  });
+}
+
 async function renderHotJobs() {
   try {
     const response = await fetch("/api/employer/job/getHotJobs", {
       method: 'GET'
     });
 
-    const job = response.json();
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Failed to fetch jobs: ${response.status}`);
+    }
 
+    const jobs = await response.json();
     const hotJobsGrid = document.getElementById("hotJobsGrid");
 
-    hotJobsGrid.innerHTML =  `
-            <div class="job-card" onclick="window.location.href = \`/job-detail?id=${job.id}\`;">
-              <div class="job-header">
-                <img src="${job.employer.companyLogo}" alt="${job.employer.companyName}" class="company-logo-small">
-                <div class="job-info">
-                  <h3>${job.title}</h3>
-                  <p class="company-name">${job.employer.companyName}</p>
-                </div>
-                <div class="job-badges">
-                  ${job.badgeHtml}
-                </div>
-              </div>
-              <div class="job-details">
-                <div class="job-salary">
-                  <i class="fas fa-money-bill-wave"></i>
-                  <span>${job.salary}</span>
-                </div>
-                <div class="job-location">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>${job.city}</span>
-                </div>
-                <div class="job-experience">
-                  <i class="fas fa-briefcase"></i>
-                  <span>${job.experience}</span>
-                </div>
-              </div>
-              <div class="job-footer">
-                <span class="posted-date">${formatDate(job.createdAt)}</span>
-                <button class="apply-quick-btn" onclick="event.stopPropagation(); openApplyModal(${job.id}, '${job.title}', '${job.employer.companyName}', '${job.employer.companyLogo}', '${job.salary}', '${job.city}', '${job.experience}')">
-                  Ứng tuyển nhanh
-                </button>
-              </div>
-            </div>
-          `;
+    if (!jobs || jobs.length === 0) {
+      hotJobsGrid.innerHTML = '<p>Không có công việc nổi bật.</p>';
+      return;
+    }
 
-          //   let badgeHtml = "";
-          // if (status === "URGENT") {
-          //   badgeHtml = '<span class="badge urgent">Cần gấp</span>';
-          // } else if (status === "OPEN") {
-          //   badgeHtml = '<span class="badge hot">Đang tuyển</span>';
-          // } else if (status === "CLOSED") {
-          //   badgeHtml = '<span class="badge closed">Hết tuyển</span>';
-          // }
-      console.log("Hot jobs loaded:", data);
+    hotJobsGrid.innerHTML = jobs.map(job => {
+      const { id, title, employer, salary, city, experience, createdAt, status } = job;
+      let badgeHtml = "";
+      if (status === "URGENT") {
+        badgeHtml = '<span class="badge urgent">Cần gấp</span>';
+      } else if (status === "OPEN") {
+        badgeHtml = '<span class="badge hot">Đang tuyển</span>';
+      } else if (status === "CLOSED") {
+        badgeHtml = '<span class="badge closed">Hết tuyển</span>';
+      }
+
+      return `
+        <div class="job-card" onclick="window.location.href = '/job-detail?id=${id}'">
+          <div class="job-header">
+            <img src="${employer.companyLogo}" alt="${employer.companyName}" class="company-logo-small">
+            <div class="job-info">
+              <h3>${title}</h3>
+              <p class="company-name">${employer.companyName}</p>
+            </div>
+            <div class="job-badges">
+              ${badgeHtml}
+            </div>
+          </div>
+          <div class="job-details">
+            <div class="job-salary">
+              <i class="fas fa-money-bill-wave"></i>
+              <span>${salary}</span>
+            </div>
+            <div class="job-location">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>${city}</span>
+            </div>
+            <div class="job-experience">
+              <i class="fas fa-briefcase"></i>
+              <span>${experience}</span>
+            </div>
+          </div>
+          <div class="job-footer">
+            <span class="posted-date">${formatDate(createdAt)}</span>
+            <button class="apply-quick-btn" onclick="event.stopPropagation(); openApplyModal(${id}, '${title}', '${employer.companyName}', '${employer.companyLogo}', '${salary}', '${city}', '${experience}')">
+              Ứng tuyển nhanh
+            </button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    console.log("Hot jobs loaded:", jobs);
 
   } catch (error) {
-
+    console.error("Lỗi khi tải hot jobs:", error);
+    document.getElementById("hotJobsGrid").innerHTML = '<p>Đã xảy ra lỗi khi tải công việc nổi bật.</p>';
   }
-  // fetch("/api/employer/job/getHotJobs")
-  //   .then((response) => {
-  //     if (!response.ok) throw new Error("Failed to fetch hot jobs");
-  //     return response.json();
-  //   })
-  //   .then((data) => {
-  //     const hotJobsGrid = document.getElementById("hotJobsGrid");
-  //     if (!hotJobsGrid) return;
-
-  //     hotJobsGrid.innerHTML = data
-  //       .map((job) => {
-  //         const { id, title, employer, salary, city, experience, createdAt, status } = job;
-
-  //         let badgeHtml = "";
-  //         if (status === "URGENT") {
-  //           badgeHtml = '<span class="badge urgent">Cần gấp</span>';
-  //         } else if (status === "OPEN") {
-  //           badgeHtml = '<span class="badge hot">Đang tuyển</span>';
-  //         } else if (status === "CLOSED") {
-  //           badgeHtml = '<span class="badge closed">Hết tuyển</span>';
-  //         }
-
-  //         return `
-  //           <div class="job-card" onclick="window.location.href = \`/job-detail?id=${id}\`;">
-  //             <div class="job-header">
-  //               <img src="${employer.companyLogo}" alt="${employer.companyName}" class="company-logo-small">
-  //               <div class="job-info">
-  //                 <h3>${title}</h3>
-  //                 <p class="company-name">${employer.companyName}</p>
-  //               </div>
-  //               <div class="job-badges">
-  //                 ${badgeHtml}
-  //               </div>
-  //             </div>
-  //             <div class="job-details">
-  //               <div class="job-salary">
-  //                 <i class="fas fa-money-bill-wave"></i>
-  //                 <span>${salary}</span>
-  //               </div>
-  //               <div class="job-location">
-  //                 <i class="fas fa-map-marker-alt"></i>
-  //                 <span>${city}</span>
-  //               </div>
-  //               <div class="job-experience">
-  //                 <i class="fas fa-briefcase"></i>
-  //                 <span>${experience}</span>
-  //               </div>
-  //             </div>
-  //             <div class="job-footer">
-  //               <span class="posted-date">${formatDate(createdAt)}</span>
-  //               <button class="apply-quick-btn" onclick="event.stopPropagation(); openApplyModal(${id}, '${title}', '${employer.companyName}', '${employer.companyLogo}', '${salary}', '${city}', '${experience}')">
-  //                 Ứng tuyển nhanh
-  //               </button>
-  //             </div>
-  //           </div>
-  //         `;
-  //       })
-  //       .join("");
-
-  //     console.log("Hot jobs loaded:", data);
-  //   })
-  //   .catch((err) => {
-  //     console.error("Lỗi khi lấy hot jobs: ", err);
-  //   });
 }
+
 
 // Gán hàm vào window để sử dụng trong onclick
 window.openApplyModal = openApplyModal;
@@ -264,15 +223,6 @@ async function fetchTopCompanies() {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(topCompaniesData);
-    }, 1000);
-  });
-}
-
-async function fetchHotJobs() {
-  // Simulate API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(hotJobsData);
     }, 1000);
   });
 }
